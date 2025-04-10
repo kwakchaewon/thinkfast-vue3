@@ -1,8 +1,12 @@
 <template>
-  <div class="home">
-    <h1>Welcome to Vue 3 + TypeScript</h1>
-    <p>This is the home page of your application.</p>
-  </div>
+  <v-card class="mx-auto" max-width="600">
+    <v-card-title class="text-h4 text-center">
+      Welcome to Vue 3 + TypeScript
+    </v-card-title>
+    <v-card-text class="text-body-1 text-center">
+      This is the home page of your application.
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts">
