@@ -109,8 +109,9 @@
     <v-snackbar
       v-model="snackbar.show"
       :color="snackbar.color"
-      :timeout="3000"
+      :timeout="snackbar.timeout"
       top
+      class="text-center"
     >
       {{ snackbar.message }}
       <template v-slot:action="{ attrs }">
@@ -131,12 +132,14 @@ import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authApi } from '@/apis/authApi.ts'
 import { useDelayedRouter } from '@/composables/useDelayedRouter'
+import { useSnackbar } from '@/composables/useSnackbar'
 
 export default defineComponent({
   name: 'SignupView',
   setup() {
     const router = useRouter()
     const { navigateWithDelay } = useDelayedRouter(router)
+    const { snackbar, showError, showSuccess } = useSnackbar()
     const form = ref<any>(null)
     const isFormValid = ref(false)
     const email = ref('')
@@ -147,11 +150,6 @@ export default defineComponent({
     const showPassword = ref(false)
     const showConfirmPassword = ref(false)
     const loading = ref(false)
-    const snackbar = ref({
-      show: false,
-      message: '',
-      color: 'error'
-    })
 
     const rules = {
       required: (value: string) => !!value || '필수 입력 항목입니다.',
@@ -186,11 +184,7 @@ export default defineComponent({
     const handleSignup = async () => {
       const isValid = await form.value?.validate()
       if (isValid.valid === false) {
-        snackbar.value = {
-          show: true,
-          message: '입력 내용을 다시 확인해주세요.',
-          color: 'error'
-        }
+        showError('입력 내용을 다시 확인해주세요.')
         return
       }
 
@@ -204,27 +198,14 @@ export default defineComponent({
         })
         
         if (response.success === false) {
-          snackbar.value = {
-            show: true,
-            message: response.message || '회원가입에 실패했습니다.',
-            color: 'error'
-          }
+          showError(response.message || '회원가입에 실패했습니다.')
           return
         }
         
-        snackbar.value = {
-          show: true,
-          message: '회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.',
-          color: 'success'
-        }
-        
+        showSuccess('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.')
         await navigateWithDelay('/')
       } catch (error) {
-        snackbar.value = {
-          show: true,
-          message: '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-          color: 'error'
-        }
+        showError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.')
       } finally {
         loading.value = false
       }
