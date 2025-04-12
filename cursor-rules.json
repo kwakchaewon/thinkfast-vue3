@@ -41,5 +41,47 @@
     "match": "src/**/*.ts",
     "pattern": "import .* from 'vue';\\n\\nimport .* from '@/.*';",
     "suggestion": "import는 외부 라이브러리 → 절대경로(@) → 상대경로 순으로 정렬하고, 그룹 간 줄바꿈을 포함하세요."
+  },
+  {
+    "id": "api-directory-structure",
+    "description": "API 관련 파일은 /src/apis 디렉토리에 위치해야 합니다",
+    "match": "src/**/*.ts",
+    "pattern": "src/apis/.*\\.ts$",
+    "suggestion": "API 관련 파일은 /src/apis 디렉토리에 위치시켜야 합니다. 예: src/apis/authApi.ts"
+  },
+  {
+    "id": "api-file-naming",
+    "description": "API 파일은 {domain}Api.ts 형식으로 명명해야 합니다",
+    "match": "src/apis/*.ts",
+    "pattern": "src/apis/([a-zA-Z]+)Api\\.ts$",
+    "suggestion": "API 파일은 도메인명 + Api.ts 형식으로 명명하세요. 예: authApi.ts, testApi.ts"
+  },
+  {
+    "id": "api-axios-usage",
+    "description": "API 호출은 tbAxios를 사용해야 합니다",
+    "match": "src/apis/*.ts",
+    "mustContain": ["import.*tbAxios.*from.*axios"],
+    "suggestion": "API 호출 시 tbAxios를 사용하세요. 예: import { tbAxios } from '@/apis/axios'"
+  },
+  {
+    "id": "api-endpoint-grouping",
+    "description": "API 엔드포인트는 도메인별로 그룹화되어야 합니다",
+    "match": "src/apis/*.ts",
+    "pattern": "export\\s+const\\s+([a-zA-Z]+)Api\\s*=\\s*\\{",
+    "suggestion": "API 엔드포인트는 도메인별로 그룹화하여 관리하세요. 예: authApi.ts에는 /auth/* 엔드포인트만 포함"
+  },
+  {
+    "id": "api-response-type",
+    "description": "API 응답 타입은 명시적으로 정의해야 합니다",
+    "match": "src/apis/*.ts",
+    "pattern": "interface\\s+\\w+Response",
+    "suggestion": "API 응답에 대한 인터페이스를 명시적으로 정의하세요. 예: interface SignupResponse { ... }"
+  },
+  {
+    "id": "api-error-handling",
+    "description": "API 호출 시 에러 처리가 포함되어야 합니다",
+    "match": "src/apis/*.ts",
+    "pattern": "try\\s*\\{[^}]*\\}\\s*catch\\s*\\(error\\)",
+    "suggestion": "API 호출 시 try-catch를 사용하여 에러를 처리하세요."
   }
 ]
