@@ -100,6 +100,24 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      :timeout="3000"
+      top
+    >
+      {{ snackbar.message }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          text
+          v-bind="attrs"
+          @click="snackbar.show = false"
+        >
+          닫기
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -120,6 +138,11 @@ export default defineComponent({
     const showPassword = ref(false)
     const showConfirmPassword = ref(false)
     const loading = ref(false)
+    const snackbar = ref({
+      show: false,
+      message: '',
+      color: 'error'
+    })
 
     const rules = {
       required: (value: string) => !!value || '필수 입력 항목입니다.',
@@ -154,17 +177,39 @@ export default defineComponent({
     const handleSignup = async () => {
       loading.value = true
       try {
-        await authApi.signup({
+        const response = await authApi.signup({
           username: email.value,
           password: password.value,
           name: name.value,
           birthDate: birthDate.value
         })
-        // 회원가입 성공 시 로그인 페이지로 이동
-        router.push('/')
+        
+        if (response.success === false) {
+          snackbar.value = {
+            show: true,
+            message: response.message || '회원가입에 실패했습니다.',
+            color: 'error'
+          }
+          return
+        }
+        
+        // 회원가입 성공 메시지 표시
+        snackbar.value = {
+          show: true,
+          message: '회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.',
+          color: 'success'
+        }
+        
+        // 1.5초 후 로그인 페이지로 이동
+        setTimeout(() => {
+          router.push('/')
+        }, 1500)
       } catch (error) {
-        console.error('Signup error:', error)
-        // TODO: 에러 메시지를 사용자에게 표시
+        snackbar.value = {
+          show: true,
+          message: '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+          color: 'error'
+        }
       } finally {
         loading.value = false
       }
@@ -179,6 +224,7 @@ export default defineComponent({
       showPassword,
       showConfirmPassword,
       loading,
+      snackbar,
       rules,
       handleSignup
     }
@@ -208,5 +254,15 @@ export default defineComponent({
 /* 로그인 링크 호버 효과 */
 a:hover {
   text-decoration: underline !important;
+}
+
+/* 스낵바 메시지 중앙 정렬 */
+:deep(.v-snackbar__content) {
+  text-align: center;
+  justify-content: center;
+}
+
+:deep(.v-snackbar__actions) {
+  margin-inline-start: 0;
 }
 </style> 
