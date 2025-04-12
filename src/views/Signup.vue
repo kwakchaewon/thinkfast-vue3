@@ -16,7 +16,12 @@
           </v-card-title>
 
           <v-card-text>
-            <v-form @submit.prevent="handleSignup">
+            <v-form
+              ref="form"
+              v-model="isFormValid"
+              @submit.prevent="handleSignup"
+              lazy-validation
+            >
               <v-text-field
                 v-model="email"
                 label="이메일"
@@ -130,6 +135,8 @@ export default defineComponent({
   name: 'SignupView',
   setup() {
     const router = useRouter()
+    const form = ref<any>(null)
+    const isFormValid = ref(false)
     const email = ref('')
     const password = ref('')
     const confirmPassword = ref('')
@@ -175,6 +182,16 @@ export default defineComponent({
     }
 
     const handleSignup = async () => {
+      const isValid = await form.value?.validate()
+      if (isValid.valid === false) {
+        snackbar.value = {
+          show: true,
+          message: '입력 내용을 다시 확인해주세요.',
+          color: 'error'
+        }
+        return
+      }
+
       loading.value = true
       try {
         const response = await authApi.signup({
@@ -216,6 +233,8 @@ export default defineComponent({
     }
 
     return {
+      form,
+      isFormValid,
       email,
       password,
       confirmPassword,
