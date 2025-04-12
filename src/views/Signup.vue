@@ -130,11 +130,13 @@
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authApi } from '@/apis/authApi.ts'
+import { useDelayedRouter } from '@/composables/useDelayedRouter'
 
 export default defineComponent({
   name: 'SignupView',
   setup() {
     const router = useRouter()
+    const { navigateWithDelay } = useDelayedRouter(router)
     const form = ref<any>(null)
     const isFormValid = ref(false)
     const email = ref('')
@@ -210,17 +212,13 @@ export default defineComponent({
           return
         }
         
-        // 회원가입 성공 메시지 표시
         snackbar.value = {
           show: true,
           message: '회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.',
           color: 'success'
         }
         
-        // 1.5초 후 로그인 페이지로 이동
-        setTimeout(() => {
-          router.push('/')
-        }, 1500)
+        await navigateWithDelay('/')
       } catch (error) {
         snackbar.value = {
           show: true,
