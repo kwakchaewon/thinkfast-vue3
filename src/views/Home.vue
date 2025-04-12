@@ -72,6 +72,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'HomeView',
@@ -80,6 +81,7 @@ export default defineComponent({
     const password = ref('')
     const showPassword = ref(false)
     const loading = ref(false)
+    const router = useRouter()
 
     const rules = {
       required: (value: string) => !!value || '필수 입력 항목입니다.',
@@ -98,8 +100,7 @@ export default defineComponent({
     }
 
     const handleSignup = () => {
-      // TODO: 회원가입 페이지로 이동
-      console.log('Navigate to signup page')
+      router.push('/signup')
     }
 
     return {
