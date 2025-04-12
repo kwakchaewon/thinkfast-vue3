@@ -41,6 +41,19 @@
               ></v-text-field>
 
               <v-text-field
+                v-model="confirmPassword"
+                label="비밀번호 확인"
+                prepend-icon="mdi-lock-check"
+                :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showConfirmPassword ? 'text' : 'password'"
+                @click:append="showConfirmPassword = !showConfirmPassword"
+                :rules="[rules.required, rules.passwordMatch]"
+                outlined
+                dense
+                class="mb-2"
+              ></v-text-field>
+
+              <v-text-field
                 v-model="name"
                 label="이름"
                 prepend-icon="mdi-account"
@@ -50,35 +63,16 @@
                 class="mb-2"
               ></v-text-field>
 
-              <v-menu
-                ref="menu"
-                v-model="menu"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="birthDate"
-                    label="생년월일"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    :rules="[rules.required]"
-                    outlined
-                    dense
-                    class="mb-4"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="birthDate"
-                  :max="new Date().toISOString().substr(0, 10)"
-                  min="1900-01-01"
-                  @change="menu = false"
-                ></v-date-picker>
-              </v-menu>
+              <v-text-field
+                v-model="birthDate"
+                label="생년월일 (YYMMDD)"
+                prepend-icon="mdi-calendar"
+                :rules="[rules.required, rules.birthDate]"
+                outlined
+                dense
+                class="mb-2"
+                placeholder="예: 960327"
+              ></v-text-field>
 
               <v-btn
                 color="primary"
@@ -112,6 +106,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { authApi } from '@/api/api'
 
 export default defineComponent({
   name: 'SignupView',
@@ -119,11 +114,12 @@ export default defineComponent({
     const router = useRouter()
     const email = ref('')
     const password = ref('')
+    const confirmPassword = ref('')
     const name = ref('')
     const birthDate = ref('')
     const showPassword = ref(false)
+    const showConfirmPassword = ref(false)
     const loading = ref(false)
-    const menu = ref(false)
 
     const rules = {
       required: (value: string) => !!value || '필수 입력 항목입니다.',
@@ -132,14 +128,34 @@ export default defineComponent({
         return pattern.test(value) || '올바른 이메일 형식이 아닙니다.'
       },
       min: (value: string) => value.length >= 8 || '비밀번호는 8자 이상이어야 합니다.',
+      passwordMatch: (value: string) => value === password.value || '비밀번호가 일치하지 않습니다.',
+      birthDate: (value: string) => {
+        const pattern = /^([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/
+        if (!pattern.test(value)) {
+          return '생년월일은 YYMMDD 형식으로 입력해주세요 (예: 960327)'
+        }
+        
+        // 날짜 유효성 검사
+        const year = parseInt(value.substring(0, 2))
+        const month = parseInt(value.substring(2, 4))
+        const day = parseInt(value.substring(4, 6))
+        
+        const date = new Date(2000 + year, month - 1, day)
+        if (date.getFullYear() !== 2000 + year || 
+            date.getMonth() !== month - 1 || 
+            date.getDate() !== day) {
+          return '올바른 날짜를 입력해주세요'
+        }
+        
+        return true
+      }
     }
 
     const handleSignup = async () => {
       loading.value = true
       try {
-        // TODO: 회원가입 로직 구현
-        console.log('Signup attempt:', {
-          email: email.value,
+        await authApi.signup({
+          username: email.value,
           password: password.value,
           name: name.value,
           birthDate: birthDate.value
@@ -148,6 +164,7 @@ export default defineComponent({
         router.push('/')
       } catch (error) {
         console.error('Signup error:', error)
+        // TODO: 에러 메시지를 사용자에게 표시
       } finally {
         loading.value = false
       }
@@ -156,11 +173,12 @@ export default defineComponent({
     return {
       email,
       password,
+      confirmPassword,
       name,
       birthDate,
       showPassword,
+      showConfirmPassword,
       loading,
-      menu,
       rules,
       handleSignup
     }
