@@ -71,11 +71,25 @@
     "suggestion": "API 엔드포인트는 도메인별로 그룹화하여 관리하세요. 예: authApi.ts에는 /auth/* 엔드포인트만 포함"
   },
   {
-    "id": "api-response-type",
-    "description": "API 응답 타입은 명시적으로 정의해야 합니다",
+    "id": "api-interface-location",
+    "description": "API 요청/응답 인터페이스는 /src/interfaces 디렉토리에서 관리해야 합니다",
+    "match": "src/**/*.ts",
+    "pattern": "src/interfaces/.*\\.ts$",
+    "suggestion": "API 요청/응답 인터페이스는 /src/interfaces 디렉토리에 위치시켜야 합니다. 예: src/interfaces/auth.interface.ts"
+  },
+  {
+    "id": "api-interface-naming",
+    "description": "API 인터페이스 파일은 {domain}.interface.ts 형식으로 명명해야 합니다",
+    "match": "src/interfaces/*.ts",
+    "pattern": "src/interfaces/([a-zA-Z]+)\\.interface\\.ts$",
+    "suggestion": "API 인터페이스 파일은 도메인명.interface.ts 형식으로 명명하세요. 예: auth.interface.ts"
+  },
+  {
+    "id": "api-interface-import",
+    "description": "API 파일에서 인터페이스는 interfaces 디렉토리에서 import 해야 합니다",
     "match": "src/apis/*.ts",
-    "pattern": "interface\\s+\\w+Response",
-    "suggestion": "API 응답에 대한 인터페이스를 명시적으로 정의하세요. 예: interface SignupResponse { ... }"
+    "mustContain": ["import.*from.*@/interfaces"],
+    "suggestion": "API 요청/응답 타입은 interfaces 디렉토리에서 import 하세요. 예: import { SignupRequest } from '@/interfaces/auth.interface'"
   },
   {
     "id": "api-error-handling",
