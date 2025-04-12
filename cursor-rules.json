@@ -7,6 +7,13 @@
     "suggestion": "디렉토리는 kebab-case로, 컴포넌트 파일은 PascalCase로 작성하세요. 예: user-profile, TokenGenerateModal.vue"
   },
   {
+    "id": "full-word-usage",
+    "description": "단어를 축약하지 않고 전체 단어를 사용해야 합니다",
+    "match": "src/**/*",
+    "pattern": "\\b(bg|btn|txt|col|img|nav|cont|info|desc|val|num|str|arr|obj|func|var|param|arg|ret|res|req|stat|init|conf|opt|def|max|min|avg|sum|cnt|idx|len|pos|dir|loc|coord|rect|size|dim|vis|hid|act|inact|sel|unsel|chk|unchk|en|dis|add|rem|del|upd|ins|mod|gen|calc|proc|exec|impl|util|helper|mgr|ctrl|view|comp|elem|attr|prop|style|class|id|name|type|kind|sort|order|group|list|set|map|dict|hash|key|val|pair|item|entry|node|tree|graph|path|route|link|ref|ptr|addr|mem|buf|pool|cache|temp|tmp|perm|const|var|let|fn|cb|evt|ev|msg|err|exc|warn|log|db|sql|qry|cmd|op|bin|hex|dec|oct|bool|int|float|char|str|arr|obj|date|time|dt|ts|dur|span|zone|loc|reg|fmt|enc|dec|comp|decomp|arch|ext|ver|rev|ver|build|dist|src|dest|src|dst|in|out|io|std|dev|prod|test|demo|sample|mock|fake|stub|dummy|util|helper|tool|lib|pkg|mod|sys|os|net|web|http|url|uri|html|css|js|ts|vue|react|ang|node|npm|yarn|git|svn|cmd|sh|bat|ps|py|rb|java|cpp|c|cs|go|rs|swift|kt|dart|php|perl|bash|zsh|fish|vim|emacs|vsc|ide|ide|sdk|api|cli|gui|tui|ui|ux|ux|ai|ml|dl|nn|cnn|rnn|lstm|gan|rl|nlp|cv|ar|vr|mr|xr|iot|led|rgb|pwm|adc|dac|uart|spi|i2c|gpio|pwr|bat|chg|usb|eth|wifi|bt|ble|nfc|rfid|gps|imu|acc|gyro|mag|baro|temp|hum|light|sound|motion|touch|press|force|strain|flow|level|ph|ec|tds|orp|do|co2|ch4|nh3|no2|so2|o3|pm|voc|co|h2s|o2|n2|he|ar|ne|kr|xe|rn|fr|ra|ac|th|pa|u|np|pu|am|cm|bk|cf|es|fm|md|no|lr|rf|db|sg|bh|hs|mt|ds|rg|cn|nh|fl|lv|la|ce|pr|nd|pm|sm|eu|gd|tb|dy|ho|er|tm|yb|lu|ac|th|pa|u|np|pu|am|cm|bk|cf|es|fm|md|no|lr|rf|db|sg|bh|hs|mt|ds|rg|cn|nh|fl|lv|la|ce|pr|nd|pm|sm|eu|gd|tb|dy|ho|er|tm|yb|lu)\\b",
+    "suggestion": "단어를 축약하지 않고 전체 단어를 사용하세요. 예: backgroundColor (bgColor 대신), button (btn 대신), text (txt 대신)"
+  },
+  {
     "id": "composition-api-rule",
     "description": "Composition API setup 함수 안에서 ref, computed, watch는 상단에 선언되어야 합니다.",
     "match": "src/**/*.vue",
@@ -97,5 +104,12 @@
     "match": "src/apis/*.ts",
     "pattern": "try\\s*\\{[^}]*\\}\\s*catch\\s*\\(error\\)",
     "suggestion": "API 호출 시 try-catch를 사용하여 에러를 처리하세요."
+  },
+  {
+    "id": "api-function-naming",
+    "description": "API 함수는 HTTP 메소드와 행위에 따라 명명 규칙을 따라야 합니다",
+    "match": "src/apis/*.ts",
+    "pattern": "(fetch|create|update|delete|check)[A-Z][a-zA-Z]+Api",
+    "suggestion": "API 함수는 다음 규칙을 따라야 합니다:\n- GET: fetchOooApi()\n- POST: {행위}OooApi()\n- PUT: updateOooApi()\n- DELETE: deleteOooApi()\n- 검사: checkOooApi()"
   }
 ]
