@@ -106,7 +106,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { authApi } from '@/api/api'
+import { authApi } from '@/apis/authApi.ts'
 
 export default defineComponent({
   name: 'SignupView',
