@@ -1,16 +1,20 @@
 <template>
-  <v-footer class="bg-grey-lighten-1">
-    <v-row justify="center" no-gutters>
-      <v-col class="text-center" cols="12">
-        <span class="text-caption">
-          © {{ new Date().getFullYear() }} <strong>Andrew Kwak</strong>. All rights reserved.
-        </span>
-        <span class="text-caption mx-4">|</span>
-        <span class="text-caption">
-          <strong>ThinkFast</strong> — Smart Surveys, Better Insights
-        </span>
-      </v-col>
-    </v-row>
+  <v-footer class="bg-grey-lighten-4 border-t">
+    <v-container>
+      <v-row justify="center" no-gutters class="text-center py-2">
+        <v-col cols="12" class="mb-2">
+          <strong class="text-primary text-h6">ThinkFast</strong>
+          <div class="text-subtitle-2 text-medium-emphasis mt-1">
+            Smart Surveys, Better Insights
+          </div>
+        </v-col>
+        <v-col cols="12">
+          <span class="text-caption text-medium-emphasis">
+            © {{ new Date().getFullYear() }} <strong>Andrew Kwak</strong>. All rights reserved.
+          </span>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-footer>
 </template>
 
@@ -27,6 +31,10 @@ export default defineComponent({
   position: fixed;
   bottom: 0;
   width: 100%;
-  padding: 8px 0;
+  z-index: 1;
+}
+
+.border-t {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
 </style> 
