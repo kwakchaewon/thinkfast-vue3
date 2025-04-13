@@ -16,12 +16,13 @@
           </v-card-title>
 
           <v-card-text>
-            <v-form @submit.prevent="handleLogin">
+            <v-form ref="form" v-model="isFormValid" @submit.prevent="handleLogin">
               <v-text-field
-                v-model="username"
-                label="아이디"
+                v-model="email"
+                label="이메일"
+                type="email"
                 prepend-icon="mdi-account"
-                :rules="[rules.required]"
+                :rules="emailRules"
                 outlined
                 dense
                 class="mb-2"
@@ -30,11 +31,11 @@
               <v-text-field
                 v-model="password"
                 label="비밀번호"
+                :type="showPassword ? 'text' : 'password'"
                 prepend-icon="mdi-lock"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword ? 'text' : 'password'"
                 @click:append="showPassword = !showPassword"
-                :rules="[rules.required]"
+                :rules="passwordRules"
                 outlined
                 dense
                 class="mb-4"
@@ -48,6 +49,7 @@
                 :loading="loading"
                 class="mb-4"
                 height="48"
+                :disabled="!isFormValid || loading"
               >
                 로그인
               </v-btn>
@@ -57,7 +59,7 @@
                 <a 
                   href="#" 
                   class="text-body-2 primary--text text-decoration-none"
-                  @click.prevent="handleSignup"
+                  @click.prevent="$router.push('/signup')"
                 >
                   회원가입
                 </a>
@@ -65,6 +67,15 @@
             </v-form>
           </v-card-text>
         </v-card>
+
+        <!-- 스낵바 -->
+        <v-snackbar
+          v-model="snackbar.show"
+          :color="snackbar.color"
+          :timeout="2000"
+        >
+          {{ snackbar.text }}
+        </v-snackbar>
       </v-col>
     </v-row>
   </v-container>
@@ -73,44 +84,72 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { authApi } from '@/apis/authApi'
 
 export default defineComponent({
   name: 'HomeView',
   setup() {
-    const username = ref('')
-    const password = ref('')
-    const showPassword = ref(false)
-    const loading = ref(false)
     const router = useRouter()
+    const form = ref<any>(null)
+    const isFormValid = ref(false)
+    const loading = ref(false)
+    const showPassword = ref(false)
 
-    const rules = {
-      required: (value: string) => !!value || '필수 입력 항목입니다.',
+    // 폼 데이터
+    const email = ref('')
+    const password = ref('')
+
+    // 유효성 검사 규칙
+    const emailRules = [
+      (v: string) => !!v || '이메일을 입력해주세요.',
+      (v: string) => /.+@.+\..+/.test(v) || '올바른 이메일 형식이 아닙니다.'
+    ]
+
+    const passwordRules = [
+      (v: string) => !!v || '비밀번호를 입력해주세요.',
+      (v: string) => v.length >= 8 || '비밀번호는 최소 8자 이상이어야 합니다.'
+    ]
+
+    // 스낵바 상태
+    const snackbar = ref({
+      show: false,
+      text: '',
+      color: 'success'
+    })
+
+    const showError = (message: string) => {
+      snackbar.value = {
+        show: true,
+        text: message,
+        color: 'error'
+      }
     }
 
     const handleLogin = async () => {
+      if (!form.value?.validate()) return
+
       loading.value = true
       try {
-        // TODO: 로그인 로직 구현
-        console.log('Login attempt:', { username: username.value, password: password.value })
-      } catch (error) {
-        console.error('Login error:', error)
+        await authApi.login(email.value, password.value)
+        router.push('/main')
+      } catch (error: any) {
+        showError(error.response?.data?.message || '로그인에 실패했습니다.')
       } finally {
         loading.value = false
       }
     }
 
-    const handleSignup = () => {
-      router.push('/signup')
-    }
-
     return {
-      username,
+      form,
+      isFormValid,
+      loading,
+      email,
       password,
       showPassword,
-      loading,
-      rules,
-      handleLogin,
-      handleSignup
+      emailRules,
+      passwordRules,
+      snackbar,
+      handleLogin
     }
   }
 })
@@ -119,23 +158,21 @@ export default defineComponent({
 <style scoped>
 .v-card {
   border-radius: 8px;
-  transform: translateY(-5%); /* 카드를 약간 위로 올림 (10%에서 5%로 감소) */
+  transform: translateY(-5%);
 }
 
 .v-card-title {
-  padding: 1.5rem 1rem; /* 패딩 감소 */
+  padding: 1.5rem 1rem;
 }
 
 .v-card-text {
   padding: 1rem 2rem 2rem;
 }
 
-/* 배경 그라데이션을 인디고 계열로 변경 */
 :deep(.v-application) {
   background: linear-gradient(135deg, #E8EAF6 0%, #5C6BC0 100%);
 }
 
-/* 회원가입 링크 호버 효과 */
 a:hover {
   text-decoration: underline !important;
 }

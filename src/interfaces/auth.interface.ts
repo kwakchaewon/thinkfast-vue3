@@ -4,3 +4,13 @@ export interface SignupRequest {
   name: string
   birthDate: string
 } 
+
+export interface LoginResponse {
+  accessToken: string
+  refreshToken: string
+  user: {
+    id: number
+    email: string
+    name: string
+  }
+}
