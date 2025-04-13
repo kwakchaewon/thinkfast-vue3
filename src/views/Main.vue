@@ -134,6 +134,16 @@
           title="인사이트"
           value="insights"
         ></v-list-item>
+
+        <v-divider class="my-2"></v-divider>
+        
+        <v-list-item
+          prepend-icon="mdi-logout"
+          title="로그아웃"
+          value="logout"
+          @click="handleLogout"
+          class="logout-item"
+        ></v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -273,6 +283,8 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { authApi } from '@/apis/authApi'
 import AppFooter from '@/components/AppFooter.vue'
 
 export default defineComponent({
@@ -281,6 +293,7 @@ export default defineComponent({
     AppFooter
   },
   setup() {
+    const router = useRouter()
     const userName = ref('Andrew Kwak')
     const userEmail = ref('andrew@example.com')
     const showNotifications = ref(false)
@@ -365,6 +378,15 @@ export default defineComponent({
       }
     ])
 
+    const handleLogout = async () => {
+      try {
+        await authApi.logout()
+        router.push('/')
+      } catch (error) {
+        console.error('Logout failed:', error)
+      }
+    }
+
     return {
       userName,
       userEmail,
@@ -372,7 +394,8 @@ export default defineComponent({
       showNotifications,
       markAllAsRead,
       recentSurveys,
-      recentActivities
+      recentActivities,
+      handleLogout
     }
   }
 })
@@ -432,5 +455,14 @@ export default defineComponent({
 
 .v-timeline-item:last-child {
   padding-bottom: 0 !important;
+}
+
+.logout-item {
+  margin-top: auto;
+  color: #FF5252;
+}
+
+.logout-item :deep(.v-list-item__prepend) {
+  color: #FF5252;
 }
 </style> 
