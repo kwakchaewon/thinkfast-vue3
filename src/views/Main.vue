@@ -11,17 +11,26 @@
           prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
           :title="userName"
           :subtitle="userEmail"
+          class="profile-item"
         >
           <template v-slot:append>
-            <v-badge
-              :content="notifications.length.toString()"
-              :model-value="notifications.length > 0"
-              color="error"
-            >
-              <v-btn icon="mdi-bell" variant="text" @click="showNotifications = true">
-                <v-icon>mdi-bell</v-icon>
-              </v-btn>
-            </v-badge>
+            <div class="d-flex align-center">
+              <v-badge
+                :content="notifications.length.toString()"
+                :model-value="notifications.length > 0"
+                color="error"
+                offset-x="12"
+              >
+                <v-btn
+                  icon="mdi-bell"
+                  variant="text"
+                  @click="showNotifications = true"
+                  class="notification-btn"
+                >
+                  <v-icon>mdi-bell</v-icon>
+                </v-btn>
+              </v-badge>
+            </div>
 
             <!-- 알림 메뉴 -->
             <v-menu
@@ -30,16 +39,28 @@
               location="bottom end"
               offset="10"
             >
-              <v-card min-width="300" max-width="400">
+              <v-card min-width="300" max-width="400" class="notification-menu">
+                <div class="d-flex align-center px-4 py-2 bg-grey-lighten-4">
+                  <span class="text-h6">알림</span>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    icon="mdi-close"
+                    variant="text"
+                    density="compact"
+                    size="small"
+                    @click="showNotifications = false"
+                  >
+                    <v-icon size="small">mdi-close</v-icon>
+                  </v-btn>
+                </div>
+                <v-divider></v-divider>
                 <v-list>
-                  <v-list-subheader class="d-flex align-center">
-                    알림
-                    <v-spacer></v-spacer>
+                  <v-list-subheader class="d-flex align-center px-4">
                     <v-btn
                       variant="text"
                       density="compact"
                       color="primary"
-                      class="text-caption"
+                      class="text-caption px-0"
                       @click="markAllAsRead"
                     >
                       모두 읽음 처리
@@ -360,6 +381,23 @@ export default defineComponent({
 <style scoped>
 .v-main {
   min-height: 100vh;
+}
+
+.profile-item {
+  min-height: 72px;
+  padding: 12px 16px;
+}
+
+.profile-item :deep(.v-list-item__prepend) {
+  padding-right: 16px;
+}
+
+.notification-btn {
+  margin-left: 8px;
+}
+
+.notification-menu {
+  margin-top: 8px;
 }
 
 .v-list-item-title {
