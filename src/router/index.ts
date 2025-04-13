@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import MainView from '@/views/Main.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -17,6 +18,14 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: () => import('../views/Signup.vue')
+    },
+    {
+      path: '/main',
+      name: 'main',
+      component: MainView,
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })
