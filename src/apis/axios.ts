@@ -1,5 +1,6 @@
 import axios from "axios";
 import router from "@/router";
+import store from "@/store";
 
 const BASE_URL = "http://localhost:8080";
 
@@ -61,9 +62,12 @@ tbAxios.interceptors.response.use(
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("refreshToken");
                 router.push("/login");
+                store.dispatch("handleTokenExpiration");
                 return Promise.reject(refreshError);
             }
         }
         return Promise.reject(error);
     }
 );
+
+export default tbAxios;
