@@ -57,6 +57,19 @@ const router = createRouter({
           next()
         }
       }
+    },
+    {
+      path: '/create-survey',
+      name: 'create-survey',
+      component: () => import('@/views/CreateSurvey.vue'),
+      beforeEnter: (_to, _from, next) => {
+        if (!store.getters.isAuthenticated) {
+          showError('로그인이 필요합니다.')
+          next('/')
+        } else {
+          next()
+        }
+      }
     }
   ]
 })
