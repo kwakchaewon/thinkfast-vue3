@@ -121,60 +121,25 @@
 
                 <v-row>
                   <v-col cols="12" sm="6">
-                    <v-menu
-                      ref="menu"
-                      v-model="menu"
-                      :close-on-content-click="false"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="survey.endDate"
-                          label="응답 종료 날짜"
-                          prepend-icon="mdi-calendar"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                          variant="outlined"
-                          hide-details
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="survey.endDate"
-                        :min="minDate"
-                        @input="menu = false"
-                      ></v-date-picker>
-                    </v-menu>
+                    <v-text-field
+                      v-model="survey.endDate"
+                      label="응답 종료 날짜"
+                      type="date"
+                      :min="minDate"
+                      prepend-inner-icon="mdi-calendar"
+                      variant="outlined"
+                      hide-details
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
-                    <v-menu
-                      ref="timeMenu"
-                      v-model="timeMenu"
-                      :close-on-content-click="false"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="survey.endTime"
-                          label="종료 시각"
-                          prepend-icon="mdi-clock"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                          variant="outlined"
-                          hide-details
-                        ></v-text-field>
-                      </template>
-                      <v-time-picker
-                        v-model="survey.endTime"
-                        format="24hr"
-                        @input="timeMenu = false"
-                      ></v-time-picker>
-                    </v-menu>
+                    <v-text-field
+                      v-model="survey.endTime"
+                      label="종료 시각"
+                      type="time"
+                      prepend-inner-icon="mdi-clock"
+                      variant="outlined"
+                      hide-details
+                    ></v-text-field>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -392,13 +357,12 @@ export default {
     const store = useStore()
     const { showSuccess, showError } = useSnackbar()
 
-    const menu = ref(false)
-    const timeMenu = ref(false)
+    const showDatePicker = ref(false)
+    const showTimePicker = ref(false)
     const minDate = new Date().toISOString().substr(0, 10)
     const showNotifications = ref(false)
     const notifications = ref([])
 
-    // store에서 사용자 정보 가져오기
     const username = computed(() => store.state.username || '사용자')
 
     const questionTypes = [
@@ -411,8 +375,8 @@ export default {
     const survey = ref({
       title: '',
       description: '',
-      endDate: '',
-      endTime: '',
+      endDate: new Date().toISOString().substr(0, 10),
+      endTime: '00:00',
       showResults: false,
       questions: []
     })
@@ -443,6 +407,16 @@ export default {
       router.push('/')
     }
 
+    const handleDateSelect = (date) => {
+      survey.value.endDate = date
+      showDatePicker.value = false
+    }
+
+    const handleTimeSelect = (time) => {
+      survey.value.endTime = time
+      showTimePicker.value = false
+    }
+
     const saveSurvey = async () => {
       try {
         // TODO: API 호출로 설문 저장
@@ -454,8 +428,8 @@ export default {
     }
 
     return {
-      menu,
-      timeMenu,
+      showDatePicker,
+      showTimePicker,
       minDate,
       questionTypes,
       survey,
@@ -467,7 +441,9 @@ export default {
       addOption,
       removeOption,
       handleLogout,
-      saveSurvey
+      saveSurvey,
+      handleDateSelect,
+      handleTimeSelect
     }
   }
 }
@@ -503,5 +479,15 @@ export default {
 
 .v-expansion-panel:last-child {
   margin-bottom: 0;
+}
+
+:deep(.v-date-picker) {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+:deep(.v-time-picker) {
+  border: none !important;
+  box-shadow: none !important;
 }
 </style> 

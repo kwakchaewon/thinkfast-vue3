@@ -4,6 +4,10 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css'
 
+// Labs components
+import { VDatePicker } from 'vuetify/components/VDatePicker'
+import { VTimePicker } from 'vuetify/components/VTimePicker'
+
 const myCustomLightTheme = {
   dark: false,
   colors: {
@@ -18,12 +22,19 @@ const myCustomLightTheme = {
 }
 
 export default createVuetify({
-  components,
+  components: {
+    ...components,
+    VDatePicker,
+    VTimePicker,
+  },
   directives,
   theme: {
     defaultTheme: 'myCustomLightTheme',
     themes: {
       myCustomLightTheme,
     },
+  },
+  display: {
+    mobileBreakpoint: 'sm',
   },
 }) 
