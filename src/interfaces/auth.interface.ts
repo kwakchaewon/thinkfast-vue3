@@ -8,9 +8,7 @@ export interface SignupRequest {
 export interface LoginResponse {
   accessToken: string
   refreshToken: string
-  user: {
-    id: number
-    email: string
-    name: string
-  }
+  username: string
+  role: string
+  tokenType: string
 }

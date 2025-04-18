@@ -85,6 +85,8 @@
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authApi } from '@/apis/authApi'
+import store from "@/store";
+import {useSnackbar} from "@/composables/useSnackbar.ts";
 
 export default defineComponent({
   name: 'HomeView',
@@ -94,6 +96,7 @@ export default defineComponent({
     const isFormValid = ref(false)
     const loading = ref(false)
     const showPassword = ref(false)
+    const { showSuccess } = useSnackbar()
 
     // 폼 데이터
     const email = ref('')
@@ -127,11 +130,18 @@ export default defineComponent({
 
     const handleLogin = async () => {
       if (!form.value?.validate()) return
-
       loading.value = true
       try {
-        await authApi.login(email.value, password.value)
-        router.push('/main')
+        const response = await authApi.login(email.value, password.value)
+
+        await store.dispatch('setUser', {
+          username: response.username,
+          accessToken: response.accessToken,
+          role: response.role
+        })
+
+        await showSuccess('로그인 성공!')
+        await router.push('/main')
       } catch (error: any) {
         showError(error.response?.data?.message || '로그인에 실패했습니다.')
       } finally {

@@ -1,17 +1,11 @@
 import { tbAxios } from "@/apis/axios.ts"
-import { SignupRequest } from "@/interfaces/auth.interface"
-
+import { SignupRequest,LoginResponse } from "@/interfaces/auth.interface"
 
 
 export const authApi = {
   login: async (username: string, password: string): Promise<LoginResponse> => {
-    const response = await tbAxios.post('/auth/login', { username, password })
-
-    // 토큰 저장
-    localStorage.setItem('accessToken', response.data.data.accessToken)
-    localStorage.setItem('refreshToken', response.data.data.refreshToken)
-
-    return response.data
+      const response = await tbAxios.post('/auth/login', { username, password })
+      return response.data.data
   },
 
   logout: async () => {
