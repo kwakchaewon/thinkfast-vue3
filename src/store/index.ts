@@ -44,12 +44,6 @@ export default createStore<userState>({
       localStorage.removeItem('username');
       localStorage.removeItem('role');
     },
-    CLEAR_AUTH(state: userState) {
-      state.username = null
-      state.accessToken = null
-      state.role = null
-      localStorage.removeItem('accessToken')
-    }
   },
 
   actions: {

@@ -49,7 +49,7 @@ tbAxios.interceptors.response.use(
 
                 const { accessToken } = response.data;
 
-                // 새 토큰 저장
+                // 새로운 엑세스 토큰 저장
                 localStorage.setItem("accessToken", accessToken);
                 
                 // 원래 요청의 헤더 업데이트
@@ -59,6 +59,8 @@ tbAxios.interceptors.response.use(
                 return tbAxios(originalRequest);
             } catch (refreshError) {
                 // 리프레시 실패 시 로그아웃 처리
+                localStorage.removeItem("username");
+                localStorage.removeItem("role");
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("refreshToken");
                 router.push("/login");
