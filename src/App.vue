@@ -1,14 +1,28 @@
 <template>
   <v-app>
     <router-view></router-view>
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      :timeout="snackbar.timeout"
+    >
+      {{ snackbar.message }}
+    </v-snackbar>
   </v-app>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useSnackbar } from '@/composables/useSnackbar'
 
 export default defineComponent({
-  name: 'App'
+  name: 'App',
+  setup() {
+    const { snackbar } = useSnackbar()
+    return {
+      snackbar
+    }
+  }
 })
 </script>
 
