@@ -88,216 +88,292 @@
 
     <v-main class="bg-grey-lighten-3">
       <v-container fluid class="py-8">
-        <v-card class="content-card">
-          <v-card-title class="d-flex align-center px-4 py-3 bg-grey-lighten-4">
-            <span class="text-h6">
-              <v-icon color="primary" class="mr-2">mdi-plus-circle</v-icon>
-              새 설문 만들기
-            </span>
-          </v-card-title>
-          
-          <v-card-text class="pa-4">
-            <!-- 설문 제목 -->
-            <v-text-field
-              v-model="survey.title"
-              label="설문 제목"
-              required
-              class="mb-4"
-              outlined
-              prepend-icon="mdi-format-title"
-              hide-details
-            ></v-text-field>
-
-            <!-- 설문 설명 -->
-            <v-textarea
-              v-model="survey.description"
-              label="설문 설명"
-              rows="3"
-              class="mb-4"
-              outlined
-              prepend-icon="mdi-text"
-              hide-details
-            ></v-textarea>
-
-            <!-- 응답 제한 시간 -->
-            <v-row>
-              <v-col cols="12" sm="6">
-                <v-menu
-                  ref="menu"
-                  v-model="menu"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="survey.endDate"
-                      label="응답 종료 날짜"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                      outlined
-                      hide-details
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="survey.endDate"
-                    :min="minDate"
-                    @input="menu = false"
-                  ></v-date-picker>
-                </v-menu>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-menu
-                  ref="timeMenu"
-                  v-model="timeMenu"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="survey.endTime"
-                      label="종료 시각"
-                      prepend-icon="mdi-clock"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                      outlined
-                      hide-details
-                    ></v-text-field>
-                  </template>
-                  <v-time-picker
-                    v-model="survey.endTime"
-                    format="24hr"
-                    @input="timeMenu = false"
-                  ></v-time-picker>
-                </v-menu>
-              </v-col>
-            </v-row>
-
-            <!-- 질문 목록 -->
-            <v-card
-              v-for="(question, index) in survey.questions"
-              :key="index"
-              class="mt-6 mb-4"
-              outlined
-            >
-              <v-card-title class="d-flex align-center px-4 py-2 bg-grey-lighten-5">
-                <span class="text-subtitle-1">질문 {{ index + 1 }}</span>
-                <v-spacer></v-spacer>
-                <v-btn
-                  icon="mdi-delete"
-                  variant="text"
-                  density="comfortable"
-                  color="error"
-                  @click="removeQuestion(index)"
-                >
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
+        <v-row>
+          <v-col cols="12" lg="8">
+            <!-- 설문 기본 정보 -->
+            <v-card class="mb-6 content-card">
+              <v-card-title class="d-flex align-center px-4 py-3 bg-grey-lighten-4">
+                <span class="text-h6">
+                  <v-icon color="primary" class="mr-2">mdi-file-document-edit</v-icon>
+                  설문 기본 정보
+                </span>
               </v-card-title>
               <v-card-text class="pa-4">
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="question.text"
-                      label="질문"
-                      required
-                      outlined
-                      prepend-icon="mdi-help-circle"
-                      hide-details
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6">
-                    <v-select
-                      v-model="question.type"
-                      :items="questionTypes"
-                      label="질문 유형"
-                      required
-                      outlined
-                      prepend-icon="mdi-format-list-bulleted-type"
-                      hide-details
-                    ></v-select>
-                  </v-col>
-                  <v-col cols="12" sm="6">
-                    <v-switch
-                      v-model="question.required"
-                      label="필수 질문"
-                      color="primary"
-                      class="mt-4"
-                      hide-details
-                    ></v-switch>
-                  </v-col>
-                </v-row>
+                <v-text-field
+                  v-model="survey.title"
+                  label="설문 제목"
+                  required
+                  class="mb-4"
+                  variant="outlined"
+                  prepend-icon="mdi-format-title"
+                  hide-details
+                ></v-text-field>
 
-                <!-- 객관식 옵션 -->
-                <v-row v-if="question.type === 'multiple_choice'" class="mt-4">
-                  <v-col cols="12">
-                    <v-text-field
-                      v-for="(option, optionIndex) in question.options"
-                      :key="optionIndex"
-                      v-model="question.options[optionIndex]"
-                      :label="`옵션 ${optionIndex + 1}`"
-                      class="mb-2"
-                      outlined
-                      prepend-icon="mdi-checkbox-blank-circle-outline"
-                      hide-details
+                <v-textarea
+                  v-model="survey.description"
+                  label="설문 설명"
+                  rows="3"
+                  class="mb-4"
+                  variant="outlined"
+                  prepend-icon="mdi-text"
+                  hide-details
+                ></v-textarea>
+
+                <v-row>
+                  <v-col cols="12" sm="6">
+                    <v-menu
+                      ref="menu"
+                      v-model="menu"
+                      :close-on-content-click="false"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
                     >
-                      <template v-slot:append>
-                        <v-btn
-                          icon="mdi-delete"
-                          variant="text"
-                          density="comfortable"
-                          color="error"
-                          @click="removeOption(question, optionIndex)"
-                        >
-                          <v-icon>mdi-delete</v-icon>
-                        </v-btn>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="survey.endDate"
+                          label="응답 종료 날짜"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                          variant="outlined"
+                          hide-details
+                        ></v-text-field>
                       </template>
-                    </v-text-field>
-                    <v-btn
-                      variant="text"
-                      color="primary"
-                      class="mt-2"
-                      @click="addOption(question)"
-                      prepend-icon="mdi-plus"
+                      <v-date-picker
+                        v-model="survey.endDate"
+                        :min="minDate"
+                        @input="menu = false"
+                      ></v-date-picker>
+                    </v-menu>
+                  </v-col>
+                  <v-col cols="12" sm="6">
+                    <v-menu
+                      ref="timeMenu"
+                      v-model="timeMenu"
+                      :close-on-content-click="false"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
                     >
-                      옵션 추가
-                    </v-btn>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="survey.endTime"
+                          label="종료 시각"
+                          prepend-icon="mdi-clock"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                          variant="outlined"
+                          hide-details
+                        ></v-text-field>
+                      </template>
+                      <v-time-picker
+                        v-model="survey.endTime"
+                        format="24hr"
+                        @input="timeMenu = false"
+                      ></v-time-picker>
+                    </v-menu>
                   </v-col>
                 </v-row>
               </v-card-text>
             </v-card>
 
-            <!-- 질문 추가 버튼 -->
-            <v-btn
-              color="primary"
-              class="mt-4"
-              @click="addQuestion"
-              block
-              prepend-icon="mdi-plus"
-            >
-              질문 추가
-            </v-btn>
-          </v-card-text>
+            <!-- 질문 목록 -->
+            <v-card class="content-card">
+              <v-card-title class="d-flex align-center px-4 py-3 bg-grey-lighten-4">
+                <span class="text-h6">
+                  <v-icon color="primary" class="mr-2">mdi-format-list-checks</v-icon>
+                  질문 목록
+                </span>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="primary"
+                  prepend-icon="mdi-plus"
+                  @click="addQuestion"
+                  variant="text"
+                >
+                  질문 추가
+                </v-btn>
+              </v-card-title>
 
-          <v-divider></v-divider>
+              <v-card-text class="pa-4">
+                <div v-if="survey.questions.length === 0" class="text-center py-12 text-grey">
+                  <v-icon size="48" class="mb-2">mdi-playlist-plus</v-icon>
+                  <div class="text-h6">질문을 추가해주세요</div>
+                  <div class="text-body-2">오른쪽 상단의 '질문 추가' 버튼을 클릭하여 새로운 질문을 추가할 수 있습니다.</div>
+                </div>
 
-          <v-card-actions class="pa-4">
-            <v-spacer></v-spacer>
-            <v-btn
-              color="primary"
-              size="large"
-              @click="saveSurvey"
-              prepend-icon="mdi-content-save"
-            >
-              설문 저장
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+                <v-expansion-panels v-else>
+                  <v-expansion-panel
+                    v-for="(question, index) in survey.questions"
+                    :key="index"
+                    class="mb-2"
+                  >
+                    <v-expansion-panel-title>
+                      <div class="d-flex align-center">
+                        <span class="text-subtitle-1">질문 {{ index + 1 }}</span>
+                        <v-chip
+                          :color="question.required ? 'error' : 'grey'"
+                          size="small"
+                          class="ml-2"
+                        >
+                          {{ question.required ? '필수' : '선택' }}
+                        </v-chip>
+                      </div>
+                    </v-expansion-panel-title>
+                    <v-expansion-panel-text>
+                      <v-row>
+                        <v-col cols="12">
+                          <v-text-field
+                            v-model="question.text"
+                            label="질문"
+                            required
+                            variant="outlined"
+                            prepend-icon="mdi-help-circle"
+                            hide-details
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6">
+                          <v-select
+                            v-model="question.type"
+                            :items="questionTypes"
+                            label="질문 유형"
+                            required
+                            variant="outlined"
+                            prepend-icon="mdi-format-list-bulleted-type"
+                            hide-details
+                          ></v-select>
+                        </v-col>
+                        <v-col cols="12" sm="6">
+                          <v-switch
+                            v-model="question.required"
+                            label="필수 질문"
+                            color="primary"
+                            class="mt-4"
+                            hide-details
+                          ></v-switch>
+                        </v-col>
+                      </v-row>
+
+                      <v-row v-if="question.type === 'multiple_choice'" class="mt-4">
+                        <v-col cols="12">
+                          <div
+                            v-for="(option, optionIndex) in question.options"
+                            :key="optionIndex"
+                            class="d-flex align-center mb-2"
+                          >
+                            <v-text-field
+                              v-model="question.options[optionIndex]"
+                              :label="`옵션 ${optionIndex + 1}`"
+                              variant="outlined"
+                              density="compact"
+                              hide-details
+                              class="mr-2"
+                            ></v-text-field>
+                            <v-btn
+                              icon="mdi-delete"
+                              variant="text"
+                              color="error"
+                              density="compact"
+                              @click="removeOption(question, optionIndex)"
+                            >
+                              <v-icon>mdi-delete</v-icon>
+                            </v-btn>
+                          </div>
+                          <v-btn
+                            variant="text"
+                            color="primary"
+                            class="mt-2"
+                            prepend-icon="mdi-plus"
+                            @click="addOption(question)"
+                          >
+                            옵션 추가
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+
+                      <v-row class="mt-4">
+                        <v-col cols="12" class="text-right">
+                          <v-btn
+                            color="error"
+                            variant="text"
+                            prepend-icon="mdi-delete"
+                            @click="removeQuestion(index)"
+                          >
+                            질문 삭제
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-expansion-panel-text>
+                  </v-expansion-panel>
+                </v-expansion-panels>
+              </v-card-text>
+            </v-card>
+          </v-col>
+
+          <v-col cols="12" lg="4">
+            <!-- 설문 설정 -->
+            <v-card class="content-card">
+              <v-card-title class="d-flex align-center px-4 py-3 bg-grey-lighten-4">
+                <span class="text-h6">
+                  <v-icon color="primary" class="mr-2">mdi-cog</v-icon>
+                  설문 설정
+                </span>
+              </v-card-title>
+              <v-card-text class="pa-4">
+                <v-list>
+                  <v-list-item>
+                    <template v-slot:prepend>
+                      <v-icon color="primary">mdi-account-multiple</v-icon>
+                    </template>
+                    <v-list-item-title>응답자 수</v-list-item-title>
+                    <template v-slot:append>
+                      <v-chip color="primary" size="small">무제한</v-chip>
+                    </template>
+                  </v-list-item>
+
+                  <v-list-item>
+                    <template v-slot:prepend>
+                      <v-icon color="primary">mdi-clock-outline</v-icon>
+                    </template>
+                    <v-list-item-title>응답 시간 제한</v-list-item-title>
+                    <template v-slot:append>
+                      <v-chip color="grey" size="small">없음</v-chip>
+                    </template>
+                  </v-list-item>
+
+                  <v-list-item>
+                    <template v-slot:prepend>
+                      <v-icon color="primary">mdi-eye</v-icon>
+                    </template>
+                    <v-list-item-title>결과 공개</v-list-item-title>
+                    <template v-slot:append>
+                      <v-switch
+                        v-model="survey.showResults"
+                        color="primary"
+                        hide-details
+                      ></v-switch>
+                    </template>
+                  </v-list-item>
+                </v-list>
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions class="pa-4">
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="primary"
+                  size="large"
+                  @click="saveSurvey"
+                  prepend-icon="mdi-content-save"
+                >
+                  설문 저장
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
       </v-container>
     </v-main>
   </v-layout>
@@ -337,6 +413,7 @@ export default {
       description: '',
       endDate: '',
       endTime: '',
+      showResults: false,
       questions: []
     })
 
@@ -412,5 +489,19 @@ export default {
 
 .logout-item {
   margin-top: auto;
+}
+
+.v-expansion-panels {
+  background: transparent;
+}
+
+.v-expansion-panel {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  margin-bottom: 8px;
+}
+
+.v-expansion-panel:last-child {
+  margin-bottom: 0;
 }
 </style> 

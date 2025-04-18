@@ -110,6 +110,7 @@
           prepend-icon="mdi-plus"
           title="새 설문 만들기"
           value="create"
+          to="/create-survey"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-poll"
