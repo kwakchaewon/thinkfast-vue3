@@ -1,5 +1,6 @@
 import { tbAxios } from '@/apis/axios'
 import { useSnackbar } from '@/composables/useSnackbar'
+import { CreateSurveyRequest } from '@/interfaces/surveyInterface'
 
 const { showError } = useSnackbar()
 
@@ -27,9 +28,9 @@ export const surveyApi = {
   },
 
   // 설문 생성
-  async createSurvey(surveyData: any) {
+  async createSurvey(payload: CreateSurveyRequest) {
     try {
-      const response = await tbAxios.post('/surveys')
+      const response = await tbAxios.post('/survey', payload)
       return response.data
     } catch (error) {
       showError('설문 생성에 실패했습니다.')
