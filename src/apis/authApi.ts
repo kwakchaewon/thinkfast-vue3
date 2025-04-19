@@ -1,5 +1,5 @@
 import { tbAxios } from "@/apis/axios.ts"
-import { SignupRequest,LoginResponse } from "@/interfaces/auth.interface"
+import { SignupRequest,LoginResponse } from "@/interfaces/authInterface.ts"
 
 
 export const authApi = {

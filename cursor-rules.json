@@ -82,21 +82,21 @@
     "description": "API 요청/응답 인터페이스는 /src/interfaces 디렉토리에서 관리해야 합니다",
     "match": "src/**/*.ts",
     "pattern": "src/interfaces/.*\\.ts$",
-    "suggestion": "API 요청/응답 인터페이스는 /src/interfaces 디렉토리에 위치시켜야 합니다. 예: src/interfaces/auth.interface.ts"
+    "suggestion": "API 요청/응답 인터페이스는 /src/interfaces 디렉토리에 위치시켜야 합니다. 예: src/interfaces/authInterface.ts"
   },
   {
     "id": "api-interface-naming",
-    "description": "API 인터페이스 파일은 {domain}.interface.ts 형식으로 명명해야 합니다",
+    "description": "API 인터페이스 파일은 {domain}Interface.ts 형식으로 명명해야 합니다",
     "match": "src/interfaces/*.ts",
-    "pattern": "src/interfaces/([a-zA-Z]+)\\.interface\\.ts$",
-    "suggestion": "API 인터페이스 파일은 도메인명.interface.ts 형식으로 명명하세요. 예: auth.interface.ts"
+    "pattern": "src/interfaces/([a-zA-Z]+)Interface\\.ts$",
+    "suggestion": "API 인터페이스 파일은 도메인명 + Interface.ts 형식으로 명명하세요. 예: authInterface.ts"
   },
   {
     "id": "api-interface-import",
     "description": "API 파일에서 인터페이스는 interfaces 디렉토리에서 import 해야 합니다",
     "match": "src/apis/*.ts",
     "mustContain": ["import.*from.*@/interfaces"],
-    "suggestion": "API 요청/응답 타입은 interfaces 디렉토리에서 import 하세요. 예: import { SignupRequest } from '@/interfaces/auth.interface'"
+    "suggestion": "API 요청/응답 타입은 interfaces 디렉토리에서 import 하세요. 예: import { SignupRequest } from '@/interfaces/authInterface'"
   },
   {
     "id": "api-error-handling",
