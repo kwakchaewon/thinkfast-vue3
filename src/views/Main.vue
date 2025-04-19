@@ -291,7 +291,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'
 
 export default defineComponent({
@@ -300,7 +300,7 @@ export default defineComponent({
     // AppFooter
   },
   setup() {
-    const router = useRouter()
+    const { showSuccess } = useSnackbar()
     const userName = ref('Andrew Kwak')
     const userEmail = ref('andrew@example.com')
     const showNotifications = ref(false)
@@ -388,7 +388,7 @@ export default defineComponent({
     const handleLogout = async () => {
       try {
         await authApi.logout()
-        router.push('/')
+        showSuccess('로그아웃에 성공했습니다.')
       } catch (error) {
         console.error('Logout failed:', error)
       }

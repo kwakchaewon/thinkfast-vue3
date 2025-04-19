@@ -96,7 +96,7 @@ export default defineComponent({
     const isFormValid = ref(false)
     const loading = ref(false)
     const showPassword = ref(false)
-    const { showSuccess, showError } = useSnackbar()
+    const { showSuccess } = useSnackbar()
 
     // 폼 데이터
     const email = ref('')
@@ -119,6 +119,14 @@ export default defineComponent({
       text: '',
       color: 'success'
     })
+
+    const showError = (message: string) => {
+      snackbar.value = {
+        show: true,
+        text: message,
+        color: 'error'
+      }
+    }
 
     const handleLogin = async () => {
       if (!form.value?.validate()) return

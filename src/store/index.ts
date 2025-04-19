@@ -49,7 +49,7 @@ export default createStore<userState>({
   actions: {
     async logout({ commit }: {commit:Function}) {
       commit('CLEAR_USER_DATA')
-      router.push('/login')
+      router.push('/')
     },
 
     async handleTokenExpiration({ commit }: { commit: Function }) {
