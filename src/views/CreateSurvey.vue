@@ -84,6 +84,14 @@
           class="logout-item"
         ></v-list-item>
       </v-list>
+
+      <v-divider></v-divider>
+
+      <v-list-item class="copyright-item">
+        <v-list-item-title class="text-caption text-grey">
+          © 2024 Andrew Kwak. All rights reserved.
+        </v-list-item-title>
+      </v-list-item>
     </v-navigation-drawer>
 
     <v-main class="bg-grey-lighten-3">
@@ -465,6 +473,15 @@ export default {
 
 .logout-item {
   margin-top: auto;
+}
+
+.copyright-item {
+  padding: 8px 16px;
+  opacity: 0.7;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: grey-lighten-4;
 }
 
 .v-expansion-panels {

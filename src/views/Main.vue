@@ -146,6 +146,14 @@
           class="logout-item"
         ></v-list-item>
       </v-list>
+
+      <v-divider></v-divider>
+
+      <v-list-item class="copyright-item">
+        <v-list-item-title class="text-caption text-grey">
+          © 2024 Andrew Kwak. All rights reserved.
+        </v-list-item-title>
+      </v-list-item>
     </v-navigation-drawer>
 
     <!-- 메인 컨텐츠 -->
@@ -463,5 +471,14 @@ export default defineComponent({
 
 .logout-item :deep(.v-list-item__prepend) {
   color: #FF5252;
+}
+
+.copyright-item {
+  padding: 8px 16px;
+  opacity: 0.7;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: grey-lighten-4;
 }
 </style> 
