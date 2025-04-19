@@ -125,5 +125,19 @@
     "pattern": "import.*axios.*from.*axios",
     "mustContain": ["import.*tbAxios.*from.*axios"],
     "suggestion": "axios 대신 tbAxios를 import하세요. 예: import { tbAxios } from '@/apis/axios'"
+  },
+  {
+    "id": "api-payload-naming",
+    "description": "API 요청 본문 객체는 payload라는 이름을 사용해야 합니다",
+    "match": "src/apis/*.ts",
+    "pattern": "async\\s+[a-zA-Z]+\\s*\\([^)]*\\b(?!payload\\b)[a-zA-Z]+\\s*:\\s*[a-zA-Z]+\\s*,\\s*[^)]*\\)",
+    "suggestion": "API 요청 본문 객체는 payload라는 이름을 사용하세요. 예: async createSurvey(payload: CreateSurveyRequest)"
+  },
+  {
+    "id": "api-payload-usage",
+    "description": "API 요청 시 payload를 request body로 전달해야 합니다",
+    "match": "src/apis/*.ts",
+    "pattern": "tbAxios\\.(post|put)\\([^,]+,\\s*(?!payload\\b)[a-zA-Z]+\\b",
+    "suggestion": "API 요청 시 payload를 request body로 전달하세요. 예: tbAxios.post('/surveys', payload)"
   }
 ]
