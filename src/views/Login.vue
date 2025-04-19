@@ -78,7 +78,7 @@ export default {
           accessToken: response.accessToken
         })
         showSuccess('로그인 성공!')
-        router.push('/main')
+        // await router.push('/main')
       } catch (error) {
         showError('로그인에 실패했습니다.')
       } finally {

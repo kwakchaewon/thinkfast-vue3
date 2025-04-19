@@ -6,16 +6,16 @@ interface SnackbarOptions {
   timeout?: number
 }
 
-export const useSnackbar = () => {
-  const snackbar = ref({
-    show: false,
-    message: '',
-    color: 'error',
-    timeout: 3000
-  })
+const globalSnackbar = ref({
+  show: false,
+  message: '',
+  color: 'error',
+  timeout: 3000
+})
 
+export const useSnackbar = () => {
   const showMessage = ({ message, color = 'error', timeout = 3000 }: SnackbarOptions) => {
-    snackbar.value = {
+    globalSnackbar.value = {
       show: true,
       message,
       color,
@@ -32,7 +32,7 @@ export const useSnackbar = () => {
   }
 
   return {
-    snackbar,
+    snackbar: globalSnackbar,
     showMessage,
     showError,
     showSuccess

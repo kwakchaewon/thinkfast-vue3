@@ -96,7 +96,7 @@ export default defineComponent({
     const isFormValid = ref(false)
     const loading = ref(false)
     const showPassword = ref(false)
-    const { showSuccess } = useSnackbar()
+    const { showSuccess, showError } = useSnackbar()
 
     // 폼 데이터
     const email = ref('')
@@ -120,14 +120,6 @@ export default defineComponent({
       color: 'success'
     })
 
-    const showError = (message: string) => {
-      snackbar.value = {
-        show: true,
-        text: message,
-        color: 'error'
-      }
-    }
-
     const handleLogin = async () => {
       if (!form.value?.validate()) return
       loading.value = true
@@ -140,8 +132,8 @@ export default defineComponent({
           role: response.role
         })
 
-        await showSuccess('로그인 성공!')
         await router.push('/main')
+        showSuccess('로그인에 성공했습니다.')
       } catch (error: any) {
         showError(error.response?.data?.message || '로그인에 실패했습니다.')
       } finally {
