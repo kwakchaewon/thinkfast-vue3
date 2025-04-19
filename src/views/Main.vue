@@ -279,19 +279,17 @@
       </v-container>
     </v-main>
   </v-layout>
-  <AppFooter />
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { authApi } from '@/apis/authApi'
-import AppFooter from '@/components/AppFooter.vue'
 
 export default defineComponent({
   name: 'MainView',
   components: {
-    AppFooter
+    // AppFooter
   },
   setup() {
     const router = useRouter()
