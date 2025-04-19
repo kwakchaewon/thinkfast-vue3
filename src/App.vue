@@ -5,6 +5,7 @@
       v-model="snackbar.show"
       :color="snackbar.color"
       :timeout="snackbar.timeout"
+      class="text-center"
     >
       {{ snackbar.message }}
     </v-snackbar>
@@ -37,5 +38,10 @@ html, body {
 #app {
   height: 100%;
   width: 100%;
+}
+
+.v-snackbar__content {
+  justify-content: center;
+  text-align: center;
 }
 </style> 
