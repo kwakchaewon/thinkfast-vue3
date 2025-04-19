@@ -200,7 +200,7 @@
                       <v-row>
                         <v-col cols="12">
                           <v-text-field
-                            v-model="question.text"
+                            v-model="question.content"
                             label="질문"
                             required
                             variant="outlined"
@@ -230,40 +230,48 @@
                         </v-col>
                       </v-row>
 
-                      <v-row v-if="question.type === 'multiple_choice'" class="mt-4">
+                      <v-row v-if="question.type === QuestionType.MULTIPLE_CHOICE" class="mt-4">
                         <v-col cols="12">
-                          <div
-                            v-for="(option, optionIndex) in question.options"
-                            :key="optionIndex"
-                            class="d-flex align-center mb-2"
-                          >
-                            <v-text-field
-                              v-model="question.options[optionIndex]"
-                              :label="`옵션 ${optionIndex + 1}`"
-                              variant="outlined"
-                              density="compact"
-                              hide-details
-                              class="mr-2"
-                            ></v-text-field>
-                            <v-btn
-                              icon="mdi-delete"
-                              variant="text"
-                              color="error"
-                              density="compact"
-                              @click="removeOption(question, optionIndex)"
+                          <v-card variant="outlined" class="pa-4">
+                            <div class="text-subtitle-2 mb-2">선택 옵션</div>
+                            <div
+                              v-for="(option, optionIndex) in question.options"
+                              :key="optionIndex"
+                              class="d-flex align-center mb-2"
                             >
-                              <v-icon>mdi-delete</v-icon>
+                              <v-text-field
+                                v-model="question.options[optionIndex]"
+                                :label="`옵션 ${optionIndex + 1}`"
+                                variant="outlined"
+                                density="compact"
+                                hide-details
+                                class="mr-2"
+                                placeholder="옵션 내용을 입력하세요"
+                              ></v-text-field>
+                              <v-btn
+                                icon="mdi-delete"
+                                variant="text"
+                                color="error"
+                                density="compact"
+                                @click="removeOption(index, optionIndex)"
+                                :disabled="question.options.length <= 2"
+                              >
+                                <v-icon>mdi-delete</v-icon>
+                              </v-btn>
+                            </div>
+                            <v-btn
+                              variant="text"
+                              color="primary"
+                              class="mt-2"
+                              prepend-icon="mdi-plus"
+                              @click="addOption(index)"
+                            >
+                              옵션 추가
                             </v-btn>
-                          </div>
-                          <v-btn
-                            variant="text"
-                            color="primary"
-                            class="mt-2"
-                            prepend-icon="mdi-plus"
-                            @click="addOption(question)"
-                          >
-                            옵션 추가
-                          </v-btn>
+                            <div v-if="question.options.length < 2" class="text-caption text-error mt-2">
+                              객관식 질문은 최소 2개 이상의 옵션이 필요합니다
+                            </div>
+                          </v-card>
                         </v-col>
                       </v-row>
 
@@ -338,7 +346,7 @@
                 <v-btn
                   color="primary"
                   size="large"
-                  @click="saveSurvey"
+                  @click="handleCreateSurvey"
                   prepend-icon="mdi-content-save"
                 >
                   설문 저장
@@ -352,107 +360,113 @@
   </v-layout>
 </template>
 
-<script>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { useStore } from 'vuex'
+import { surveyApi } from '@/apis/surveyApi'
+import { QuestionType, CreateSurveyRequest } from '@/interfaces/surveyInterface'
 
-export default {
-  name: 'CreateSurvey',
-  setup() {
-    const router = useRouter()
-    const store = useStore()
-    const { showSuccess, showError } = useSnackbar()
+const router = useRouter()
+const store = useStore()
+const { showSuccess, showError } = useSnackbar()
 
-    const showDatePicker = ref(false)
-    const showTimePicker = ref(false)
-    const minDate = new Date().toISOString().substr(0, 10)
-    const showNotifications = ref(false)
-    const notifications = ref([])
+const showDatePicker = ref(false)
+const showTimePicker = ref(false)
+const minDate = computed(() => {
+  const today = new Date()
+  return today.toISOString().split('T')[0]
+})
+const showNotifications = ref(false)
+const notifications = ref([])
 
-    const username = computed(() => store.state.username || '사용자')
+const username = computed(() => store.state.username || '사용자')
 
-    const questionTypes = [
-      { text: '객관식', value: 'multiple_choice' },
-      { text: '주관식', value: 'text' },
-      { text: '단답형', value: 'short_text' },
-      { text: '장문형', value: 'long_text' }
-    ]
+const questionTypes = [
+  { title: '객관식', value: QuestionType.MULTIPLE_CHOICE },
+  { title: '주관식', value: QuestionType.SUBJECTIVE }
+]
 
-    const survey = ref({
-      title: '',
-      description: '',
-      endDate: new Date().toISOString().substr(0, 10),
-      endTime: '00:00',
-      showResults: false,
-      questions: []
-    })
+const survey = ref<CreateSurveyRequest>({
+  title: '',
+  description: '',
+  endDate: '',
+  endTime: '',
+  showResults: true,
+  questions: []
+})
 
-    const addQuestion = () => {
-      survey.value.questions.push({
-        text: '',
-        type: 'multiple_choice',
-        required: false,
-        options: ['옵션 1', '옵션 2']
-      })
+const addQuestion = () => {
+  survey.value.questions.push({
+    content: '',
+    type: QuestionType.MULTIPLE_CHOICE,
+    required: false,
+    options: ['', '']
+  })
+}
+
+const removeQuestion = (index: number) => {
+  survey.value.questions.splice(index, 1)
+}
+
+const addOption = (questionIndex: number) => {
+  survey.value.questions[questionIndex].options?.push('')
+}
+
+const removeOption = (questionIndex: number, optionIndex: number) => {
+  survey.value.questions[questionIndex].options?.splice(optionIndex, 1)
+}
+
+const handleLogout = () => {
+  store.dispatch('logout')
+  router.push('/')
+}
+
+const handleDateSelect = (date: string) => {
+  survey.value.endDate = date
+  showDatePicker.value = false
+}
+
+const handleTimeSelect = (time: string) => {
+  survey.value.endTime = time
+  showTimePicker.value = false
+}
+
+const handleCreateSurvey = async () => {
+  try {
+    // 필수 필드 검증
+    if (!survey.value.title) {
+      showError('설문 제목을 입력해주세요')
+      return
     }
 
-    const removeQuestion = (index) => {
-      survey.value.questions.splice(index, 1)
+    if (survey.value.questions.length === 0) {
+      showError('최소 하나 이상의 질문을 추가해주세요')
+      return
     }
 
-    const addOption = (question) => {
-      question.options.push('')
-    }
+    // 질문 내용 검증
+    for (const question of survey.value.questions) {
+      if (!question.content) {
+        showError('모든 질문의 내용을 입력해주세요')
+        return
+      }
 
-    const removeOption = (question, index) => {
-      question.options.splice(index, 1)
-    }
-
-    const handleLogout = () => {
-      store.dispatch('logout')
-      router.push('/')
-    }
-
-    const handleDateSelect = (date) => {
-      survey.value.endDate = date
-      showDatePicker.value = false
-    }
-
-    const handleTimeSelect = (time) => {
-      survey.value.endTime = time
-      showTimePicker.value = false
-    }
-
-    const saveSurvey = async () => {
-      try {
-        // TODO: API 호출로 설문 저장
-        showSuccess('설문이 저장되었습니다.')
-        router.push('/main')
-      } catch (error) {
-        showError('설문 저장에 실패했습니다.')
+      if (question.type === QuestionType.MULTIPLE_CHOICE && 
+          (!question.options || question.options.length < 2)) {
+        showError('객관식 질문은 최소 2개 이상의 옵션이 필요합니다')
+        return
       }
     }
 
-    return {
-      showDatePicker,
-      showTimePicker,
-      minDate,
-      questionTypes,
-      survey,
-      showNotifications,
-      notifications,
-      username,
-      addQuestion,
-      removeQuestion,
-      addOption,
-      removeOption,
-      handleLogout,
-      saveSurvey,
-      handleDateSelect,
-      handleTimeSelect
-    }
+    // API 호출
+    await surveyApi.createSurvey(survey.value)
+    showSuccess('설문이 성공적으로 생성되었습니다')
+    router.push('/main')
+  } catch (error) {
+    showError('설문 생성 중 오류가 발생했습니다')
+    console.error(error)
   }
 }
 </script>
