@@ -233,7 +233,12 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="survey in recentSurveys" :key="survey.id">
+                    <tr 
+                      v-for="survey in recentSurveys" 
+                      :key="survey.id"
+                      class="survey-row"
+                      @click="goToSurveyDetail(survey.id)"
+                    >
                       <td class="text-body-1">{{ survey.title }}</td>
                       <td>
                         <v-chip
@@ -294,6 +299,7 @@ import { defineComponent, ref, onMounted } from 'vue'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'
 import { surveyApi } from '@/apis/surveyApi'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'MainView',
@@ -301,6 +307,7 @@ export default defineComponent({
     // AppFooter
   },
   setup() {
+    const router = useRouter()
     const { showSuccess, showError } = useSnackbar()
     const userName = ref('Andrew Kwak')
     const userEmail = ref('andrew@example.com')
@@ -390,6 +397,10 @@ export default defineComponent({
       }
     }
 
+    const goToSurveyDetail = (surveyId: number) => {
+      router.push(`/survey/${surveyId}`)
+    }
+
     return {
       userName,
       userEmail,
@@ -399,7 +410,8 @@ export default defineComponent({
       recentSurveys,
       recentActivities,
       handleLogout,
-      isLoading
+      isLoading,
+      goToSurveyDetail
     }
   }
 })
@@ -477,5 +489,13 @@ export default defineComponent({
   bottom: 0;
   width: 100%;
   background-color: grey-lighten-4;
+}
+
+.survey-row {
+  cursor: pointer;
+}
+
+.survey-row:hover {
+  background-color: rgba(0, 0, 0, 0.04);
 }
 </style> 
