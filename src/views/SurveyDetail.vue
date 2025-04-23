@@ -455,7 +455,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, computed } from 'vue'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'
 import { surveyApi } from '@/apis/surveyApi'
@@ -495,7 +495,7 @@ export default defineComponent({
       }
     ])
 
-    const shareUrl = ref('https://thinkfast.com/survey/response/1')
+    const shareUrl = computed(() => `http://localhost:80/survey/${route.params.id}/create-response`)
 
     const markAllAsRead = () => {
       notifications.value = []
