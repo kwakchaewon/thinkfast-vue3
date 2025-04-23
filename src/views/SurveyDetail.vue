@@ -246,10 +246,14 @@
             <v-card class="stat-card">
               <v-card-item>
                 <v-card-title class="text-subtitle-1 mb-2">완료율</v-card-title>
-                <!-- <div class="d-flex align-center">
-                  <span class="text-h4">{{ survey.completionRate }}%</span>
+<!--                <div class="d-flex align-center">-->
+<!--                  <span class="text-h4">{{ survey.completionRate }}%</span>-->
+<!--                  <v-chip color="warning" size="small" class="ms-3">New</v-chip>-->
+<!--                </div>-->
+                <div class="d-flex align-center">
+                  <span class="text-h4">95%</span>
                   <v-chip color="warning" size="small" class="ms-3">New</v-chip>
-                </div> -->
+                </div>
               </v-card-item>
             </v-card>
           </v-col>
@@ -532,7 +536,7 @@ export default defineComponent({
       showSuccess('URL이 복사되었습니다.')
     }
 
-    const questionTypeLabels = {
+    const questionTypeLabels: Record<string, string> = {
       MULTIPLE_CHOICE: '객관식',
       SUBJECTIVE: '주관식',
       SCALE: '척도형'
@@ -559,7 +563,6 @@ export default defineComponent({
         isLoading.value = true
         const surveyId = Number(route.params.id)
         const response = await surveyApi.getSurveyDetail(surveyId)
-        console.log('Survey detail response:', response)
         
         // API 응답을 survey ref에 바인딩
         survey.value = {
