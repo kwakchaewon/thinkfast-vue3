@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from '@/store'
 import { useSnackbar } from '@/composables/useSnackbar'
+import Main from '@/views/Main.vue'
+import CreateSurvey from '@/views/CreateSurvey.vue'
+import SurveyDetail from '@/views/SurveyDetail.vue'
 
 const { showError } = useSnackbar()
 
@@ -22,7 +25,7 @@ const router = createRouter({
     {
       path: '/main',
       name: 'main',
-      component: () => import('@/views/Main.vue'),
+      component: Main,
       beforeEnter: (_to, _from, next) => {
         if (!store.getters.isAuthenticated) {
           showError('로그인 세션이 만료됐습니다.')
@@ -61,7 +64,7 @@ const router = createRouter({
     {
       path: '/create-survey',
       name: 'create-survey',
-      component: () => import('@/views/CreateSurvey.vue'),
+      component: CreateSurvey,
       beforeEnter: (_to, _from, next) => {
         if (!store.getters.isAuthenticated) {
           showError('로그인이 필요합니다.')
@@ -70,6 +73,12 @@ const router = createRouter({
           next()
         }
       }
+    },
+    {
+      path: '/survey/:id',
+      name: 'survey-detail',
+      component: SurveyDetail,
+      props: true
     }
   ]
 })
