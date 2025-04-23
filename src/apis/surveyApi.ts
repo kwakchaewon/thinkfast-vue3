@@ -16,6 +16,17 @@ export const surveyApi = {
     }
   },
 
+  async getRecentSurveys() {
+    try {
+      const response = await tbAxios.get('/survey/recent')
+      console.log(response.data)
+      return response.data
+    } catch (error) {
+      showError('최근 설문 목록을 불러오는데 실패했습니다.')
+      throw error
+    }
+  },
+
   // 설문 상세 조회
   async getSurvey(id: string) {
     try {

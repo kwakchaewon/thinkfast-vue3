@@ -18,4 +18,14 @@ export interface CreateSurveyRequest {
   endTime: string // 시간 문자열 (HH:mm:ss)
   showResults: boolean
   questions: QuestionRequest[]
-} 
+}
+
+export interface SurvGetRecentSurveysResponseey {
+  id: number
+  title: string
+  description: string
+  startTime: string
+  isActive: boolean
+  createdAt: string
+  answerCount: number
+}

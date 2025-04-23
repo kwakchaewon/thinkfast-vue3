@@ -244,7 +244,7 @@
                           {{ survey.status === 'active' ? '진행중' : '종료' }}
                         </v-chip>
                       </td>
-                      <td class="text-body-1">{{ survey.responses }}개</td>
+                      <td class="text-body-1">{{ survey.answerCount }}개</td>
                       <td class="text-body-1">{{ survey.createdAt }}</td>
                     </tr>
                   </tbody>
@@ -290,9 +290,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'
+import { surveyApi } from '@/apis/surveyApi'
 
 export default defineComponent({
   name: 'MainView',
@@ -300,10 +301,12 @@ export default defineComponent({
     // AppFooter
   },
   setup() {
-    const { showSuccess } = useSnackbar()
+    const { showSuccess, showError } = useSnackbar()
     const userName = ref('Andrew Kwak')
     const userEmail = ref('andrew@example.com')
     const showNotifications = ref(false)
+    const recentSurveys = ref([])
+    const isLoading = ref(false)
 
     const notifications = ref([
       {
@@ -329,34 +332,27 @@ export default defineComponent({
       }
     ])
 
+    const fetchRecentSurveys = async () => {
+      try {
+        isLoading.value = true
+        const response = await surveyApi.getRecentSurveys()
+        recentSurveys.value = response.data
+      } catch (error) {
+        console.error('Failed to fetch recent surveys:', error)
+        showError('최근 설문 목록을 불러오는데 실패했습니다.')
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    onMounted(() => {
+      fetchRecentSurveys()
+    })
+
     const markAllAsRead = () => {
       notifications.value = []
       showNotifications.value = false
     }
-
-    const recentSurveys = ref([
-      {
-        id: 1,
-        title: '직장인 커피 소비 습관',
-        status: 'active',
-        responses: 45,
-        createdAt: '2024-03-15'
-      },
-      {
-        id: 2,
-        title: '재택근무 만족도 조사',
-        status: 'ended',
-        responses: 120,
-        createdAt: '2024-03-10'
-      },
-      {
-        id: 3,
-        title: '주말 여가 활동 조사',
-        status: 'active',
-        responses: 82,
-        createdAt: '2024-03-08'
-      }
-    ])
 
     const recentActivities = ref([
       {
@@ -402,7 +398,8 @@ export default defineComponent({
       markAllAsRead,
       recentSurveys,
       recentActivities,
-      handleLogout
+      handleLogout,
+      isLoading
     }
   }
 })
