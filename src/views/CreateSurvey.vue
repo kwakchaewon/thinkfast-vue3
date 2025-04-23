@@ -446,6 +446,24 @@ const handleCreateSurvey = async () => {
       return
     }
 
+    if (!survey.value.endDate) {
+      showError('응답 종료 날짜를 지정해주세요')
+      return
+    }
+
+    if (!survey.value.endTime) {
+      showError('응답 종료 시각을 지정해주세요')
+      return
+    }
+
+    // 종료 날짜와 시각이 현재보다 이전인지 확인
+    const endDateTime = new Date(`${survey.value.endDate}T${survey.value.endTime}`)
+    const now = new Date()
+    if (endDateTime <= now) {
+      showError('종료 날짜와 시각은 현재보다 이후여야 합니다')
+      return
+    }
+
     if (survey.value.questions.length === 0) {
       showError('최소 하나 이상의 질문을 추가해주세요')
       return
