@@ -31,7 +31,6 @@ export const surveyApi = {
   async getSurveyDetail(id: number) {
     try {
       const response = await tbAxios.get('/survey/' + id)
-      console.log(response.data)
       return response.data.data
     } catch (error) {
       showError('설문을 불러오는데 실패했습니다.')
@@ -63,7 +62,6 @@ export const surveyApi = {
 
   // 설문 삭제
   async deleteSurvey(surveyId: number) {
-    console.log(surveyId);
     try {
       const response = await tbAxios.delete('/survey/'+surveyId)
       return response.data

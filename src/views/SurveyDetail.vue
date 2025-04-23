@@ -472,6 +472,7 @@ export default defineComponent({
     const { showSuccess, showError } = useSnackbar()
     const router = useRouter()
     const route = useRoute()
+    const surveyId = Number(route.params.id)
     const userName = ref('Andrew Kwak')
     const userEmail = ref('andrew@example.com')
     const showNotifications = ref(false)
@@ -522,7 +523,7 @@ export default defineComponent({
 
     const confirmDelete = async () => {
       try {
-        // TODO: API 연동
+        await surveyApi.deleteSurvey(surveyId)
         showSuccess('설문이 삭제되었습니다.')
         router.push('/')
       } catch (error) {
@@ -562,7 +563,6 @@ export default defineComponent({
     const fetchSurveyDetail = async () => {
       try {
         isLoading.value = true
-        const surveyId = Number(route.params.id)
         const response = await surveyApi.getSurveyDetail(surveyId)
         
         // API 응답을 survey ref에 바인딩
