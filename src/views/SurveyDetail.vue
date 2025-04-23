@@ -165,18 +165,18 @@
             <div class="d-flex align-center justify-space-between">
               <div>
                 <v-chip
-                  :color="survey.status === 'active' ? 'success' : 'error'"
+                  :color="survey.isActive == true ? 'success' : 'error'"
                   size="small"
                   class="mb-2"
                 >
-                  {{ survey.status === 'active' ? '진행중' : '종료' }}
+                  {{ survey.isActive == true ? '진행중' : '종료' }}
                 </v-chip>
                 <h1 class="text-h4 mb-2">{{ survey.title }}</h1>
                 <p class="text-body-1 text-grey">{{ survey.description }}</p>
               </div>
               <div class="text-right">
                 <div class="text-caption text-grey mb-1">마감일</div>
-                <div class="text-body-2 mb-4">{{ survey.endDate }} {{ survey.endTime }}</div>
+                <div class="text-body-2 mb-4">{{ survey.endTime }}</div>
                 <div class="d-flex justify-end gap-2">
                   <!-- <v-btn
                     color="primary"
@@ -535,41 +535,41 @@ export default defineComponent({
       id: 1,
       title: '직장인 커피 소비 습관',
       description: '직장인들의 커피 소비 패턴과 선호도를 조사하는 설문입니다.',
-      status: 'active',
-      endDate: '2024-03-31',
-      endTime: '23:59',
+      isActive: true,
+      endTime: '2024-03-31 23:59',
       answerCount: 45,
       responseRate: 82,
       avgResponseTime: 5,
       completionRate: 95,
-      questions: [
-        {
-          id: 1,
-          content: '하루 평균 몇 잔의 커피를 마시나요?',
-          type: 'MULTIPLE_CHOICE',
-          required: true,
-          options: ['1잔', '2잔', '3잔', '4잔 이상']
-        },
-        {
-          id: 2,
-          content: '가장 선호하는 커피 종류는 무엇인가요?',
-          type: 'MULTIPLE_CHOICE',
-          required: true,
-          options: ['아메리카노', '라떼', '카푸치노', '에스프레소', '기타']
-        },
-        {
-          id: 3,
-          content: '커피를 마시는 주된 이유는 무엇인가요?',
-          type: 'SUBJECTIVE',
-          required: false
-        },
-        {
-          id: 4,
-          content: '커피 맛에 대한 만족도는 어떠신가요?',
-          type: 'SCALE',
-          required: true
-        }
-      ]
+      questions: []
+      // questions: [
+      //   {
+      //     id: 1,
+      //     content: '하루 평균 몇 잔의 커피를 마시나요?',
+      //     type: 'MULTIPLE_CHOICE',
+      //     required: true,
+      //     options: ['1잔', '2잔', '3잔', '4잔 이상']
+      //   },
+      //   {
+      //     id: 2,
+      //     content: '가장 선호하는 커피 종류는 무엇인가요?',
+      //     type: 'MULTIPLE_CHOICE',
+      //     required: true,
+      //     options: ['아메리카노', '라떼', '카푸치노', '에스프레소', '기타']
+      //   },
+      //   {
+      //     id: 3,
+      //     content: '커피를 마시는 주된 이유는 무엇인가요?',
+      //     type: 'SUBJECTIVE',
+      //     required: false
+      //   },
+      //   {
+      //     id: 4,
+      //     content: '커피 맛에 대한 만족도는 어떠신가요?',
+      //     type: 'SCALE',
+      //     required: true
+      //   }
+      // ]
     })
 
     const fetchSurveyDetail = async () => {
@@ -578,6 +578,26 @@ export default defineComponent({
         const surveyId = Number(route.params.id)
         const response = await surveyApi.getSurveyDetail(surveyId)
         console.log('Survey detail response:', response)
+        
+        // API 응답을 survey ref에 바인딩
+        survey.value = {
+          id: response.id,
+          title: response.title,
+          description: response.description,
+          isActive: response.isActive,
+          endTime: response.endTime,
+          answerCount: response.answerCount,
+          // responseRate: response.responseRate,
+          // avgResponseTime: response.avgResponseTime,
+          // completionRate: response.completionRate,
+          questions: response.questions.map(question => ({
+            id: question.id,
+            content: question.content,
+            type: question.type
+            // required: question.required,
+            // options: question.options || []
+          }))
+        }
       } catch (error) {
         console.error('Failed to fetch survey detail:', error)
         showError('설문 상세 정보를 불러오는데 실패했습니다.')
