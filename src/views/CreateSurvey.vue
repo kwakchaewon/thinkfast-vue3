@@ -521,4 +521,25 @@ const handleCreateSurvey = async () => {
   border: none !important;
   box-shadow: none !important;
 }
+
+/* 스크롤 관련 스타일 추가 */
+.v-main {
+  min-height: 100vh;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.v-container {
+  min-height: 100%;
+  padding-bottom: 32px;
+}
+
+.v-navigation-drawer {
+  height: 100vh !important;
+  position: fixed !important;
+}
+
+.v-navigation-drawer__content {
+  overflow-y: auto;
+}
 </style> 
