@@ -462,24 +462,7 @@ import { authApi } from '@/apis/authApi'
 import { surveyApi } from '@/apis/surveyApi'
 import { useRouter, useRoute } from 'vue-router'
 import QrcodeVue from 'qrcode.vue'
-
-interface Question {
-  id: number
-  content: string
-  type: string
-  required?: boolean
-  options?: Array<{ id: number, content: string }>
-}
-
-interface Survey {
-  id: number
-  title: string
-  description: string
-  isActive: boolean
-  endTime: string
-  answerCount: number
-  questions: Question[]
-}
+import { getQuestionsResponse, GetSurveyDetailResponse } from '@/interfaces/surveyInterface'
 
 export default defineComponent({
   name: 'SurveyDetailView',
@@ -498,7 +481,7 @@ export default defineComponent({
     const showDeleteDialog = ref(false)
     const isLoading = ref(false)
 
-    const survey = ref<Survey>({
+    const survey = ref<GetSurveyDetailResponse>({
       id: 0,
       title: '',
       description: '',
@@ -586,7 +569,7 @@ export default defineComponent({
           isActive: surveyDetail.isActive,
           endTime: surveyDetail.endTime,
           answerCount: surveyDetail.answerCount,
-          questions: questions.map((question: Question) => ({
+          questions: questions.map((question: getQuestionsResponse) => ({
             id: question.id,
             content: question.content,
             type: question.type,
