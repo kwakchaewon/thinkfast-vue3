@@ -79,6 +79,14 @@ const router = createRouter({
       name: 'survey-detail',
       component: SurveyDetail,
       props: true
+    },
+    {
+      path: '/survey/:id/response',
+      name: 'survey-response',
+      component: () => import('@/views/SurveyResponse.vue'),
+      meta: {
+        requiresAuth: false
+      }
     }
   ]
 })
