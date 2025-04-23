@@ -203,62 +203,62 @@
         </v-card>
 
         <!-- 통계 카드 -->
-        <v-row>
-          <v-col cols="12" sm="6" lg="3">
-            <v-card class="stat-card">
-              <v-card-item>
-                <v-card-title class="text-subtitle-1 mb-2">총 응답수</v-card-title>
-                <div class="d-flex align-center">
-<!--                  <span class="text-h4">{{ survey.answerCount }}</span>-->
-                  <span class="text-h4">10</span>
-                  <v-icon color="success" class="ms-3">mdi-trending-up</v-icon>
-                </div>
-              </v-card-item>
-            </v-card>
-          </v-col>
-
-          <v-col cols="12" sm="6" lg="3">
-            <v-card class="stat-card">
-              <v-card-item>
-                <v-card-title class="text-subtitle-1 mb-2">응답률</v-card-title>
-                <div class="d-flex align-center">
-                  <span class="text-h4"> 100%</span>
-                  <!-- <span class="text-h4">{{ survey.responseRate }}%</span> -->
-                  <v-chip color="success" size="small" class="ms-3">+5%</v-chip>
-                </div>
-              </v-card-item>
-            </v-card>
-          </v-col>
-
-          <v-col cols="12" sm="6" lg="3">
-            <v-card class="stat-card">
-              <v-card-item>
-                <v-card-title class="text-subtitle-1 mb-2">평균 응답 시간</v-card-title>
-                <div class="d-flex align-center">
-                  <span class="text-h4">10분</span>
-                  <!-- <span class="text-h4">{{ survey.avgResponseTime }}분</span> -->
-                  <v-icon color="info" class="ms-3">mdi-information</v-icon>
-                </div>
-              </v-card-item>
-            </v-card>
-          </v-col>
-
-          <v-col cols="12" sm="6" lg="3">
-            <v-card class="stat-card">
-              <v-card-item>
-                <v-card-title class="text-subtitle-1 mb-2">완료율</v-card-title>
+<!--        <v-row>-->
+<!--          <v-col cols="12" sm="6" lg="3">-->
+<!--            <v-card class="stat-card">-->
+<!--              <v-card-item>-->
+<!--                <v-card-title class="text-subtitle-1 mb-2">총 응답수</v-card-title>-->
 <!--                <div class="d-flex align-center">-->
-<!--                  <span class="text-h4">{{ survey.completionRate }}%</span>-->
+<!--&lt;!&ndash;                  <span class="text-h4">{{ survey.answerCount }}</span>&ndash;&gt;-->
+<!--                  <span class="text-h4">10</span>-->
+<!--                  <v-icon color="success" class="ms-3">mdi-trending-up</v-icon>-->
+<!--                </div>-->
+<!--              </v-card-item>-->
+<!--            </v-card>-->
+<!--          </v-col>-->
+
+<!--          <v-col cols="12" sm="6" lg="3">-->
+<!--            <v-card class="stat-card">-->
+<!--              <v-card-item>-->
+<!--                <v-card-title class="text-subtitle-1 mb-2">응답률</v-card-title>-->
+<!--                <div class="d-flex align-center">-->
+<!--                  <span class="text-h4"> 100%</span>-->
+<!--                  &lt;!&ndash; <span class="text-h4">{{ survey.responseRate }}%</span> &ndash;&gt;-->
+<!--                  <v-chip color="success" size="small" class="ms-3">+5%</v-chip>-->
+<!--                </div>-->
+<!--              </v-card-item>-->
+<!--            </v-card>-->
+<!--          </v-col>-->
+
+<!--          <v-col cols="12" sm="6" lg="3">-->
+<!--            <v-card class="stat-card">-->
+<!--              <v-card-item>-->
+<!--                <v-card-title class="text-subtitle-1 mb-2">평균 응답 시간</v-card-title>-->
+<!--                <div class="d-flex align-center">-->
+<!--                  <span class="text-h4">10분</span>-->
+<!--                  &lt;!&ndash; <span class="text-h4">{{ survey.avgResponseTime }}분</span> &ndash;&gt;-->
+<!--                  <v-icon color="info" class="ms-3">mdi-information</v-icon>-->
+<!--                </div>-->
+<!--              </v-card-item>-->
+<!--            </v-card>-->
+<!--          </v-col>-->
+
+<!--          <v-col cols="12" sm="6" lg="3">-->
+<!--            <v-card class="stat-card">-->
+<!--              <v-card-item>-->
+<!--                <v-card-title class="text-subtitle-1 mb-2">완료율</v-card-title>-->
+<!--&lt;!&ndash;                <div class="d-flex align-center">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <span class="text-h4">{{ survey.completionRate }}%</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <v-chip color="warning" size="small" class="ms-3">New</v-chip>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--                <div class="d-flex align-center">-->
+<!--                  <span class="text-h4">95%</span>-->
 <!--                  <v-chip color="warning" size="small" class="ms-3">New</v-chip>-->
 <!--                </div>-->
-                <div class="d-flex align-center">
-                  <span class="text-h4">95%</span>
-                  <v-chip color="warning" size="small" class="ms-3">New</v-chip>
-                </div>
-              </v-card-item>
-            </v-card>
-          </v-col>
-        </v-row>
+<!--              </v-card-item>-->
+<!--            </v-card>-->
+<!--          </v-col>-->
+<!--        </v-row>-->
 
         <!-- 설문 공유 -->
         <v-row class="mt-4">
