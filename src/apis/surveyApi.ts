@@ -31,6 +31,19 @@ export const surveyApi = {
   async getSurveyDetail(id: number) {
     try {
       const response = await tbAxios.get('/survey/' + id)
+      console.log(response.data.data);
+      return response.data.data
+    } catch (error) {
+      showError('설문을 불러오는데 실패했습니다.')
+      throw error
+    }
+  },
+
+  // 질문 리스트
+  async getQuestionsBySurveyId(id: number) {
+    try {
+      const response = await tbAxios.get('/survey/' + id + '/questions')
+      console.log(response.data.data);
       return response.data.data
     } catch (error) {
       showError('설문을 불러오는데 실패했습니다.')

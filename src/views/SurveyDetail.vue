@@ -386,13 +386,13 @@
                     </v-list-item-subtitle>
                     <v-list-item-text>
                       <div v-if="question.type === 'MULTIPLE_CHOICE'">
-                        <!-- <v-chip
+                        <v-chip
                           v-for="option in question.options"
-                          :key="option"
+                          :key="option.id"
                           class="me-2 mb-2"
                         >
-                          {{ option }}
-                        </v-chip> -->
+                          {{ option.content }}
+                        </v-chip>
                       </div>
                       <div v-else-if="question.type === 'SCALE'">
                         <v-slider
@@ -463,6 +463,24 @@ import { surveyApi } from '@/apis/surveyApi'
 import { useRouter, useRoute } from 'vue-router'
 import QrcodeVue from 'qrcode.vue'
 
+interface Question {
+  id: number
+  content: string
+  type: string
+  required?: boolean
+  options?: Array<{ id: number, content: string }>
+}
+
+interface Survey {
+  id: number
+  title: string
+  description: string
+  isActive: boolean
+  endTime: string
+  answerCount: number
+  questions: Question[]
+}
+
 export default defineComponent({
   name: 'SurveyDetailView',
   components: {
@@ -479,6 +497,16 @@ export default defineComponent({
     const showResults = ref(false)
     const showDeleteDialog = ref(false)
     const isLoading = ref(false)
+
+    const survey = ref<Survey>({
+      id: 0,
+      title: '',
+      description: '',
+      isActive: false,
+      endTime: '',
+      answerCount: 0,
+      questions: []
+    })
 
     const notifications = ref([
       {
@@ -544,41 +572,26 @@ export default defineComponent({
       SCALE: '척도형'
     }
 
-    const survey = ref({
-      id: 1,
-      title: '직장인 커피 소비 습관',
-      description: '직장인들의 커피 소비 패턴과 선호도를 조사하는 설문입니다.',
-      isActive: true,
-      endTime: '2024-03-31 23:59',
-      answerCount: 45,
-      questions: [{
-        id: 0,
-        content: '',
-        type: 'MULTIPLE_CHOICE',
-        // required: false,
-        // options: []
-      }]
-    })
-
     const fetchSurveyDetail = async () => {
       try {
         isLoading.value = true
-        const response = await surveyApi.getSurveyDetail(surveyId)
+        const surveyDetail = await surveyApi.getSurveyDetail(surveyId)
+        const questions = await surveyApi.getQuestionsBySurveyId(surveyId)
         
         // API 응답을 survey ref에 바인딩
         survey.value = {
-          id: response.id,
-          title: response.title,
-          description: response.description,
-          isActive: response.isActive,
-          endTime: response.endTime,
-          answerCount: response.answerCount,
-          questions: response.questions.map(question => ({
+          id: surveyDetail.id,
+          title: surveyDetail.title,
+          description: surveyDetail.description,
+          isActive: surveyDetail.isActive,
+          endTime: surveyDetail.endTime,
+          answerCount: surveyDetail.answerCount,
+          questions: questions.map((question: Question) => ({
             id: question.id,
             content: question.content,
             type: question.type,
-            // required: question.required || false,
-            // options: question.options || []
+            required: question.required || false,
+            options: question.options || []
           }))
         }
       } catch (error) {
