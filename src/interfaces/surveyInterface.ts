@@ -34,3 +34,15 @@ export interface Survey {
 export interface GetRecentSurveysResponse {
   surveys: Survey[]
 }
+
+export interface GetSurveyDetailResponse{
+  id: number
+  title: string
+  description: string
+  startTime: string
+  isActive: boolean
+  createdAt: string
+  answerCount: number
+  question: QuestionRequest[]
+}
+

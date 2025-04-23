@@ -444,11 +444,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'
 import { surveyApi } from '@/apis/surveyApi'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import QrcodeVue from 'qrcode.vue'
 
 export default defineComponent({
@@ -459,11 +459,13 @@ export default defineComponent({
   setup() {
     const { showSuccess, showError } = useSnackbar()
     const router = useRouter()
+    const route = useRoute()
     const userName = ref('Andrew Kwak')
     const userEmail = ref('andrew@example.com')
     const showNotifications = ref(false)
     const showResults = ref(false)
     const showDeleteDialog = ref(false)
+    const isLoading = ref(false)
 
     const notifications = ref([
       {
@@ -508,12 +510,11 @@ export default defineComponent({
 
     const confirmDelete = async () => {
       try {
-        await surveyApi.deleteSurvey(survey.value.id)
+        // TODO: API 연동
         showSuccess('설문이 삭제되었습니다.')
-        router.push('/main')
+        router.push('/')
       } catch (error) {
         showError('설문 삭제에 실패했습니다.')
-        console.error('Delete survey failed:', error)
       } finally {
         showDeleteDialog.value = false
       }
@@ -569,6 +570,24 @@ export default defineComponent({
           required: true
         }
       ]
+    })
+
+    const fetchSurveyDetail = async () => {
+      try {
+        isLoading.value = true
+        const surveyId = Number(route.params.id)
+        const response = await surveyApi.getSurveyDetail(surveyId)
+        console.log('Survey detail response:', response)
+      } catch (error) {
+        console.error('Failed to fetch survey detail:', error)
+        showError('설문 상세 정보를 불러오는데 실패했습니다.')
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    onMounted(() => {
+      fetchSurveyDetail()
     })
 
     return {

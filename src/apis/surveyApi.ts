@@ -1,6 +1,6 @@
 import { tbAxios } from '@/apis/axios'
 import { useSnackbar } from '@/composables/useSnackbar'
-import { CreateSurveyRequest, GetRecentSurveysResponse } from '@/interfaces/surveyInterface'
+import {CreateSurveyRequest, GetRecentSurveysResponse, GetSurveyDetailResponse} from '@/interfaces/surveyInterface'
 
 const { showError } = useSnackbar()
 
@@ -27,10 +27,10 @@ export const surveyApi = {
     }
   },
 
-  // 설문 상세 조회
-  async getSurvey(id: string) {
+  // 설문 상세
+  async getSurveyDetail(id: number): Promise<GetSurveyDetailResponse> {
     try {
-      const response = await tbAxios.get('/surveys/${id}')
+      const response = await tbAxios.get<GetSurveyDetailResponse>('/survey/' + id)
       return response.data
     } catch (error) {
       showError('설문을 불러오는데 실패했습니다.')
