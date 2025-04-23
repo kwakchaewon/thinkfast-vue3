@@ -9,6 +9,7 @@ export interface QuestionRequest {
   type: QuestionType
   required: boolean
   options?: string[]
+  orderIndex: number
 }
 
 export interface CreateSurveyRequest {

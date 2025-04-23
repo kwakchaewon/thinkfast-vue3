@@ -394,20 +394,25 @@ const survey = ref<CreateSurveyRequest>({
   endDate: '',
   endTime: '',
   showResults: true,
-  questions: []
+  questions: [],
 })
 
 const addQuestion = () => {
   survey.value.questions.push({
     content: '',
-    type: QuestionType.MULTIPLE_CHOICE,
+    type: QuestionType.SUBJECTIVE,
     required: false,
-    options: ['', '']
+    options: ['', ''],
+    orderIndex: survey.value.questions.length + 1
   })
 }
 
 const removeQuestion = (index: number) => {
   survey.value.questions.splice(index, 1)
+  // 질문이 삭제된 후 남은 질문들의 orderIndex를 재정렬
+  survey.value.questions.forEach((question, idx) => {
+    question.orderIndex = idx + 1
+  })
 }
 
 const addOption = (questionIndex: number) => {
