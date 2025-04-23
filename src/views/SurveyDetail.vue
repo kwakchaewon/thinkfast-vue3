@@ -178,7 +178,7 @@
                 <div class="text-caption text-grey mb-1">마감일</div>
                 <div class="text-body-2 mb-4">{{ survey.endDate }} {{ survey.endTime }}</div>
                 <div class="d-flex justify-end gap-2">
-                  <v-btn
+                  <!-- <v-btn
                     color="primary"
                     variant="outlined"
                     size="small"
@@ -186,7 +186,7 @@
                     @click="handleEdit"
                   >
                     수정
-                  </v-btn>
+                  </v-btn> -->
                   <v-btn
                     color="error"
                     variant="outlined"
