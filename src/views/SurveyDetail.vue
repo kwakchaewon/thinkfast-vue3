@@ -221,7 +221,8 @@
               <v-card-item>
                 <v-card-title class="text-subtitle-1 mb-2">응답률</v-card-title>
                 <div class="d-flex align-center">
-                  <span class="text-h4">{{ survey.responseRate }}%</span>
+                  <span class="text-h4"> 100%</span>
+                  <!-- <span class="text-h4">{{ survey.responseRate }}%</span> -->
                   <v-chip color="success" size="small" class="ms-3">+5%</v-chip>
                 </div>
               </v-card-item>
@@ -233,7 +234,8 @@
               <v-card-item>
                 <v-card-title class="text-subtitle-1 mb-2">평균 응답 시간</v-card-title>
                 <div class="d-flex align-center">
-                  <span class="text-h4">{{ survey.avgResponseTime }}분</span>
+                  <span class="text-h4">10분</span>
+                  <!-- <span class="text-h4">{{ survey.avgResponseTime }}분</span> -->
                   <v-icon color="info" class="ms-3">mdi-information</v-icon>
                 </div>
               </v-card-item>
@@ -244,10 +246,10 @@
             <v-card class="stat-card">
               <v-card-item>
                 <v-card-title class="text-subtitle-1 mb-2">완료율</v-card-title>
-                <div class="d-flex align-center">
+                <!-- <div class="d-flex align-center">
                   <span class="text-h4">{{ survey.completionRate }}%</span>
                   <v-chip color="warning" size="small" class="ms-3">New</v-chip>
-                </div>
+                </div> -->
               </v-card-item>
             </v-card>
           </v-col>
@@ -312,16 +314,16 @@
                       </div>
                       <div class="mt-auto">
                         <div class="text-subtitle-2 mb-2">응답 현황</div>
-                        <v-progress-linear
+                        <!-- <v-progress-linear
                           :model-value="survey.responseRate"
                           color="primary"
                           height="8"
                           rounded
-                        ></v-progress-linear>
-                        <div class="d-flex justify-space-between mt-2">
+                        ></v-progress-linear> -->
+                        <!-- <div class="d-flex justify-space-between mt-2">
                           <span class="text-caption text-grey">응답률</span>
                           <span class="text-caption">{{ survey.responseRate }}%</span>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </v-col>
@@ -360,8 +362,13 @@
                     </template>
                     <v-list-item-title class="text-h6 mb-2">
                       {{ question.content }}
-                      <v-chip
+                      <!-- <v-chip
                         v-if="question.required"
+                        color="error"
+                        size="small"
+                        class="ms-2"
+                      > -->
+                      <v-chip
                         color="error"
                         size="small"
                         class="ms-2"
@@ -374,13 +381,13 @@
                     </v-list-item-subtitle>
                     <v-list-item-text>
                       <div v-if="question.type === 'MULTIPLE_CHOICE'">
-                        <v-chip
+                        <!-- <v-chip
                           v-for="option in question.options"
                           :key="option"
                           class="me-2 mb-2"
                         >
                           {{ option }}
-                        </v-chip>
+                        </v-chip> -->
                       </div>
                       <div v-else-if="question.type === 'SCALE'">
                         <v-slider
@@ -538,38 +545,13 @@ export default defineComponent({
       isActive: true,
       endTime: '2024-03-31 23:59',
       answerCount: 45,
-      responseRate: 82,
-      avgResponseTime: 5,
-      completionRate: 95,
-      questions: []
-      // questions: [
-      //   {
-      //     id: 1,
-      //     content: '하루 평균 몇 잔의 커피를 마시나요?',
-      //     type: 'MULTIPLE_CHOICE',
-      //     required: true,
-      //     options: ['1잔', '2잔', '3잔', '4잔 이상']
-      //   },
-      //   {
-      //     id: 2,
-      //     content: '가장 선호하는 커피 종류는 무엇인가요?',
-      //     type: 'MULTIPLE_CHOICE',
-      //     required: true,
-      //     options: ['아메리카노', '라떼', '카푸치노', '에스프레소', '기타']
-      //   },
-      //   {
-      //     id: 3,
-      //     content: '커피를 마시는 주된 이유는 무엇인가요?',
-      //     type: 'SUBJECTIVE',
-      //     required: false
-      //   },
-      //   {
-      //     id: 4,
-      //     content: '커피 맛에 대한 만족도는 어떠신가요?',
-      //     type: 'SCALE',
-      //     required: true
-      //   }
-      // ]
+      questions: [{
+        id: 0,
+        content: '',
+        type: 'MULTIPLE_CHOICE',
+        // required: false,
+        // options: []
+      }]
     })
 
     const fetchSurveyDetail = async () => {
@@ -587,14 +569,11 @@ export default defineComponent({
           isActive: response.isActive,
           endTime: response.endTime,
           answerCount: response.answerCount,
-          // responseRate: response.responseRate,
-          // avgResponseTime: response.avgResponseTime,
-          // completionRate: response.completionRate,
           questions: response.questions.map(question => ({
             id: question.id,
             content: question.content,
-            type: question.type
-            // required: question.required,
+            type: question.type,
+            // required: question.required || false,
             // options: question.options || []
           }))
         }
