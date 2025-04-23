@@ -447,6 +447,7 @@
 import { defineComponent, ref } from 'vue'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'
+import { surveyApi } from '@/apis/surveyApi'
 import { useRouter } from 'vue-router'
 import QrcodeVue from 'qrcode.vue'
 
@@ -507,11 +508,12 @@ export default defineComponent({
 
     const confirmDelete = async () => {
       try {
-        // TODO: API 연동
+        await surveyApi.deleteSurvey(survey.value.id)
         showSuccess('설문이 삭제되었습니다.')
-        router.push('/')
+        router.push('/main')
       } catch (error) {
         showError('설문 삭제에 실패했습니다.')
+        console.error('Delete survey failed:', error)
       } finally {
         showDeleteDialog.value = false
       }

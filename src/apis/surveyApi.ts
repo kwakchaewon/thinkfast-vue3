@@ -61,9 +61,10 @@ export const surveyApi = {
   },
 
   // 설문 삭제
-  async deleteSurvey(id: string) {
+  async deleteSurvey(surveyId: number) {
+    console.log(surveyId);
     try {
-      const response = await tbAxios.delete('/surveys/${id}')
+      const response = await tbAxios.delete('/survey/'+surveyId)
       return response.data
     } catch (error) {
       showError('설문 삭제에 실패했습니다.')
@@ -74,7 +75,7 @@ export const surveyApi = {
   // 설문 응답 제출
   async submitResponse(surveyId: string, responseData: any) {
     try {
-      const response = await tbAxios.post('/surveys/${surveyId}/responses')
+      const response = await tbAxios.post('/survey/${surveyId}/responses')
       return response.data
     } catch (error) {
       showError('응답 제출에 실패했습니다.')
@@ -85,7 +86,7 @@ export const surveyApi = {
   // 설문 결과 조회
   async getSurveyResults(surveyId: string) {
     try {
-      const response = await tbAxios.get('/surveys/${surveyId}/results')
+      const response = await tbAxios.get('/survey/${surveyId}/results')
       return response.data
     } catch (error) {
       showError('설문 결과를 불러오는데 실패했습니다.')
@@ -96,7 +97,7 @@ export const surveyApi = {
   // 설문 인사이트 조회
   async getSurveyInsights(surveyId: string) {
     try {
-      const response = await tbAxios.get('/surveys/${surveyId}/insights')
+      const response = await tbAxios.get('/survey/${surveyId}/insights')
       return response.data
     } catch (error) {
       showError('설문 인사이트를 불러오는데 실패했습니다.')
