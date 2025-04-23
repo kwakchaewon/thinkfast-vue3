@@ -1,6 +1,6 @@
 import { tbAxios } from '@/apis/axios'
 import { useSnackbar } from '@/composables/useSnackbar'
-import { CreateSurveyRequest } from '@/interfaces/surveyInterface'
+import { CreateSurveyRequest, GetRecentSurveysResponse } from '@/interfaces/surveyInterface'
 
 const { showError } = useSnackbar()
 
@@ -16,9 +16,9 @@ export const surveyApi = {
     }
   },
 
-  async getRecentSurveys() {
+  async getRecentSurveys(): Promise<GetRecentSurveysResponse> {
     try {
-      const response = await tbAxios.get('/survey/recent')
+      const response = await tbAxios.get<GetRecentSurveysResponse>('/survey/recent')
       console.log(response.data)
       return response.data
     } catch (error) {

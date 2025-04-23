@@ -20,7 +20,7 @@ export interface CreateSurveyRequest {
   questions: QuestionRequest[]
 }
 
-export interface SurvGetRecentSurveysResponseey {
+export interface Survey {
   id: number
   title: string
   description: string
@@ -28,4 +28,8 @@ export interface SurvGetRecentSurveysResponseey {
   isActive: boolean
   createdAt: string
   answerCount: number
+}
+
+export interface GetRecentSurveysResponse {
+  surveys: Survey[]
 }
