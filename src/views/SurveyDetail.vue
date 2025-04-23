@@ -209,7 +209,8 @@
               <v-card-item>
                 <v-card-title class="text-subtitle-1 mb-2">총 응답수</v-card-title>
                 <div class="d-flex align-center">
-                  <span class="text-h4">{{ survey.answerCount }}</span>
+<!--                  <span class="text-h4">{{ survey.answerCount }}</span>-->
+                  <span class="text-h4">10</span>
                   <v-icon color="success" class="ms-3">mdi-trending-up</v-icon>
                 </div>
               </v-card-item>
