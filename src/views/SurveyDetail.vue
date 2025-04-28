@@ -508,7 +508,7 @@ export default defineComponent({
       }
     ])
 
-    const shareUrl = computed(() => `http://localhost:80/survey/${route.params.id}/create-response`)
+    const shareUrl = computed(() => `http://localhost:5173/survey/${route.params.id}/create-response`)
 
     const markAllAsRead = () => {
       notifications.value = []
