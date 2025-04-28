@@ -4,7 +4,8 @@ import {
   CreateSurveyRequest,
   GetRecentSurveysResponse,
   Survey,
-  Question, GetSurveyDetailResponse
+  Question, GetSurveyDetailResponse,
+  CreateAnswerRequest
 } from '@/interfaces/surveyInterface'
 
 const { showError } = useSnackbar()
@@ -62,6 +63,17 @@ export const surveyApi = {
       return response.data
     } catch (error) {
       showError('설문 생성에 실패했습니다.')
+      throw error
+    }
+  },
+  
+  // 설문 응답 제출
+  async createAnswer(surveyId: number, payload: CreateAnswerRequest): Promise<any> {
+    try {
+      const response = await tbAxios.post(`/survey/${surveyId}/answers`, payload)
+      return response.data  
+    } catch (error) {
+      showError('설문 응답 제출에 실패했습니다.')
       throw error
     }
   },

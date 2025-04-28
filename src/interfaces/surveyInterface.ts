@@ -43,3 +43,13 @@ export interface GetRecentSurveysResponse {
   surveys: GetSurveyDetailResponse[]
 }
 
+export interface CreateAnswerRequest {
+  answers: CreateAnswerDto[];
+}
+
+export interface CreateAnswerDto {
+  questionId: number;
+  type: string;
+  optionId?: number | null;
+  content?: string | null;
+}

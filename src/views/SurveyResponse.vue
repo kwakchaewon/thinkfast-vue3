@@ -112,6 +112,15 @@ import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { useRouter, useRoute } from 'vue-router'
 import { surveyApi } from '@/apis/surveyApi'
+import { CreateAnswerRequest } from '@/interfaces/surveyInterface'
+
+interface Question {
+  id: number
+  content: string
+  type: string
+  required: boolean
+  options?: any[]
+}
 
 export default defineComponent({
   name: 'SurveyResponseView',
@@ -131,7 +140,7 @@ export default defineComponent({
       status: '',
       endDate: '',
       endTime: '',
-      questions: [] as any[]
+      questions: [] as Question[]
     })
 
     const fetchSurveyData = async () => {
@@ -169,8 +178,17 @@ export default defineComponent({
 
       isSubmitting.value = true
       try {
-        // TODO: 설문 응답 제출 API 호출
-        console.log('설문 응답:', answers.value)
+        // 응답 데이터를 API 요청 형식에 맞게 변환
+        const payload: CreateAnswerRequest = {
+          answers: survey.value.questions.map(question => ({
+            questionId: question.id,
+            type: question.type,
+            optionId: question.type === 'MULTIPLE_CHOICE' ? answers.value[question.id] : null,
+            content: question.type === 'SUBJECTIVE' ? answers.value[question.id] : null
+          }))
+        }
+
+        await surveyApi.createAnswer(survey.value.id, payload)
         showSuccess('설문이 성공적으로 제출되었습니다.')
         router.push('/')
       } catch (error) {
