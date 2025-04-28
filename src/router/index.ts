@@ -81,7 +81,7 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/survey/:id/response',
+      path: '/survey/:id/create-response',
       name: 'survey-response',
       component: () => import('@/views/SurveyResponse.vue'),
       meta: {

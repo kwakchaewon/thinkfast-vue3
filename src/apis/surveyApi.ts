@@ -44,7 +44,7 @@ export const surveyApi = {
     }
   },
 
-  // 질문 리스트
+  // 설문 상세 질문 리스트
   async getQuestionsBySurveyId(id: number): Promise<Question[]> {
     try {
       const response = await tbAxios.get('/survey/' + id + '/questions')
