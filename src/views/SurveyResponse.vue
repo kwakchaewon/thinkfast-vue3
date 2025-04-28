@@ -44,9 +44,9 @@
             >
               <v-radio
                 v-for="option in question.options"
-                :key="option"
-                :label="option"
-                :value="option"
+                :key="option.id"
+                :label="option.content"
+                :value="option.id"
                 class="mb-2"
               ></v-radio>
             </v-radio-group>
@@ -108,56 +108,53 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useSnackbar } from '@/composables/useSnackbar'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { surveyApi } from '@/apis/surveyApi'
 
 export default defineComponent({
   name: 'SurveyResponseView',
   setup() {
     const { showSuccess, showError } = useSnackbar()
     const router = useRouter()
+    const route = useRoute()
     const form = ref()
     const isSubmitting = ref(false)
     const answers = ref<Record<string, any>>({})
+    const isLoading = ref(true)
 
-    // 임시 설문 데이터
     const survey = ref({
-      id: 1,
-      title: '직장인 커피 소비 습관',
-      description: '직장인들의 커피 소비 패턴과 선호도를 조사하는 설문입니다.',
-      status: 'active',
-      endDate: '2024-03-31',
-      endTime: '23:59',
-      questions: [
-        {
-          id: 1,
-          content: '하루 평균 몇 잔의 커피를 마시나요?',
-          type: 'MULTIPLE_CHOICE',
-          required: true,
-          options: ['1잔', '2잔', '3잔', '4잔 이상']
-        },
-        {
-          id: 2,
-          content: '가장 선호하는 커피 종류는 무엇인가요?',
-          type: 'MULTIPLE_CHOICE',
-          required: true,
-          options: ['아메리카노', '라떼', '카푸치노', '에스프레소', '기타']
-        },
-        {
-          id: 3,
-          content: '커피를 마시는 주된 이유는 무엇인가요?',
-          type: 'SUBJECTIVE',
-          required: false
-        },
-        {
-          id: 4,
-          content: '커피 맛에 대한 만족도는 어떠신가요?',
-          type: 'SCALE',
-          required: true
-        }
-      ]
+      id: 0,
+      title: '',
+      description: '',
+      status: '',
+      endDate: '',
+      endTime: '',
+      questions: [] as any[]
     })
+
+    const fetchSurveyData = async () => {
+      try {
+        const surveyId = Number(route.params.id)
+        const questions = await surveyApi.getQuestionsBySurveyId(surveyId)
+        // TODO: 설문 기본 정보를 가져오는 API가 필요합니다
+        survey.value = {
+          id: surveyId,
+          title: '설문 제목', // API에서 가져와야 함
+          description: '설문 설명', // API에서 가져와야 함
+          status: 'active', // API에서 가져와야 함
+          endDate: '2024-03-31', // API에서 가져와야 함
+          endTime: '23:59', // API에서 가져와야 함
+          questions: questions
+        }
+      } catch (error) {
+        showError('설문을 불러오는데 실패했습니다.')
+        router.push('/')
+      } finally {
+        isLoading.value = false
+      }
+    }
 
     const isFormValid = computed(() => {
       return survey.value.questions.every(question => {
@@ -172,7 +169,7 @@ export default defineComponent({
 
       isSubmitting.value = true
       try {
-        // 임시 제출 처리
+        // TODO: 설문 응답 제출 API 호출
         console.log('설문 응답:', answers.value)
         showSuccess('설문이 성공적으로 제출되었습니다.')
         router.push('/')
@@ -183,13 +180,18 @@ export default defineComponent({
       }
     }
 
+    onMounted(() => {
+      fetchSurveyData()
+    })
+
     return {
       form,
       survey,
       answers,
       isSubmitting,
       isFormValid,
-      submitResponse
+      submitResponse,
+      isLoading
     }
   }
 })
