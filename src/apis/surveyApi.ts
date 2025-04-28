@@ -71,7 +71,7 @@ export const surveyApi = {
   async createAnswer(surveyId: number, payload: CreateAnswerRequest): Promise<any> {
     try {
       const response = await tbAxios.post(`/survey/${surveyId}/answers`, payload)
-      return response.data  
+      return response  
     } catch (error) {
       showError('설문 응답 제출에 실패했습니다.')
       throw error

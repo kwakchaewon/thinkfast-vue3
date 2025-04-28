@@ -166,7 +166,7 @@ export default defineComponent({
     }
 
     const isFormValid = computed(() => {
-      return survey.value.questions.every(question => {
+      return survey.value.questions.every((question: Question) => {
         if (!question.required) return true
         return answers.value[question.id] !== undefined && answers.value[question.id] !== ''
       })
@@ -178,9 +178,8 @@ export default defineComponent({
 
       isSubmitting.value = true
       try {
-        // 응답 데이터를 API 요청 형식에 맞게 변환
         const payload: CreateAnswerRequest = {
-          answers: survey.value.questions.map(question => ({
+          answers: survey.value.questions.map((question: Question) => ({
             questionId: question.id,
             type: question.type,
             optionId: question.type === 'MULTIPLE_CHOICE' ? answers.value[question.id] : null,
@@ -188,9 +187,13 @@ export default defineComponent({
           }))
         }
 
-        await surveyApi.createAnswer(survey.value.id, payload)
-        showSuccess('설문이 성공적으로 제출되었습니다.')
-        router.push('/')
+        const response = await surveyApi.createAnswer(survey.value.id, payload)
+        if (response.data.success === true) {
+          showSuccess('설문이 성공적으로 제출되었습니다.')
+          router.push('/')
+        } else {
+          showError(response.data.message)
+        }
       } catch (error) {
         showError('설문 제출에 실패했습니다.')
       } finally {
