@@ -140,14 +140,27 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
-                    <v-text-field
-                      v-model="survey.endTime"
-                      label="종료 시각"
-                      type="time"
-                      prepend-inner-icon="mdi-clock"
-                      variant="outlined"
-                      hide-details
-                    ></v-text-field>
+                    <div class="d-flex align-center">
+                      <v-select
+                        v-model="selectedHour"
+                        label="시"
+                        :items="hours"
+                        variant="outlined"
+                        density="compact"
+                        hide-details
+                        class="mr-2"
+                        style="max-width: 100px"
+                      ></v-select>
+                      <v-select
+                        v-model="selectedMinute"
+                        label="분"
+                        :items="minutes"
+                        variant="outlined"
+                        density="compact"
+                        hide-details
+                        style="max-width: 100px"
+                      ></v-select>
+                    </div>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -361,7 +374,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { useStore } from 'vuex'
@@ -388,13 +401,24 @@ const questionTypes = [
   { title: '주관식', value: QuestionType.SUBJECTIVE }
 ]
 
+const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'))
+const minutes = Array.from({ length: 12 }, (_, i) => (i * 5).toString().padStart(2, '0'))
+
+const selectedHour = ref('00')
+const selectedMinute = ref('00')
+
 const survey = ref<CreateSurveyRequest>({
   title: '',
   description: '',
   endDate: '',
-  endTime: '',
+  endTime: '00:00',
   showResults: true,
   questions: [],
+})
+
+// 시간 선택이 변경될 때마다 survey.endTime을 업데이트
+watch([selectedHour, selectedMinute], ([hour, minute]) => {
+  survey.value.endTime = `${hour}:${minute}`
 })
 
 const addQuestion = () => {
@@ -457,7 +481,9 @@ const handleCreateSurvey = async () => {
     }
 
     // 종료 날짜와 시각이 현재보다 이전인지 확인
-    const endDateTime = new Date(`${survey.value.endDate}T${survey.value.endTime}`)
+    const endDateTime = new Date(survey.value.endDate)
+    endDateTime.setHours(parseInt(survey.value.endTime.split(':')[0]))
+    endDateTime.setMinutes(parseInt(survey.value.endTime.split(':')[1]))
     const now = new Date()
     if (endDateTime <= now) {
       showError('종료 날짜와 시각은 현재보다 이후여야 합니다')
@@ -564,5 +590,10 @@ const handleCreateSurvey = async () => {
 
 .v-navigation-drawer__content {
   overflow-y: auto;
+}
+
+.time-input :deep(input) {
+  text-align: center;
+  font-family: monospace;
 }
 </style> 
