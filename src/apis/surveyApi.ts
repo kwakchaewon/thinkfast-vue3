@@ -37,7 +37,6 @@ export const surveyApi = {
   async getSurveyDetail(id: number): Promise<GetSurveyDetailResponse> {
     try {
       const response = await tbAxios.get('/survey/' + id)
-      console.log(response.data.data);
       return response.data.data
     } catch (error) {
       showError('설문을 불러오는데 실패했습니다.')

@@ -578,7 +578,6 @@ export default defineComponent({
           }))
         }
       } catch (error) {
-        console.error('Failed to fetch survey detail:', error)
         showError('설문 상세 정보를 불러오는데 실패했습니다.')
       } finally {
         isLoading.value = false
