@@ -39,8 +39,18 @@ export interface GetSurveyDetailResponse {
   questions: getQuestionsResponse[]
 }
 
-export interface GetRecentSurveysResponse {
-  surveys: GetSurveyDetailResponse[]
+export interface recentSurvey {
+  id: number
+  title: string
+  description: string
+  isActive: boolean
+  endTime: string
+  answerCount: number
+  createdAt: string
+}
+
+export type GetRecentSurveysResponse = {
+  surveys: recentSurvey[]
 }
 
 export interface CreateAnswerRequest {

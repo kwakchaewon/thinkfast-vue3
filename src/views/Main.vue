@@ -242,11 +242,11 @@
                       <td class="text-body-1">{{ survey.title }}</td>
                       <td>
                         <v-chip
-                          :color="survey.status === 'active' ? 'success' : 'error'"
+                          :color="survey.isActive ? 'success' : 'error'"
                           size="small"
                           class="font-weight-medium"
                         >
-                          {{ survey.status === 'active' ? '진행중' : '종료' }}
+                          {{ survey.isActive === true ? '진행중' : '종료' }}
                         </v-chip>
                       </td>
                       <td class="text-body-1">{{ survey.answerCount }}개</td>
@@ -300,7 +300,7 @@ import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'
 import { surveyApi } from '@/apis/surveyApi'
 import { useRouter } from 'vue-router'
-
+import { recentSurvey } from '@/interfaces/surveyInterface'
 export default defineComponent({
   name: 'MainView',
   components: {
@@ -312,7 +312,7 @@ export default defineComponent({
     const userName = ref('Andrew Kwak')
     const userEmail = ref('andrew@example.com')
     const showNotifications = ref(false)
-    const recentSurveys = ref([])
+    const recentSurveys = ref<recentSurvey[]>([])
     const isLoading = ref(false)
 
     const notifications = ref([
@@ -343,6 +343,7 @@ export default defineComponent({
       try {
         isLoading.value = true
         const response = await surveyApi.getRecentSurveys()
+        console.log(response)
         recentSurveys.value = response.data
       } catch (error) {
         console.error('Failed to fetch recent surveys:', error)
