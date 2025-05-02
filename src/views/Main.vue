@@ -249,7 +249,7 @@
                           {{ survey.isActive === true ? '진행중' : '종료' }}
                         </v-chip>
                       </td>
-                      <td class="text-body-1">{{ survey.answerCount }}개</td>
+                      <td class="text-body-1">{{ survey.responseCount }}개</td>
                       <td class="text-body-1">{{ survey.createdAt }}</td>
                     </tr>
                   </tbody>

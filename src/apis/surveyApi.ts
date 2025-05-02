@@ -25,7 +25,6 @@ export const surveyApi = {
   async getRecentSurveys(): Promise<GetRecentSurveysResponse> {
     try {
       const response = await tbAxios.get<GetRecentSurveysResponse>('/survey/recent')
-      console.log(response.data)
       return response.data
     } catch (error) {
       showError('최근 설문 목록을 불러오는데 실패했습니다.')
@@ -69,7 +68,7 @@ export const surveyApi = {
   // 설문 응답 제출
   async createAnswer(surveyId: number, payload: CreateAnswerRequest): Promise<any> {
     try {
-      const response = await tbAxios.post(`/survey/${surveyId}/answers`, payload)
+      const response = await tbAxios.post(`/survey/${surveyId}/responses`, payload)
       return response  
     } catch (error) {
       showError('설문 응답 제출에 실패했습니다.')

@@ -35,7 +35,7 @@ export interface GetSurveyDetailResponse {
   description: string
   isActive: boolean
   endTime: string
-  answerCount: number
+  responseCount: number
   questions: getQuestionsResponse[]
 }
 
@@ -45,7 +45,7 @@ export interface recentSurvey {
   description: string
   isActive: boolean
   endTime: string
-  answerCount: number
+  responseCount: number
   createdAt: string
 }
 

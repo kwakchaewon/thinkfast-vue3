@@ -209,7 +209,7 @@
 <!--              <v-card-item>-->
 <!--                <v-card-title class="text-subtitle-1 mb-2">총 응답수</v-card-title>-->
 <!--                <div class="d-flex align-center">-->
-<!--&lt;!&ndash;                  <span class="text-h4">{{ survey.answerCount }}</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <span class="text-h4">{{ survey.responseCount }}</span>&ndash;&gt;-->
 <!--                  <span class="text-h4">10</span>-->
 <!--                  <v-icon color="success" class="ms-3">mdi-trending-up</v-icon>-->
 <!--                </div>-->
@@ -487,7 +487,7 @@ export default defineComponent({
       description: '',
       isActive: false,
       endTime: '',
-      answerCount: 0,
+      responseCount: 0,
       questions: []
     })
 
@@ -568,7 +568,7 @@ export default defineComponent({
           description: surveyDetail.description,
           isActive: surveyDetail.isActive,
           endTime: surveyDetail.endTime,
-          answerCount: surveyDetail.answerCount,
+          responseCount: surveyDetail.responseCount,
           questions: questions.map((question: getQuestionsResponse) => ({
             id: question.id,
             content: question.content,
