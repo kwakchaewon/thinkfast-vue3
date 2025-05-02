@@ -146,15 +146,16 @@ export default defineComponent({
     const fetchSurveyData = async () => {
       try {
         const surveyId = Number(route.params.id)
+        const response = await surveyApi.getSurveyDetail(surveyId)
         const questions = await surveyApi.getQuestionsBySurveyId(surveyId)
-        // TODO: 설문 기본 정보를 가져오는 API가 필요합니다
+
         survey.value = {
           id: surveyId,
-          title: '설문 제목', // API에서 가져와야 함
-          description: '설문 설명', // API에서 가져와야 함
-          status: 'active', // API에서 가져와야 함
-          endDate: '2024-03-31', // API에서 가져와야 함
-          endTime: '23:59', // API에서 가져와야 함
+          title: response.title,
+          description: response.description,
+          status: response.isActive ? 'active' : 'inactive',
+          endDate: response.endDate,
+          endTime: response.endTime,
           questions: questions
         }
       } catch (error) {
