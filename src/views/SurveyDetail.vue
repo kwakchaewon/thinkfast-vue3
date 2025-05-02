@@ -578,7 +578,7 @@ export default defineComponent({
           }))
         }
       } catch (error) {
-        showError('설문 상세 정보를 불러오는데 실패했습니다.')
+        router.push('/')
       } finally {
         isLoading.value = false
       }

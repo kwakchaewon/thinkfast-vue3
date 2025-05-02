@@ -138,7 +138,6 @@ export default defineComponent({
       title: '',
       description: '',
       status: '',
-      endDate: '',
       endTime: '',
       questions: [] as Question[]
     })
@@ -154,12 +153,11 @@ export default defineComponent({
           title: response.title,
           description: response.description,
           status: response.isActive ? 'active' : 'inactive',
-          endDate: response.endDate,
           endTime: response.endTime,
           questions: questions
         }
-      } catch (error) {
-        showError('설문을 불러오는데 실패했습니다.')
+      } catch (error: any) {
+        showError(error.response?.data?.message || '설문을 불러오는데 실패했습니다.')
         router.push('/')
       } finally {
         isLoading.value = false

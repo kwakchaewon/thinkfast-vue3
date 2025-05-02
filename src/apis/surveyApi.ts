@@ -1,5 +1,6 @@
 import { tbAxios } from '@/apis/axios'
 import { useSnackbar } from '@/composables/useSnackbar'
+import { useRouter } from 'vue-router'
 import {
   CreateSurveyRequest,
   GetRecentSurveysResponse,
@@ -36,9 +37,13 @@ export const surveyApi = {
   async getSurveyDetail(id: number): Promise<GetSurveyDetailResponse> {
     try {
       const response = await tbAxios.get('/survey/' + id)
+      console.log(response.data)
+      if (!response.data.success){
+        throw new Error(response.data.message)
+      }
       return response.data.data
     } catch (error) {
-      showError('설문을 불러오는데 실패했습니다.')
+      showError(error.message)
       throw error
     }
   },
