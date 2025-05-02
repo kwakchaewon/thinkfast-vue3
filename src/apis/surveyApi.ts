@@ -37,13 +37,12 @@ export const surveyApi = {
   async getSurveyDetail(id: number): Promise<GetSurveyDetailResponse> {
     try {
       const response = await tbAxios.get('/survey/' + id)
-      console.log(response.data)
       if (!response.data.success){
         throw new Error(response.data.message)
       }
       return response.data.data
     } catch (error) {
-      showError(error.message)
+      showError((error as Error).message)
       throw error
     }
   },
