@@ -1,160 +1,7 @@
 <template>
   <v-layout class="rounded rounded-md">
     <!-- 사이드바 -->
-    <v-navigation-drawer
-      permanent
-      color="grey-lighten-4"
-      width="280"
-    >
-      <v-list>
-        <v-list-item
-          prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-          :title="userName"
-          :subtitle="userEmail"
-          class="profile-item"
-        >
-          <template v-slot:append>
-            <div class="d-flex align-center">
-              <v-badge
-                :content="notifications.length.toString()"
-                :model-value="notifications.length > 0"
-                color="error"
-                offset-x="12"
-              >
-                <v-btn
-                  icon="mdi-bell"
-                  variant="text"
-                  @click="showNotifications = true"
-                  class="notification-btn"
-                >
-                  <v-icon>mdi-bell</v-icon>
-                </v-btn>
-              </v-badge>
-            </div>
-
-            <!-- 알림 메뉴 -->
-            <v-menu
-              v-model="showNotifications"
-              :close-on-content-click="false"
-              location="bottom end"
-              offset="10"
-            >
-              <v-card min-width="300" max-width="400" class="notification-menu">
-                <div class="d-flex align-center px-4 py-2 bg-grey-lighten-4">
-                  <span class="text-h6">알림</span>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    icon="mdi-close"
-                    variant="text"
-                    density="compact"
-                    size="small"
-                    @click="showNotifications = false"
-                  >
-                    <v-icon size="small">mdi-close</v-icon>
-                  </v-btn>
-                </div>
-                <v-divider></v-divider>
-                <v-list>
-                  <v-list-subheader class="d-flex align-center px-4">
-                    <v-btn
-                      variant="text"
-                      density="compact"
-                      color="primary"
-                      class="text-caption px-0"
-                      @click="markAllAsRead"
-                    >
-                      모두 읽음 처리
-                    </v-btn>
-                  </v-list-subheader>
-                  <v-list-item
-                    v-for="notification in notifications"
-                    :key="notification.id"
-                    :subtitle="notification.time"
-                    class="py-2"
-                  >
-                    <template v-slot:prepend>
-                      <v-avatar :color="notification.color" size="36">
-                        <v-icon color="white" size="small">
-                          {{ notification.icon }}
-                        </v-icon>
-                      </v-avatar>
-                    </template>
-                    <v-list-item-title class="text-subtitle-2 mb-1">
-                      {{ notification.title }}
-                    </v-list-item-title>
-                  </v-list-item>
-                  <v-list-item v-if="notifications.length === 0">
-                    <v-list-item-title class="text-center text-subtitle-1 py-4">
-                      새로운 알림이 없습니다
-                    </v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-card>
-            </v-menu>
-          </template>
-        </v-list-item>
-      </v-list>
-
-      <v-divider></v-divider>
-
-      <v-list density="compact" nav>
-        <v-list-item
-          prepend-icon="mdi-view-dashboard"
-          title="대시보드"
-          value="dashboard"
-          to="/"
-        ></v-list-item>
-        
-        <v-list-subheader>설문 관리</v-list-subheader>
-        <v-list-item
-          prepend-icon="mdi-plus"
-          title="새 설문 만들기"
-          value="create"
-          to="/create-survey"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-poll"
-          title="내 설문"
-          value="my-surveys"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-vote"
-          title="참여 가능한 설문"
-          value="available"
-        ></v-list-item>
-
-        <v-divider class="my-2"></v-divider>
-        <v-list-subheader>분석</v-list-subheader>
-        <v-list-item
-          prepend-icon="mdi-chart-box"
-          title="설문 결과"
-          value="results"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-chart-timeline-variant"
-          title="인사이트"
-          value="insights"
-        ></v-list-item>
-
-        <v-divider class="my-2"></v-divider>
-        
-        <v-list-item
-          prepend-icon="mdi-logout"
-          title="로그아웃"
-          value="logout"
-          @click="handleLogout"
-          class="logout-item"
-        ></v-list-item>
-      </v-list>
-
-      <v-divider></v-divider>
-
-      <v-list-item class="copyright-item">
-        <v-list-item-title class="text-caption text-grey">
-          © 2024 Andrew Kwak. All rights reserved.
-        </v-list-item-title>
-      </v-list-item>
-    </v-navigation-drawer>
+    <Sidebar />
 
     <!-- 메인 컨텐츠 -->
     <v-main class="bg-grey-lighten-3">
@@ -178,15 +25,6 @@
                 <div class="text-caption text-grey mb-1">마감일</div>
                 <div class="text-body-2 mb-4">{{ survey.endTime }}</div>
                 <div class="d-flex justify-end gap-2">
-                  <!-- <v-btn
-                    color="primary"
-                    variant="outlined"
-                    size="small"
-                    prepend-icon="mdi-pencil"
-                    @click="handleEdit"
-                  >
-                    수정
-                  </v-btn> -->
                   <v-btn
                     color="error"
                     variant="outlined"
@@ -201,64 +39,6 @@
             </div>
           </v-card-item>
         </v-card>
-
-        <!-- 통계 카드 -->
-<!--        <v-row>-->
-<!--          <v-col cols="12" sm="6" lg="3">-->
-<!--            <v-card class="stat-card">-->
-<!--              <v-card-item>-->
-<!--                <v-card-title class="text-subtitle-1 mb-2">총 응답수</v-card-title>-->
-<!--                <div class="d-flex align-center">-->
-<!--&lt;!&ndash;                  <span class="text-h4">{{ survey.responseCount }}</span>&ndash;&gt;-->
-<!--                  <span class="text-h4">10</span>-->
-<!--                  <v-icon color="success" class="ms-3">mdi-trending-up</v-icon>-->
-<!--                </div>-->
-<!--              </v-card-item>-->
-<!--            </v-card>-->
-<!--          </v-col>-->
-
-<!--          <v-col cols="12" sm="6" lg="3">-->
-<!--            <v-card class="stat-card">-->
-<!--              <v-card-item>-->
-<!--                <v-card-title class="text-subtitle-1 mb-2">응답률</v-card-title>-->
-<!--                <div class="d-flex align-center">-->
-<!--                  <span class="text-h4"> 100%</span>-->
-<!--                  &lt;!&ndash; <span class="text-h4">{{ survey.responseRate }}%</span> &ndash;&gt;-->
-<!--                  <v-chip color="success" size="small" class="ms-3">+5%</v-chip>-->
-<!--                </div>-->
-<!--              </v-card-item>-->
-<!--            </v-card>-->
-<!--          </v-col>-->
-
-<!--          <v-col cols="12" sm="6" lg="3">-->
-<!--            <v-card class="stat-card">-->
-<!--              <v-card-item>-->
-<!--                <v-card-title class="text-subtitle-1 mb-2">평균 응답 시간</v-card-title>-->
-<!--                <div class="d-flex align-center">-->
-<!--                  <span class="text-h4">10분</span>-->
-<!--                  &lt;!&ndash; <span class="text-h4">{{ survey.avgResponseTime }}분</span> &ndash;&gt;-->
-<!--                  <v-icon color="info" class="ms-3">mdi-information</v-icon>-->
-<!--                </div>-->
-<!--              </v-card-item>-->
-<!--            </v-card>-->
-<!--          </v-col>-->
-
-<!--          <v-col cols="12" sm="6" lg="3">-->
-<!--            <v-card class="stat-card">-->
-<!--              <v-card-item>-->
-<!--                <v-card-title class="text-subtitle-1 mb-2">완료율</v-card-title>-->
-<!--&lt;!&ndash;                <div class="d-flex align-center">&ndash;&gt;-->
-<!--&lt;!&ndash;                  <span class="text-h4">{{ survey.completionRate }}%</span>&ndash;&gt;-->
-<!--&lt;!&ndash;                  <v-chip color="warning" size="small" class="ms-3">New</v-chip>&ndash;&gt;-->
-<!--&lt;!&ndash;                </div>&ndash;&gt;-->
-<!--                <div class="d-flex align-center">-->
-<!--                  <span class="text-h4">95%</span>-->
-<!--                  <v-chip color="warning" size="small" class="ms-3">New</v-chip>-->
-<!--                </div>-->
-<!--              </v-card-item>-->
-<!--            </v-card>-->
-<!--          </v-col>-->
-<!--        </v-row>-->
 
         <!-- 설문 공유 -->
         <v-row class="mt-4">
@@ -319,16 +99,6 @@
                       </div>
                       <div class="mt-auto">
                         <div class="text-subtitle-2 mb-2">응답 현황</div>
-                        <!-- <v-progress-linear
-                          :model-value="survey.responseRate"
-                          color="primary"
-                          height="8"
-                          rounded
-                        ></v-progress-linear> -->
-                        <!-- <div class="d-flex justify-space-between mt-2">
-                          <span class="text-caption text-grey">응답률</span>
-                          <span class="text-caption">{{ survey.responseRate }}%</span>
-                        </div> -->
                       </div>
                     </div>
                   </v-col>
@@ -367,12 +137,6 @@
                     </template>
                     <v-list-item-title class="text-h6 mb-2">
                       {{ question.content }}
-                      <!-- <v-chip
-                        v-if="question.required"
-                        color="error"
-                        size="small"
-                        class="ms-2"
-                      > -->
                       <v-chip
                         color="error"
                         size="small"
@@ -458,25 +222,23 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, computed } from 'vue'
 import { useSnackbar } from '@/composables/useSnackbar'
-import { authApi } from '@/apis/authApi'
 import { surveyApi } from '@/apis/surveyApi'
 import { useRouter, useRoute } from 'vue-router'
 import QrcodeVue from 'qrcode.vue'
 import { getQuestionsResponse, GetSurveyDetailResponse } from '@/interfaces/surveyInterface'
+import Sidebar from '@/components/common/Sidebar.vue'
 
 export default defineComponent({
   name: 'SurveyDetailView',
   components: {
-    QrcodeVue
+    QrcodeVue,
+    Sidebar
   },
   setup() {
     const { showSuccess, showError } = useSnackbar()
     const router = useRouter()
     const route = useRoute()
     const surveyId = Number(route.params.id)
-    const userName = ref('Andrew Kwak')
-    const userEmail = ref('andrew@example.com')
-    const showNotifications = ref(false)
     const showResults = ref(false)
     const showDeleteDialog = ref(false)
     const isLoading = ref(false)
@@ -491,42 +253,7 @@ export default defineComponent({
       questions: []
     })
 
-    const notifications = ref([
-      {
-        id: 1,
-        title: '"직장인 커피 소비 습관" 설문이 종료되었습니다',
-        time: '방금 전',
-        icon: 'mdi-poll',
-        color: 'primary'
-      },
-      {
-        id: 2,
-        title: '"재택근무 만족도 조사"에 새로운 응답이 있습니다',
-        time: '10분 전',
-        icon: 'mdi-message-reply',
-        color: 'success'
-      }
-    ])
-
     const shareUrl = computed(() => `http://localhost:5173/survey/${route.params.id}/create-response`)
-
-    const markAllAsRead = () => {
-      notifications.value = []
-      showNotifications.value = false
-    }
-
-    const handleLogout = async () => {
-      try {
-        await authApi.logout()
-        showSuccess('로그아웃에 성공했습니다.')
-      } catch (error) {
-        console.error('Logout failed:', error)
-      }
-    }
-
-    const handleEdit = () => {
-      router.push(`/edit-survey/${survey.value.id}`)
-    }
 
     const handleDelete = () => {
       showDeleteDialog.value = true
@@ -589,16 +316,9 @@ export default defineComponent({
     })
 
     return {
-      userName,
-      userEmail,
-      notifications,
-      showNotifications,
-      markAllAsRead,
-      handleLogout,
       survey,
       showResults,
       questionTypeLabels,
-      handleEdit,
       handleDelete,
       showDeleteDialog,
       confirmDelete,
@@ -621,44 +341,6 @@ export default defineComponent({
   padding-bottom: 32px;
 }
 
-.profile-item {
-  min-height: 72px;
-  padding: 12px 16px;
-}
-
-.profile-item :deep(.v-list-item__prepend) {
-  padding-right: 16px;
-}
-
-.notification-btn {
-  margin-left: 8px;
-}
-
-.notification-menu {
-  margin-top: 8px;
-}
-
-.v-list-item-title {
-  white-space: normal;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.stat-card {
-  height: 100%;
-}
-
-.stat-card .v-card-item {
-  height: 100px;
-  padding: 16px;
-}
-
-.stat-card .v-card-title {
-  opacity: 0.7;
-}
-
 .content-card {
   height: 100%;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -666,24 +348,6 @@ export default defineComponent({
 
 .content-card .v-card-title {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.logout-item {
-  margin-top: auto;
-  color: #FF5252;
-}
-
-.logout-item :deep(.v-list-item__prepend) {
-  color: #FF5252;
-}
-
-.copyright-item {
-  padding: 8px 16px;
-  opacity: 0.7;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background-color: grey-lighten-4;
 }
 
 .question-number {
