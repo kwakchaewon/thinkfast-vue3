@@ -295,12 +295,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted } from 'vue'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'
 import { surveyApi } from '@/apis/surveyApi'
 import { useRouter } from 'vue-router'
 import { recentSurvey } from '@/interfaces/surveyInterface'
+
+interface Notification {
+  id: number
+  title: string
+  time: string
+  icon: string
+  color: string
+}
+
 export default defineComponent({
   name: 'MainView',
   components: {
@@ -314,30 +323,74 @@ export default defineComponent({
     const showNotifications = ref(false)
     const recentSurveys = ref<recentSurvey[]>([])
     const isLoading = ref(false)
+    const ws = ref<WebSocket | null>(null)
 
-    const notifications = ref([
-      {
-        id: 1,
-        title: '"직장인 커피 소비 습관" 설문이 종료되었습니다',
-        time: '방금 전',
-        icon: 'mdi-poll',
-        color: 'primary'
-      },
-      {
-        id: 2,
-        title: '"재택근무 만족도 조사"에 새로운 응답이 있습니다',
-        time: '10분 전',
-        icon: 'mdi-message-reply',
-        color: 'success'
-      },
-      {
-        id: 3,
-        title: '새로운 인사이트가 생성되었습니다',
-        time: '1시간 전',
-        icon: 'mdi-lightbulb',
-        color: 'warning'
+    const notifications = ref<Notification[]>([])
+
+    const connectWebSocket = () => {
+      const username = localStorage.getItem('username') || 'user'
+      const wsUrl = `ws://localhost:8080/alarm/${username}`
+      console.log('Connecting to WebSocket:', wsUrl)
+      
+      ws.value = new WebSocket(wsUrl)
+
+      ws.value.onopen = () => {
+        console.log('WebSocket connection established')
       }
-    ])
+
+      ws.value.onmessage = (event: MessageEvent) => {
+        console.log('Received message:', event.data)
+        try {
+          let message: string
+          // 메시지가 JSON인지 확인
+          if (event.data.startsWith('{') || event.data.startsWith('[')) {
+            const notification = JSON.parse(event.data)
+            message = notification.message || notification
+          } else {
+            message = event.data
+          }
+          
+          console.log('Processed message:', message)
+          
+          // 새로운 알림을 배열의 맨 앞에 추가
+          notifications.value.unshift({
+            id: Date.now(),
+            title: message,
+            time: '방금 전',
+            icon: 'mdi-bell',
+            color: 'primary'
+          })
+          
+          // 알림이 추가되었음을 콘솔에 로깅
+          console.log('Notification added:', notifications.value[0])
+          
+          // 알림 배지 업데이트를 위해 강제로 리렌더링
+          showNotifications.value = false
+          setTimeout(() => {
+            showNotifications.value = true
+          }, 100)
+        } catch (error) {
+          console.error('Error processing notification:', error)
+        }
+      }
+
+      ws.value.onerror = (error: Event) => {
+        console.error('WebSocket error:', error)
+        console.log('WebSocket readyState:', ws.value?.readyState)
+        showError('알림 서버와의 연결에 실패했습니다.')
+      }
+
+      ws.value.onclose = (event: CloseEvent) => {
+        console.log('WebSocket connection closed:', event.code, event.reason)
+        // 연결이 끊어진 경우 3초 후 재연결 시도
+        setTimeout(() => {
+          if (ws.value?.readyState === WebSocket.CLOSED) {
+            console.log('Attempting to reconnect...')
+            connectWebSocket()
+          }
+        }, 3000)
+      }
+    }
 
     const fetchRecentSurveys = async () => {
       try {
@@ -355,6 +408,13 @@ export default defineComponent({
 
     onMounted(() => {
       fetchRecentSurveys()
+      connectWebSocket()
+    })
+
+    onUnmounted(() => {
+      if (ws.value) {
+        ws.value.close()
+      }
     })
 
     const markAllAsRead = () => {
