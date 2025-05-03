@@ -11,10 +11,10 @@
           <v-col cols="12" sm="6" lg="3">
             <v-card class="stat-card">
               <v-card-item>
-                <v-card-title class="text-subtitle-1 mb-2">진행중인 설문</v-card-title>
+                <v-card-title class="text-subtitle-1 mb-2">진행중 설문</v-card-title>
                 <div class="d-flex align-center">
-                  <span class="text-h4">3</span>
-                  <v-icon color="success" class="ms-3">mdi-trending-up</v-icon>
+                  <span class="text-h4">{{ activeSurveysCount }}</span>
+                  <v-icon color="success" class="ms-3">mdi-chart-line</v-icon>
                 </div>
               </v-card-item>
             </v-card>
@@ -25,8 +25,8 @@
               <v-card-item>
                 <v-card-title class="text-subtitle-1 mb-2">총 응답수</v-card-title>
                 <div class="d-flex align-center">
-                  <span class="text-h4">247</span>
-                  <v-chip color="success" size="small" class="ms-3">+12%</v-chip>
+                  <span class="text-h4">{{ totalResponses }}</span>
+                  <v-icon color="primary" class="ms-3">mdi-message-reply</v-icon>
                 </div>
               </v-card-item>
             </v-card>
@@ -35,10 +35,10 @@
           <v-col cols="12" sm="6" lg="3">
             <v-card class="stat-card">
               <v-card-item>
-                <v-card-title class="text-subtitle-1 mb-2">평균 응답률</v-card-title>
+                <v-card-title class="text-subtitle-1 mb-2">최근 7일 응답</v-card-title>
                 <div class="d-flex align-center">
-                  <span class="text-h4">82%</span>
-                  <v-icon color="info" class="ms-3">mdi-information</v-icon>
+                  <span class="text-h4">{{ recentResponses }}</span>
+                  <v-chip color="success" size="small" class="ms-3">+{{ recentResponseIncrease }}%</v-chip>
                 </div>
               </v-card-item>
             </v-card>
@@ -47,10 +47,10 @@
           <v-col cols="12" sm="6" lg="3">
             <v-card class="stat-card">
               <v-card-item>
-                <v-card-title class="text-subtitle-1 mb-2">새로운 인사이트</v-card-title>
+                <v-card-title class="text-subtitle-1 mb-2">평균 응답 시간</v-card-title>
                 <div class="d-flex align-center">
-                  <span class="text-h4">5</span>
-                  <v-chip color="warning" size="small" class="ms-3">New</v-chip>
+                  <span class="text-h4">{{ avgResponseTime }}분</span>
+                  <v-icon color="info" class="ms-3">mdi-clock-outline</v-icon>
                 </div>
               </v-card-item>
             </v-card>
@@ -142,7 +142,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted, computed } from 'vue'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { surveyApi } from '@/apis/surveyApi'
 import { useRouter } from 'vue-router'
@@ -209,11 +209,63 @@ export default defineComponent({
       router.push(`/survey/${surveyId}`)
     }
 
+    const activeSurveysCount = computed(() => {
+      return recentSurveys.value.filter(survey => survey.isActive).length
+    })
+
+    const totalResponses = computed(() => {
+      return recentSurveys.value.reduce((sum, survey) => sum + survey.responseCount, 0)
+    })
+
+    const recentResponses = computed(() => {
+      // 최근 7일간의 응답 수를 계산하는 로직
+      return recentSurveys.value.reduce((sum, survey) => {
+        const surveyDate = new Date(survey.createdAt)
+        const sevenDaysAgo = new Date()
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+        
+        if (surveyDate >= sevenDaysAgo) {
+          return sum + survey.responseCount
+        }
+        return sum
+      }, 0)
+    })
+
+    const recentResponseIncrease = computed(() => {
+      // 이전 7일 대비 응답 증가율 계산
+      const currentResponses = recentResponses.value
+      const previousResponses = recentSurveys.value.reduce((sum, survey) => {
+        const surveyDate = new Date(survey.createdAt)
+        const fourteenDaysAgo = new Date()
+        fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14)
+        const sevenDaysAgo = new Date()
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+        
+        if (surveyDate >= fourteenDaysAgo && surveyDate < sevenDaysAgo) {
+          return sum + survey.responseCount
+        }
+        return sum
+      }, 0)
+
+      if (previousResponses === 0) return 0
+      return Math.round(((currentResponses - previousResponses) / previousResponses) * 100)
+    })
+
+    const avgResponseTime = computed(() => {
+      // 설문별 평균 응답 시간 계산 (예시로 10분 고정)
+      return 10
+    })
+
     return {
       recentSurveys,
       recentActivities,
       isLoading,
-      goToSurveyDetail
+      goToSurveyDetail,
+      activeSurveysCount,
+      totalResponses,
+      recentResponses,
+      recentResponseIncrease,
+      avgResponseTime
     }
   }
 })
