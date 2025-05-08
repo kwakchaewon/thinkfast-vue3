@@ -53,7 +53,10 @@
               </div>
               <v-divider></v-divider>
               <v-list>
-                <v-list-subheader class="d-flex align-center px-4">
+                <v-list-subheader 
+                  v-if="notifications.some(n => !n.isRead)"
+                  class="d-flex align-center px-4"
+                >
                   <v-btn
                     variant="text"
                     density="compact"
