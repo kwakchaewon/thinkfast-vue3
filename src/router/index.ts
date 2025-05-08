@@ -87,6 +87,11 @@ const router = createRouter({
       meta: {
         requiresAuth: false
       }
+    },
+    {
+      path: '/survey-completion',
+      name: 'SurveyCompletion',
+      component: () => import('@/views/SurveyCompletion.vue')
     }
   ]
 })

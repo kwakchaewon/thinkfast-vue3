@@ -189,7 +189,10 @@ export default defineComponent({
         const response = await surveyApi.createAnswer(survey.value.id, payload)
         if (response.data.success === true) {
           showSuccess('설문이 성공적으로 제출되었습니다.')
-          router.push('/')
+          router.push({
+            path: '/survey-completion',
+            query: { title: encodeURIComponent(survey.value.title) }
+          })
         } else {
           showError(response.data.message)
         }
