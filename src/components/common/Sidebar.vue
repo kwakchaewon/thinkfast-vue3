@@ -14,8 +14,8 @@
         <template v-slot:append>
           <div class="d-flex align-center">
             <v-badge
-              :content="notifications.length.toString()"
-              :model-value="notifications.length > 0"
+              :content="notifications.filter(n => !n.isRead).length.toString()"
+              :model-value="notifications.filter(n => !n.isRead).length > 0"
               color="error"
               offset-x="12"
             >
