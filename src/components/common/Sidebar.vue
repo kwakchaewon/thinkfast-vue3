@@ -161,6 +161,8 @@ import { defineComponent, ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'
+import axios from 'axios'
+import tbAxios from "@/apis/axios.ts";
 
 interface Notification {
   id: number
@@ -221,6 +223,44 @@ export default defineComponent({
       return `알림: ${notification.type}`
     }
 
+    const fetchInitialNotifications = async () => {
+      try {
+        console.log('Fetching initial notifications...')
+        const response = await tbAxios.get('http://localhost:8080/notification')
+        console.log('Raw response:', response)
+        console.log('Response data:', response.data)
+        
+        if (response.data.data && Array.isArray(response.data.data)) {
+          const processedNotifications = response.data.data.map((notification: any) => {
+            console.log('Processing raw notification:', notification)
+            const processed = {
+              id: Date.now() + Math.random(),
+              title: formatNotificationTitle(notification),
+              time: formatTimeAgo(notification.createdAt),
+              icon: 'mdi-bell',
+              color: notification.isRead ? 'grey' : 'primary',
+              isRead: notification.isRead,
+              type: notification.type,
+              surveyId: notification.surveyId,
+              surveyTitle: notification.surveyTitle,
+              createdAt: notification.createdAt,
+              alarmCount: notification.alarmCount
+            }
+            console.log('Processed notification:', processed)
+            return processed
+          })
+          
+          console.log('Final processed notifications:', processedNotifications)
+          notifications.value = processedNotifications
+          console.log('Current notifications value:', notifications.value)
+        } else {
+          console.error('Invalid response format:', response.data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch initial notifications:', error)
+      }
+    }
+
     const connectWebSocket = () => {
       const username = localStorage.getItem('username') || 'user'
       const wsUrl = `ws://localhost:8080/alarm/${username}`
@@ -233,26 +273,32 @@ export default defineComponent({
       }
 
       ws.value.onmessage = (event: MessageEvent) => {
-        console.log('Received message:', event.data)
+        console.log('Received WebSocket message:', event.data)
         try {
           const data = JSON.parse(event.data)
-          if (Array.isArray(data)) {
-            // 새로운 알림 배열로 교체
-            notifications.value = (data as RawNotification[]).map((notification: RawNotification) => ({
-              id: Date.now() + Math.random(),
-              title: formatNotificationTitle(notification),
-              time: formatTimeAgo(notification.createdAt),
-              icon: 'mdi-bell',
-              color: notification.isRead ? 'grey' : 'primary',
-              isRead: notification.isRead,
-              type: notification.type,
-              surveyId: notification.surveyId,
-              surveyTitle: notification.surveyTitle,
-              createdAt: notification.createdAt,
-              alarmCount: notification.alarmCount
-            }))
+          console.log('Parsed WebSocket data:', data)
+          
+          if (data && Array.isArray(data)) {
+            const processedNotifications = data.map((notification: any) => {
+              console.log('Processing WebSocket notification:', notification)
+              return {
+                id: Date.now() + Math.random(),
+                title: formatNotificationTitle(notification),
+                time: formatTimeAgo(notification.createdAt),
+                icon: 'mdi-bell',
+                color: notification.isRead ? 'grey' : 'primary',
+                isRead: notification.isRead,
+                type: notification.type,
+                surveyId: notification.surveyId,
+                surveyTitle: notification.surveyTitle,
+                createdAt: notification.createdAt,
+                alarmCount: notification.alarmCount
+              }
+            })
+            console.log('Processed WebSocket notifications:', processedNotifications)
+            notifications.value = processedNotifications
           } else {
-            console.error('Invalid notification format')
+            console.log('Received empty or invalid WebSocket data, keeping existing notifications')
           }
           
           // 알림 배지 업데이트를 위해 강제로 리렌더링
@@ -261,7 +307,7 @@ export default defineComponent({
             showNotifications.value = true
           }, 100)
         } catch (error) {
-          console.error('Error processing notification:', error)
+          console.error('Error processing WebSocket notification:', error)
         }
       }
 
@@ -283,7 +329,8 @@ export default defineComponent({
       }
     }
 
-    onMounted(() => {
+    onMounted(async () => {
+      await fetchInitialNotifications()
       connectWebSocket()
     })
 
