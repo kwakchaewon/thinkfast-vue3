@@ -369,13 +369,21 @@ export default defineComponent({
       }
     }
 
-    const handleNotificationClick = (notification: Notification) => {
+    const handleNotificationClick = async (notification: Notification) => {
       if (notification.type === 'SURVEY_RESPONSE') {
-        router.push(`/survey/${notification.surveyId}`)
-        // 알림을 읽음 처리
-        notifications.value = notifications.value.map((n: Notification) => 
-          n.id === notification.id ? { ...n, isRead: true } : n
-        )
+        try {
+          // 알림 읽음 처리 API 호출
+          await tbAxios.post('http://localhost:8080/notification/read', [notification.surveyId])
+          
+          // 알림 목록 새로고침
+          await fetchInitialNotifications()
+          
+          // 설문 페이지로 이동
+          router.push(`/survey/${notification.surveyId}`)
+        } catch (error) {
+          console.error('Failed to mark notification as read:', error)
+          showError('알림 읽음 처리에 실패했습니다.')
+        }
       }
     }
 
