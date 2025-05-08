@@ -68,7 +68,8 @@
                   v-for="notification in notifications"
                   :key="notification.id"
                   :subtitle="`🕒 ${notification.time}  •  ${notification.isRead ? '읽음' : '미읽음'}`"
-                  class="py-2"
+                  class="py-2 notification-item"
+                  @click="handleNotificationClick(notification)"
                 >
                   <template v-slot:prepend>
                     <v-avatar :color="notification.color" size="36">
@@ -157,6 +158,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'
 
@@ -168,6 +170,7 @@ interface Notification {
   color: string
   isRead: boolean
   type: string
+  surveyId: number
   surveyTitle: string
   createdAt: string
   alarmCount: number
@@ -175,6 +178,7 @@ interface Notification {
 
 interface RawNotification {
   type: string
+  surveyId: number
   surveyTitle: string
   isRead: boolean
   createdAt: string
@@ -184,6 +188,7 @@ interface RawNotification {
 export default defineComponent({
   name: 'Sidebar',
   setup() {
+    const router = useRouter()
     const { showSuccess, showError } = useSnackbar()
     const userName = ref('Andrew Kwak')
     const userEmail = ref('andrew@example.com')
@@ -241,6 +246,7 @@ export default defineComponent({
               color: notification.isRead ? 'grey' : 'primary',
               isRead: notification.isRead,
               type: notification.type,
+              surveyId: notification.surveyId,
               surveyTitle: notification.surveyTitle,
               createdAt: notification.createdAt,
               alarmCount: notification.alarmCount
@@ -304,13 +310,24 @@ export default defineComponent({
       }
     }
 
+    const handleNotificationClick = (notification: Notification) => {
+      if (notification.type === 'SURVEY_RESPONSE') {
+        router.push(`/survey/${notification.surveyId}`)
+        // 알림을 읽음 처리
+        notifications.value = notifications.value.map((n: Notification) => 
+          n.id === notification.id ? { ...n, isRead: true } : n
+        )
+      }
+    }
+
     return {
       userName,
       userEmail,
       notifications,
       showNotifications,
       markAllAsRead,
-      handleLogout
+      handleLogout,
+      handleNotificationClick
     }
   }
 })
@@ -363,5 +380,13 @@ export default defineComponent({
 .notification-title {
   white-space: pre-line;
   line-height: 1.4;
+}
+
+.notification-item {
+  cursor: pointer;
+}
+
+.notification-item:hover {
+  background-color: rgba(0, 0, 0, 0.04);
 }
 </style> 
