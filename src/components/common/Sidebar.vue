@@ -300,12 +300,6 @@ export default defineComponent({
           } else {
             console.log('Received empty or invalid WebSocket data, keeping existing notifications')
           }
-          
-          // 알림 배지 업데이트를 위해 강제로 리렌더링
-          showNotifications.value = false
-          setTimeout(() => {
-            showNotifications.value = true
-          }, 100)
         } catch (error) {
           console.error('Error processing WebSocket notification:', error)
         }
@@ -361,7 +355,6 @@ export default defineComponent({
         console.error('Failed to mark notifications as read:', error)
         showError('알림 읽음 처리에 실패했습니다.')
       }
-      showNotifications.value = false
     }
 
     const handleLogout = async () => {
