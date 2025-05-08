@@ -67,7 +67,7 @@
                 <v-list-item
                   v-for="notification in notifications"
                   :key="notification.id"
-                  :subtitle="notification.time"
+                  :subtitle="`🕒 ${notification.time}  •  ${notification.isRead ? '읽음' : '미읽음'}`"
                   class="py-2"
                 >
                   <template v-slot:prepend>
@@ -77,7 +77,7 @@
                       </v-icon>
                     </v-avatar>
                   </template>
-                  <v-list-item-title class="text-subtitle-2 mb-1">
+                  <v-list-item-title class="text-subtitle-2 mb-1 notification-title">
                     {{ notification.title }}
                   </v-list-item-title>
                 </v-list-item>
@@ -166,6 +166,19 @@ interface Notification {
   time: string
   icon: string
   color: string
+  isRead: boolean
+  type: string
+  surveyTitle: string
+  createdAt: string
+  alarmCount: number
+}
+
+interface RawNotification {
+  type: string
+  surveyTitle: string
+  isRead: boolean
+  createdAt: string
+  alarmCount: number
 }
 
 export default defineComponent({
@@ -177,6 +190,31 @@ export default defineComponent({
     const showNotifications = ref(false)
     const notifications = ref<Notification[]>([])
     const ws = ref<WebSocket | null>(null)
+
+    const formatTimeAgo = (dateString: string) => {
+      const date = new Date(dateString)
+      const now = new Date()
+      const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60))
+      
+      if (diffInMinutes < 1) return '방금 전'
+      if (diffInMinutes < 60) return `${diffInMinutes}분 전`
+      
+      const diffInHours = Math.floor(diffInMinutes / 60)
+      if (diffInHours < 24) return `${diffInHours}시간 전`
+      
+      const diffInDays = Math.floor(diffInHours / 24)
+      return `${diffInDays}일 전`
+    }
+
+    const formatNotificationTitle = (notification: RawNotification) => {
+      if (notification.type === 'SURVEY_RESPONSE') {
+        const truncatedTitle = notification.surveyTitle.length > 20 
+          ? notification.surveyTitle.substring(0, 20) + '...'
+          : notification.surveyTitle
+        return `📢 [설문 응답] "${truncatedTitle}"에\n새로운 응답이 도착했습니다. (총 ${notification.alarmCount}건의 응답)`
+      }
+      return `알림: ${notification.type}`
+    }
 
     const connectWebSocket = () => {
       const username = localStorage.getItem('username') || 'user'
@@ -192,28 +230,24 @@ export default defineComponent({
       ws.value.onmessage = (event: MessageEvent) => {
         console.log('Received message:', event.data)
         try {
-          let message: string
-          // 메시지가 JSON인지 확인
-          if (event.data.startsWith('{') || event.data.startsWith('[')) {
-            const notification = JSON.parse(event.data)
-            message = notification.message || notification
+          const data = JSON.parse(event.data)
+          if (Array.isArray(data)) {
+            // 새로운 알림 배열로 교체
+            notifications.value = (data as RawNotification[]).map((notification: RawNotification) => ({
+              id: Date.now() + Math.random(),
+              title: formatNotificationTitle(notification),
+              time: formatTimeAgo(notification.createdAt),
+              icon: 'mdi-bell',
+              color: notification.isRead ? 'grey' : 'primary',
+              isRead: notification.isRead,
+              type: notification.type,
+              surveyTitle: notification.surveyTitle,
+              createdAt: notification.createdAt,
+              alarmCount: notification.alarmCount
+            }))
           } else {
-            message = event.data
+            console.error('Invalid notification format')
           }
-          
-          console.log('Processed message:', message)
-          
-          // 새로운 알림을 배열의 맨 앞에 추가
-          notifications.value.unshift({
-            id: Date.now(),
-            title: message,
-            time: '방금 전',
-            icon: 'mdi-bell',
-            color: 'primary'
-          })
-          
-          // 알림이 추가되었음을 콘솔에 로깅
-          console.log('Notification added:', notifications.value[0])
           
           // 알림 배지 업데이트를 위해 강제로 리렌더링
           showNotifications.value = false
@@ -254,7 +288,10 @@ export default defineComponent({
     })
 
     const markAllAsRead = () => {
-      notifications.value = []
+      notifications.value = notifications.value.map((notification: Notification) => ({
+        ...notification,
+        isRead: true
+      }))
       showNotifications.value = false
     }
 
@@ -321,5 +358,10 @@ export default defineComponent({
   bottom: 0;
   width: 100%;
   background-color: grey-lighten-4;
+}
+
+.notification-title {
+  white-space: pre-line;
+  line-height: 1.4;
 }
 </style> 
