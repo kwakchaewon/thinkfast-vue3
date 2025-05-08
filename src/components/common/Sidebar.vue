@@ -67,7 +67,7 @@
                 <v-list-item
                   v-for="notification in notifications"
                   :key="notification.id"
-                  :subtitle="`🕒 ${notification.time}  •  ${notification.isRead ? '읽음' : '미읽음'}`"
+                  :subtitle="`🕒 ${notification.time}  •  ${notification.isRead ? '읽음' : '읽지 않음'}`"
                   class="py-2 notification-item"
                   @click="handleNotificationClick(notification)"
                 >
@@ -340,11 +340,27 @@ export default defineComponent({
       }
     })
 
-    const markAllAsRead = () => {
-      notifications.value = notifications.value.map((notification: Notification) => ({
-        ...notification,
-        isRead: true
-      }))
+    const markAllAsRead = async () => {
+      try {
+        // 읽지 않은 알림들의 surveyId만 추출
+        const unreadSurveyIds = notifications.value
+          .filter((notification: Notification) => !notification.isRead)
+          .map((notification: Notification) => notification.surveyId)
+        
+        if (unreadSurveyIds.length > 0) {
+          console.log('Marking notifications as read for surveyIds:', unreadSurveyIds)
+          await tbAxios.post('http://localhost:8080/notification/read', unreadSurveyIds)
+          
+          // 알림 목록 새로고침
+          await fetchInitialNotifications()
+          showSuccess('모든 알림을 읽음 처리했습니다.')
+        } else {
+          console.log('No unread notifications to mark as read')
+        }
+      } catch (error) {
+        console.error('Failed to mark notifications as read:', error)
+        showError('알림 읽음 처리에 실패했습니다.')
+      }
       showNotifications.value = false
     }
 
