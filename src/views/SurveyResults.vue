@@ -75,63 +75,66 @@
                   <v-list-item
                     v-for="(question, index) in questions"
                     :key="index"
-                    class="mb-4"
+                    class="mb-6 pa-0"
+                    style="background: none; border: none;"
                   >
-                    <template v-slot:prepend>
-                      <div class="question-number">{{ index + 1 }}</div>
-                    </template>
-                    <v-list-item-title class="text-h6 mb-2">
-                      {{ question.content }}
-                      <v-chip
-                        v-if="question.required"
-                        color="error"
-                        size="small"
-                        class="ms-2"
-                      >필수</v-chip>
-                    </v-list-item-title>
-                    <v-list-item-subtitle class="text-caption text-grey mb-2">
-                      {{ question.type }}
-                    </v-list-item-subtitle>
-                    <v-list-item-text>
-                      <div v-if="question.type === '객관식'" class="d-flex flex-wrap gap-2 mb-2">
-                        <!-- <v-chip
-                          v-for="option in question.options"
-                          :key="option"
-                          class="me-2 mb-2"
-                        >{{ option }}</v-chip> -->
-                      </div>
-                      <v-row v-if="question.type === '객관식'" class="graph-insight-row mb-4" align="center">
-                        <v-col cols="12" md="6" class="d-flex justify-center">
-                          <Doughnut :data="chartData" :options="chartOptions" style="width:380px; height:380px;" />
-                        </v-col>
-                        <v-col cols="12" md="6" class="d-flex align-center">
-                          <div class="insight-text">
-                            정글과 미드가 응답자의 절반 이상을 차지하며,<br>
-                            원딜, 탑, 서포터는 동일한 비율로 나타났습니다.
-                          </div>
-                        </v-col>
-                      </v-row>
-                      <v-row v-if="question.type === '주관식'" class="mt-4" align="center">
-                        <v-col cols="12" md="6">
-                          <div class="wordcloud-visual">
-                            <span
-                              v-for="(item, i) in wordCloudData"
-                              :key="item.word"
-                              class="wordcloud-key"
-                              :style="getWordCloudStyle(item, i)"
-                            >
-                              {{ item.word }}
-                              <span class="wordcloud-count">{{ item.count }}</span>
-                            </span>
-                          </div>
-                        </v-col>
-                        <v-col cols="12" md="6" class="d-flex align-center">
-                          <div class="insight-text">
-                            응답자들은 '매칭 시스템'에 대한 개선 요청이 가장 많았으며, 그 뒤를 '클라이언트 안정성'과 '버그 수정'에 대한 의견이 차지했습니다.
-                          </div>
-                        </v-col>
-                      </v-row>
-                    </v-list-item-text>
+                    <v-card class="pa-6" style="border-radius: 14px; box-shadow: 0 2px 8px rgba(33,150,243,0.04); border: 1px solid #e0e0e0;">
+                      <template v-slot:prepend>
+                        <div class="question-number">{{ index + 1 }}</div>
+                      </template>
+                      <v-list-item-title class="text-h6 mb-2">
+                        {{ question.content }}
+                        <v-chip
+                          v-if="question.required"
+                          color="error"
+                          size="small"
+                          class="ms-2"
+                        >필수</v-chip>
+                      </v-list-item-title>
+                      <v-list-item-subtitle class="text-caption text-grey mb-2">
+                        {{ question.type }}
+                      </v-list-item-subtitle>
+                      <v-list-item-text>
+                        <div v-if="question.type === '객관식'" class="d-flex flex-wrap gap-2 mb-2">
+                          <!-- <v-chip
+                            v-for="option in question.options"
+                            :key="option"
+                            class="me-2 mb-2"
+                          >{{ option }}</v-chip> -->
+                        </div>
+                        <v-row v-if="question.type === '객관식'" class="graph-insight-row mb-4" align="center">
+                          <v-col cols="12" md="6" class="d-flex justify-center">
+                            <Doughnut :data="chartData" :options="chartOptions" style="width:380px; height:380px;" />
+                          </v-col>
+                          <v-col cols="12" md="6" class="d-flex align-center">
+                            <div class="insight-text">
+                              정글과 미드가 응답자의 절반 이상을 차지하며,<br>
+                              원딜, 탑, 서포터는 동일한 비율로 나타났습니다.
+                            </div>
+                          </v-col>
+                        </v-row>
+                        <v-row v-if="question.type === '주관식'" class="mt-4" align="center">
+                          <v-col cols="12" md="6">
+                            <div class="wordcloud-visual">
+                              <span
+                                v-for="(item, i) in wordCloudData"
+                                :key="item.word"
+                                class="wordcloud-key"
+                                :style="getWordCloudStyle(item, i)"
+                              >
+                                {{ item.word }}
+                                <span class="wordcloud-count">{{ item.count }}</span>
+                              </span>
+                            </div>
+                          </v-col>
+                          <v-col cols="12" md="6" class="d-flex align-center">
+                            <div class="insight-text">
+                              응답자들은 '매칭 시스템'에 대한 개선 요청이 가장 많았으며, 그 뒤를 '클라이언트 안정성'과 '버그 수정'에 대한 의견이 차지했습니다.
+                            </div>
+                          </v-col>
+                        </v-row>
+                      </v-list-item-text>
+                    </v-card>
                   </v-list-item>
                 </v-list>
               </v-card-text>
