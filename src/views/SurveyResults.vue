@@ -94,11 +94,11 @@
                     </v-list-item-subtitle>
                     <v-list-item-text>
                       <div v-if="question.type === '객관식'" class="d-flex flex-wrap gap-2">
-                        <v-chip
+                        <!-- <v-chip
                           v-for="option in question.options"
                           :key="option"
                           class="me-2 mb-2"
-                        >{{ option }}</v-chip>
+                        >{{ option }}</v-chip> -->
                       </div>
                       <div v-if="question.type === '객관식'" class="d-flex justify-center my-4">
                         <Doughnut :data="chartData" :options="chartOptions" style="width:320px; height:320px;" />
