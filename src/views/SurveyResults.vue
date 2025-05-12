@@ -231,10 +231,12 @@ export default defineComponent({
     }
 
     const chartOptions = {
-      responsive: false,
-      maintainAspectRatio: true,
+      responsive: true,
+      maintainAspectRatio: false,
       plugins: {
-        legend: { position: 'bottom' }
+        legend: {
+          position: 'bottom' as const,
+        },
       }
     }
 
@@ -246,7 +248,7 @@ export default defineComponent({
       { word: 'AFK', count: 5 }
     ]
 
-    function getWordCloudStyle(item, i) {
+    function getWordCloudStyle(item: { word: string; count: number }, i: number) {
       const minFont = 18, maxFont = 48
       const minCount = Math.min(...wordCloudData.map(w => w.count))
       const maxCount = Math.max(...wordCloudData.map(w => w.count))
@@ -254,20 +256,17 @@ export default defineComponent({
       // 랜덤 위치 (5~75% top/left)
       const top = Math.random() * 70 + 5
       const left = Math.random() * 70 + 5
-      // 랜덤 회전
-      const rotate = Math.random() * 30 - 15
       // 랜덤 색상
       const colors = ['#1976d2', '#43a047', '#fbc02d', '#8e24aa', '#039be5', '#e64a19']
       const color = colors[i % colors.length]
       return {
-        position: 'absolute',
+        position: 'absolute' as const,
         top: `${top}%`,
         left: `${left}%`,
         fontSize: size + 'px',
         fontWeight: 700,
         color,
         opacity: 0.7 + ((item.count - minCount) / (maxCount - minCount || 1)) * 0.3,
-        transform: `rotate(${rotate}deg)`,
         zIndex: 10 + item.count
       }
     }
