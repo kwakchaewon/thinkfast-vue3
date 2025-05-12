@@ -64,7 +64,12 @@
               <v-card-title class="d-flex align-center px-4 py-3 bg-grey-lighten-4">
                 <span class="text-h6">최근 설문</span>
                 <v-spacer></v-spacer>
-                <v-btn variant="text" color="primary" size="small">
+                <v-btn 
+                  variant="text" 
+                  color="primary" 
+                  size="small"
+                  to="/all-surveys"
+                >
                   전체보기
                   <v-icon end>mdi-chevron-right</v-icon>
                 </v-btn>

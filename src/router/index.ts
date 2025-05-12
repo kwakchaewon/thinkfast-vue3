@@ -4,6 +4,7 @@ import { useSnackbar } from '@/composables/useSnackbar'
 import Main from '@/views/Main.vue'
 import CreateSurvey from '@/views/CreateSurvey.vue'
 import SurveyDetail from '@/views/SurveyDetail.vue'
+import AllSurveys from '@/views/AllSurveys.vue'
 
 const { showError } = useSnackbar()
 
@@ -92,6 +93,19 @@ const router = createRouter({
       path: '/survey-completion',
       name: 'SurveyCompletion',
       component: () => import('@/views/SurveyCompletion.vue')
+    },
+    {
+      path: '/all-surveys',
+      name: 'all-surveys',
+      component: AllSurveys,
+      beforeEnter: (_to, _from, next) => {
+        if (!store.getters.isAuthenticated) {
+          showError('로그인이 필요합니다.')
+          next('/')
+        } else {
+          next()
+        }
+      }
     }
   ]
 })
