@@ -259,6 +259,8 @@ export default defineComponent({
 <style scoped>
 .v-main {
   min-height: 100vh;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .content-card {
