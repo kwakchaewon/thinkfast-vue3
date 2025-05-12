@@ -212,7 +212,7 @@ export default defineComponent({
     }
 
     const chartOptions = {
-      responsive: true,
+      responsive: false,
       maintainAspectRatio: true,
       plugins: {
         legend: { position: 'bottom' }
