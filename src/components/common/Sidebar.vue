@@ -69,7 +69,7 @@
                   </v-btn>
                 </v-list-subheader>
                 <v-list-item
-                  v-for="notification in notifications"
+                  v-for="notification in paginatedNotifications"
                   :key="notification.id"
                   :subtitle="`🕒 ${notification.time}  •  ${notification.isRead ? '읽음' : '읽지 않음'}`"
                   class="py-2 notification-item"
@@ -90,6 +90,31 @@
                   <v-list-item-title class="text-center text-subtitle-1 py-4">
                     새로운 알림이 없습니다
                   </v-list-item-title>
+                </v-list-item>
+
+                <!-- Pagination Controls -->
+                <v-list-item v-if="notifications.length > 0" class="pagination-controls">
+                  <div class="d-flex justify-center align-center w-100">
+                    <v-btn
+                      icon="mdi-chevron-left"
+                      variant="text"
+                      :disabled="currentPage === 1"
+                      @click="currentPage--"
+                      size="small"
+                    >
+                      <v-icon>mdi-chevron-left</v-icon>
+                    </v-btn>
+                    <span class="text-caption mx-2">{{ currentPage }} / {{ totalPages }}</span>
+                    <v-btn
+                      icon="mdi-chevron-right"
+                      variant="text"
+                      :disabled="currentPage === totalPages"
+                      @click="currentPage++"
+                      size="small"
+                    >
+                      <v-icon>mdi-chevron-right</v-icon>
+                    </v-btn>
+                  </div>
                 </v-list-item>
               </v-list>
             </v-card>
@@ -161,7 +186,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'
@@ -201,6 +226,18 @@ export default defineComponent({
     const showNotifications = ref(false)
     const notifications = ref<Notification[]>([])
     const ws = ref<WebSocket | null>(null)
+    const currentPage = ref(1)
+    const itemsPerPage = 5
+
+    const totalPages = computed(() => {
+      return Math.ceil(notifications.value.length / itemsPerPage)
+    })
+
+    const paginatedNotifications = computed(() => {
+      const start = (currentPage.value - 1) * itemsPerPage
+      const end = start + itemsPerPage
+      return notifications.value.slice(start, end)
+    })
 
     const formatTimeAgo = (dateString: string) => {
       const date = new Date(dateString)
@@ -256,6 +293,7 @@ export default defineComponent({
           
           console.log('Final processed notifications:', processedNotifications)
           notifications.value = processedNotifications
+          resetPagination()
           console.log('Current notifications value:', notifications.value)
         } else {
           console.error('Invalid response format:', response.data)
@@ -388,6 +426,11 @@ export default defineComponent({
       }
     }
 
+    // Reset to first page when notifications change
+    const resetPagination = () => {
+      currentPage.value = 1
+    }
+
     return {
       userName,
       userEmail,
@@ -395,7 +438,10 @@ export default defineComponent({
       showNotifications,
       markAllAsRead,
       handleLogout,
-      handleNotificationClick
+      handleNotificationClick,
+      currentPage,
+      totalPages,
+      paginatedNotifications
     }
   }
 })
@@ -456,5 +502,15 @@ export default defineComponent({
 
 .notification-item:hover {
   background-color: rgba(0, 0, 0, 0.04);
+}
+
+.pagination-controls {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 8px 0;
+}
+
+.pagination-controls .v-btn {
+  min-width: 32px;
+  height: 32px;
 }
 </style> 
