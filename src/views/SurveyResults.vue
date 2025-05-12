@@ -111,24 +111,26 @@
                           </div>
                         </v-col>
                       </v-row>
-                      <v-textarea
-                        v-else
-                        placeholder="주관식 응답"
-                        readonly
-                        auto-grow
-                        rows="1"
-                      ></v-textarea>
-                      <div v-if="question.type === '주관식'" class="wordcloud-visual mt-4">
-                        <span
-                          v-for="(item, i) in wordCloudData"
-                          :key="item.word"
-                          class="wordcloud-key"
-                          :style="getWordCloudStyle(item, i)"
-                        >
-                          {{ item.word }}
-                          <span class="wordcloud-count">{{ item.count }}</span>
-                        </span>
-                      </div>
+                      <v-row v-if="question.type === '주관식'" class="mt-4" align="center">
+                        <v-col cols="12" md="6">
+                          <div class="wordcloud-visual">
+                            <span
+                              v-for="(item, i) in wordCloudData"
+                              :key="item.word"
+                              class="wordcloud-key"
+                              :style="getWordCloudStyle(item, i)"
+                            >
+                              {{ item.word }}
+                              <span class="wordcloud-count">{{ item.count }}</span>
+                            </span>
+                          </div>
+                        </v-col>
+                        <v-col cols="12" md="6" class="d-flex align-center">
+                          <div class="insight-text">
+                            응답자들은 '매칭 시스템'에 대한 개선 요청이 가장 많았으며, 그 뒤를 '클라이언트 안정성'과 '버그 수정'에 대한 의견이 차지했습니다.
+                          </div>
+                        </v-col>
+                      </v-row>
                     </v-list-item-text>
                   </v-list-item>
                 </v-list>
