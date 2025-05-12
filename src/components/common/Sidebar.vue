@@ -130,7 +130,8 @@
         prepend-icon="mdi-view-dashboard"
         title="대시보드"
         value="dashboard"
-        active
+        to="/"
+        :active="$route.path === '/'"
       ></v-list-item>
       
       <v-list-subheader>설문 관리</v-list-subheader>
