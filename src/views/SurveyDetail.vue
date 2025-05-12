@@ -119,7 +119,7 @@
                   variant="text"
                   color="primary"
                   size="small"
-                  @click="showResults = true"
+                  @click="goToResults"
                 >
                   결과 보기
                   <v-icon end>mdi-chart-bar</v-icon>
@@ -311,6 +311,10 @@ export default defineComponent({
       }
     }
 
+    const goToResults = () => {
+      router.push(`/survey/${surveyId.value}/results`)
+    }
+
     // 라우트 파라미터 변경 감지
     watch(() => route.params.id, (newId) => {
       if (newId) {
@@ -330,7 +334,8 @@ export default defineComponent({
       showDeleteDialog,
       confirmDelete,
       shareUrl,
-      copyShareUrl
+      copyShareUrl,
+      goToResults
     }
   }
 })
