@@ -118,6 +118,17 @@
                         auto-grow
                         rows="1"
                       ></v-textarea>
+                      <div v-if="question.type === '주관식'" class="wordcloud-visual mt-4">
+                        <span
+                          v-for="(item, i) in wordCloudData"
+                          :key="item.word"
+                          class="wordcloud-key"
+                          :style="getWordCloudStyle(item, i)"
+                        >
+                          {{ item.word }}
+                          <span class="wordcloud-count">{{ item.count }}</span>
+                        </span>
+                      </div>
                     </v-list-item-text>
                   </v-list-item>
                 </v-list>
@@ -227,6 +238,40 @@ export default defineComponent({
       }
     }
 
+    const wordCloudData = [
+      { word: '매칭', count: 12 },
+      { word: '클라이언트', count: 8 },
+      { word: '버그', count: 7 },
+      { word: '최적화', count: 6 },
+      { word: 'AFK', count: 5 }
+    ]
+
+    function getWordCloudStyle(item, i) {
+      const minFont = 18, maxFont = 48
+      const minCount = Math.min(...wordCloudData.map(w => w.count))
+      const maxCount = Math.max(...wordCloudData.map(w => w.count))
+      const size = minFont + ((item.count - minCount) / (maxCount - minCount || 1)) * (maxFont - minFont)
+      // 랜덤 위치 (5~75% top/left)
+      const top = Math.random() * 70 + 5
+      const left = Math.random() * 70 + 5
+      // 랜덤 회전
+      const rotate = Math.random() * 30 - 15
+      // 랜덤 색상
+      const colors = ['#1976d2', '#43a047', '#fbc02d', '#8e24aa', '#039be5', '#e64a19']
+      const color = colors[i % colors.length]
+      return {
+        position: 'absolute',
+        top: `${top}%`,
+        left: `${left}%`,
+        fontSize: size + 'px',
+        fontWeight: 700,
+        color,
+        opacity: 0.7 + ((item.count - minCount) / (maxCount - minCount || 1)) * 0.3,
+        transform: `rotate(${rotate}deg)`,
+        zIndex: 10 + item.count
+      }
+    }
+
     const fetchSurveyDetail = async () => {
       try {
         isLoading.value = true
@@ -258,7 +303,9 @@ export default defineComponent({
       questions,
       positionResults,
       chartData,
-      chartOptions
+      chartOptions,
+      wordCloudData,
+      getWordCloudStyle
     }
   }
 })
@@ -307,5 +354,93 @@ export default defineComponent({
   font-weight: 600;
   letter-spacing: -0.5px;
   line-height: 1.5;
+}
+
+.wordcloud-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px 24px;
+  background: #fafbfc;
+  margin-top: 12px;
+  max-width: 420px;
+}
+.wordcloud-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #666;
+  margin-bottom: 12px;
+}
+.wordcloud-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wordcloud-row {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-family: 'Consolas', 'monospace';
+}
+.wordcloud-keyword {
+  width: 90px;
+  color: #333;
+  font-weight: 500;
+}
+.wordcloud-bar {
+  color: #1976d2;
+  margin: 0 8px;
+  letter-spacing: 2px;
+}
+.wordcloud-count {
+  color: #888;
+  font-size: 15px;
+  min-width: 24px;
+  text-align: right;
+}
+.wordcloud-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 24px;
+  align-items: flex-end;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+.wordcloud-item {
+  display: inline-flex;
+  align-items: flex-end;
+  transition: font-size 0.2s;
+  line-height: 1.1;
+}
+.wordcloud-count {
+  font-size: 0.85em;
+  color: #888;
+  margin-left: 2px;
+}
+.wordcloud-visual {
+  background: #f5f5f5;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.04);
+  min-height: 180px;
+  max-width: 600px;
+  margin-bottom: 12px;
+  margin-top: 8px;
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+.wordcloud-key {
+  font-family: 'Pretendard', 'Noto Sans KR', 'sans-serif';
+  font-weight: 700;
+  transition: font-size 0.2s, color 0.2s;
+  line-height: 1.1;
+  display: inline-block;
+  pointer-events: none;
+}
+.wordcloud-count {
+  font-size: 0.8em;
+  color: #888;
+  margin-left: 2px;
+  font-weight: 400;
 }
 </style> 
