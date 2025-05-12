@@ -33,30 +33,31 @@
         <v-card class="mb-4">
           <v-card-title class="d-flex align-center px-4 py-3 bg-grey-lighten-4">
             <span class="text-h6">설문 요약 리포트</span>
+            <v-spacer></v-spacer>
+            <span class="text-caption text-grey">총 {{ survey.responseCount }}명 참여</span>
           </v-card-title>
-          <v-card-text class="pa-4">
-            <div class="d-flex flex-column gap-4">
+          <v-card-text class="pa-6">
+            <div class="d-flex flex-column gap-6">
               <!-- 주요 포지션 -->
               <div>
-                <div class="text-subtitle-1 font-weight-medium mb-2">주요 포지션</div>
+                <div class="text-subtitle-1 font-weight-medium mb-3">주요 포지션</div>
                 <div class="text-body-1">{{ summary.mainPosition }}</div>
+                <div class="text-caption text-grey mt-1">전체 응답자의 45%가 선택</div>
               </div>
 
               <!-- 개선 사항 -->
               <div>
-                <div class="text-subtitle-1 font-weight-medium mb-2">개선 사항</div>
-                <v-list density="compact" class="bg-transparent">
-                  <v-list-item
-                    v-for="(item, index) in summary.improvements"
+                <div class="text-subtitle-1 font-weight-medium mb-3">개선 사항</div>
+                <div class="d-flex flex-column gap-2">
+                  <div 
+                    v-for="(item, index) in summary.improvements" 
                     :key="index"
-                    class="px-0"
+                    class="d-flex align-center"
                   >
-                    <template v-slot:prepend>
-                      <div class="text-body-1">{{ index + 1 }}.</div>
-                    </template>
-                    <v-list-item-title class="text-body-1">{{ item }}</v-list-item-title>
-                  </v-list-item>
-                </v-list>
+                    <span class="text-body-1 me-2">{{ index + 1 }}.</span>
+                    <span class="text-body-1">{{ item }}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </v-card-text>
