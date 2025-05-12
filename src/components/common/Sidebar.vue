@@ -41,6 +41,7 @@
               <div class="d-flex align-center px-4 py-2 bg-grey-lighten-4">
                 <span class="text-h6">알림</span>
                 <v-spacer></v-spacer>
+                <span class="text-caption text-grey">최신 30일 간 알림이 표시됩니다</span>
                 <v-btn
                   icon="mdi-close"
                   variant="text"
