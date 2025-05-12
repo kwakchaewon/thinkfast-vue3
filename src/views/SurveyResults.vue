@@ -79,18 +79,18 @@
                     style="background: none; border: none;"
                   >
                     <v-card class="pa-6" style="border-radius: 14px; box-shadow: 0 2px 8px rgba(33,150,243,0.04); border: 1px solid #e0e0e0;">
-                      <template v-slot:prepend>
+                      <div class="d-flex align-center mb-2" style="gap: 12px;">
                         <div class="question-number">{{ index + 1 }}</div>
-                      </template>
-                      <v-list-item-title class="text-h6 mb-2">
-                        {{ question.content }}
-                        <v-chip
-                          v-if="question.required"
-                          color="error"
-                          size="small"
-                          class="ms-2"
-                        >필수</v-chip>
-                      </v-list-item-title>
+                        <div class="text-h6">
+                          {{ question.content }}
+                          <v-chip
+                            v-if="question.required"
+                            color="error"
+                            size="small"
+                            class="ms-2"
+                          >필수</v-chip>
+                        </div>
+                      </div>
                       <v-list-item-subtitle class="text-caption text-grey mb-2">
                         {{ question.type }}
                       </v-list-item-subtitle>
