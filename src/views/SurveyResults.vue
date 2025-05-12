@@ -62,6 +62,75 @@
             </div>
           </v-card-text>
         </v-card>
+
+        <!-- 설문 질문 섹션 -->
+        <v-card>
+          <v-card-title class="d-flex align-center px-4 py-3 bg-grey-lighten-4">
+            <span class="text-h6">설문 질문</span>
+          </v-card-title>
+          <v-card-text class="pa-4">
+            <v-list>
+              <!-- 객관식 질문 -->
+              <v-list-item class="mb-4">
+                <template v-slot:prepend>
+                  <div class="question-number">1</div>
+                </template>
+                <v-list-item-title class="text-h6 mb-2">
+                  당신이 가장 자주 플레이하는 포지션은 무엇인가요?
+                  <v-chip
+                    color="error"
+                    size="small"
+                    class="ms-2"
+                  >
+                    필수
+                  </v-chip>
+                </v-list-item-title>
+                <v-list-item-subtitle class="text-caption text-grey mb-2">
+                  객관식
+                </v-list-item-subtitle>
+                <v-list-item-text>
+                  <div class="d-flex flex-wrap gap-2">
+                    <v-chip
+                      v-for="position in ['탑', '정글', '미드', '원딜', '서포터']"
+                      :key="position"
+                      class="me-2 mb-2"
+                    >
+                      {{ position }}
+                    </v-chip>
+                  </div>
+                </v-list-item-text>
+              </v-list-item>
+
+              <!-- 주관식 질문 -->
+              <v-list-item>
+                <template v-slot:prepend>
+                  <div class="question-number">2</div>
+                </template>
+                <v-list-item-title class="text-h6 mb-2">
+                  리그 오브 레전드에서 개선되었으면 하는 점이나 바라는 점이 있다면 자유롭게 작성해주세요.
+                  <v-chip
+                    color="error"
+                    size="small"
+                    class="ms-2"
+                  >
+                    필수
+                  </v-chip>
+                </v-list-item-title>
+                <v-list-item-subtitle class="text-caption text-grey mb-2">
+                  주관식
+                </v-list-item-subtitle>
+                <v-list-item-text>
+                  <v-textarea
+                    placeholder="주관식 응답"
+                    readonly
+                    auto-grow
+                    rows="1"
+                  ></v-textarea>
+                </v-list-item-text>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+        </v-card>
       </v-container>
     </v-main>
   </v-layout>
@@ -158,5 +227,18 @@ export default defineComponent({
 
 .content-card .v-card-title {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.question-number {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgb(var(--v-theme-primary));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
 }
 </style> 
