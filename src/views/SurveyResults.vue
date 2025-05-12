@@ -72,57 +72,36 @@
               </v-card-title>
               <v-card-text class="pa-4">
                 <v-list>
-                  <!-- 객관식 질문 -->
-                  <v-list-item class="mb-4">
+                  <v-list-item
+                    v-for="(question, index) in questions"
+                    :key="index"
+                    class="mb-4"
+                  >
                     <template v-slot:prepend>
-                      <div class="question-number">1</div>
+                      <div class="question-number">{{ index + 1 }}</div>
                     </template>
                     <v-list-item-title class="text-h6 mb-2">
-                      당신이 가장 자주 플레이하는 포지션은 무엇인가요?
+                      {{ question.content }}
                       <v-chip
+                        v-if="question.required"
                         color="error"
                         size="small"
                         class="ms-2"
-                      >
-                        필수
-                      </v-chip>
+                      >필수</v-chip>
                     </v-list-item-title>
                     <v-list-item-subtitle class="text-caption text-grey mb-2">
-                      객관식
+                      {{ question.type }}
                     </v-list-item-subtitle>
                     <v-list-item-text>
-                      <div class="d-flex flex-wrap gap-2">
+                      <div v-if="question.type === '객관식'" class="d-flex flex-wrap gap-2">
                         <v-chip
-                          v-for="position in ['탑', '정글', '미드', '원딜', '서포터']"
-                          :key="position"
+                          v-for="option in question.options"
+                          :key="option"
                           class="me-2 mb-2"
-                        >
-                          {{ position }}
-                        </v-chip>
+                        >{{ option }}</v-chip>
                       </div>
-                    </v-list-item-text>
-                  </v-list-item>
-
-                  <!-- 주관식 질문 -->
-                  <v-list-item>
-                    <template v-slot:prepend>
-                      <div class="question-number">2</div>
-                    </template>
-                    <v-list-item-title class="text-h6 mb-2">
-                      리그 오브 레전드에서 개선되었으면 하는 점이나 바라는 점이 있다면 자유롭게 작성해주세요.
-                      <v-chip
-                        color="error"
-                        size="small"
-                        class="ms-2"
-                      >
-                        필수
-                      </v-chip>
-                    </v-list-item-title>
-                    <v-list-item-subtitle class="text-caption text-grey mb-2">
-                      주관식
-                    </v-list-item-subtitle>
-                    <v-list-item-text>
                       <v-textarea
+                        v-else
                         placeholder="주관식 응답"
                         readonly
                         auto-grow
@@ -186,6 +165,20 @@ export default defineComponent({
       ]
     })
 
+    const questions = [
+      {
+        content: '당신이 가장 자주 플레이하는 포지션은 무엇인가요?',
+        type: '객관식',
+        required: true,
+        options: ['탑', '정글', '미드', '원딜', '서포터']
+      },
+      {
+        content: '리그 오브 레전드에서 개선되었으면 하는 점이나 바라는 점이 있다면 자유롭게 작성해주세요.',
+        type: '주관식',
+        required: true
+      }
+    ]
+
     const fetchSurveyDetail = async () => {
       try {
         isLoading.value = true
@@ -213,7 +206,8 @@ export default defineComponent({
     return {
       survey,
       summary,
-      isLoading
+      isLoading,
+      questions
     }
   }
 })
@@ -234,15 +228,18 @@ export default defineComponent({
 }
 
 .question-number {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background-color: rgb(var(--v-theme-grey-darken-1));
-  color: white;
+  background-color: #e0e0e0;
+  color: #222;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 400;
+  margin-right: 8px;
+  box-shadow: none;
+  border: none;
 }
 </style> 
