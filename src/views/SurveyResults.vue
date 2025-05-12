@@ -78,8 +78,9 @@
                     class="mb-6 pa-0"
                     style="background: none; border: none;"
                   >
-                    <v-card class="pa-6" style="border-radius: 14px; box-shadow: 0 2px 8px rgba(33,150,243,0.04); border: 1px solid #e0e0e0;">
-                      <div class="d-flex align-center justify-space-between mb-2">
+                    <v-card class="pa-0" style="border-radius: 14px; box-shadow: 0 2px 8px rgba(33,150,243,0.04); border: 1px solid #e0e0e0;">
+                      <!-- 헤더 -->
+                      <v-card-title class="d-flex align-center justify-space-between px-6 py-4" style="background: #f5f7fa;">
                         <div class="d-flex align-center" style="gap: 12px;">
                           <div class="question-number">{{ index + 1 }}</div>
                           <div class="text-h6">
@@ -101,50 +102,52 @@
                           전체 응답 보기
                           <v-icon end>mdi-eye</v-icon>
                         </v-btn>
-                      </div>
-                      <v-list-item-subtitle class="text-caption text-grey mb-2">
-                        {{ question.type }}
-                      </v-list-item-subtitle>
-                      <v-list-item-text>
-                        <div v-if="question.type === '객관식'" class="d-flex flex-wrap gap-2 mb-2">
-                          <!-- <v-chip
-                            v-for="option in question.options"
-                            :key="option"
-                            class="me-2 mb-2"
-                          >{{ option }}</v-chip> -->
-                        </div>
-                        <v-row v-if="question.type === '객관식'" class="graph-insight-row mb-4" align="center">
-                          <v-col cols="12" md="6" class="d-flex justify-center">
-                            <Doughnut :data="chartData" :options="chartOptions" style="width:380px; height:380px;" />
-                          </v-col>
-                          <v-col cols="12" md="6" class="d-flex align-center">
-                            <div class="insight-text">
-                              정글과 미드가 응답자의 절반 이상을 차지하며,<br>
-                              원딜, 탑, 서포터는 동일한 비율로 나타났습니다.
-                            </div>
-                          </v-col>
-                        </v-row>
-                        <v-row v-if="question.type === '주관식'" class="mt-4" align="center">
-                          <v-col cols="12" md="6">
-                            <div class="wordcloud-visual">
-                              <span
-                                v-for="(item, i) in wordCloudData"
-                                :key="item.word"
-                                class="wordcloud-key"
-                                :style="getWordCloudStyle(item, i)"
-                              >
-                                {{ item.word }}
-                                <span class="wordcloud-count">{{ item.count }}</span>
-                              </span>
-                            </div>
-                          </v-col>
-                          <v-col cols="12" md="6" class="d-flex align-center">
-                            <div class="insight-text">
-                              응답자들은 '매칭 시스템'에 대한 개선 요청이 가장 많았으며, 그 뒤를 '클라이언트 안정성'과 '버그 수정'에 대한 의견이 차지했습니다.
-                            </div>
-                          </v-col>
-                        </v-row>
-                      </v-list-item-text>
+                      </v-card-title>
+                      <!-- 바디 -->
+                      <v-card-text class="pa-6">
+                        <div class="text-caption text-grey mb-2">{{ question.type }}</div>
+                        <v-list-item-text>
+                          <!-- 기존 응답 결과, 차트, 워드클라우드 등 -->
+                          <div v-if="question.type === '객관식'" class="d-flex flex-wrap gap-2 mb-2">
+                            <!-- <v-chip
+                              v-for="option in question.options"
+                              :key="option"
+                              class="me-2 mb-2"
+                            >{{ option }}</v-chip> -->
+                          </div>
+                          <v-row v-if="question.type === '객관식'" class="graph-insight-row mb-4" align="center">
+                            <v-col cols="12" md="6" class="d-flex justify-center">
+                              <Doughnut :data="chartData" :options="chartOptions" style="width:380px; height:380px;" />
+                            </v-col>
+                            <v-col cols="12" md="6" class="d-flex align-center">
+                              <div class="insight-text">
+                                정글과 미드가 응답자의 절반 이상을 차지하며,<br>
+                                원딜, 탑, 서포터는 동일한 비율로 나타났습니다.
+                              </div>
+                            </v-col>
+                          </v-row>
+                          <v-row v-if="question.type === '주관식'" class="mt-4" align="center">
+                            <v-col cols="12" md="6">
+                              <div class="wordcloud-visual">
+                                <span
+                                  v-for="(item, i) in wordCloudData"
+                                  :key="item.word"
+                                  class="wordcloud-key"
+                                  :style="getWordCloudStyle(item, i)"
+                                >
+                                  {{ item.word }}
+                                  <span class="wordcloud-count">{{ item.count }}</span>
+                                </span>
+                              </div>
+                            </v-col>
+                            <v-col cols="12" md="6" class="d-flex align-center">
+                              <div class="insight-text">
+                                응답자들은 '매칭 시스템'에 대한 개선 요청이 가장 많았으며, <br>그 뒤를 '클라이언트 안정성'과 '버그 수정'에 대한 의견이 차지했습니다.
+                              </div>
+                            </v-col>
+                          </v-row>
+                        </v-list-item-text>
+                      </v-card-text>
                     </v-card>
                   </v-list-item>
                 </v-list>
@@ -155,6 +158,30 @@
       </v-container>
     </v-main>
   </v-layout>
+
+  <!-- 전체 응답 모달 -->
+  <v-dialog v-model="showResponsesModal" max-width="500">
+    <v-card>
+      <v-card-title class="text-h6 d-flex align-center justify-space-between">
+        전체 응답 보기
+        <v-btn icon variant="text" @click="showResponsesModal = false"><v-icon>mdi-close</v-icon></v-btn>
+      </v-card-title>
+      <v-card-text>
+        <div v-if="selectedQuestionIndex !== null">
+          <div class="mb-2 text-subtitle-2">질문: {{ questions[selectedQuestionIndex].content }}</div>
+          <v-divider class="mb-2"></v-divider>
+          <div v-if="allResponses[selectedQuestionIndex] && allResponses[selectedQuestionIndex].length">
+            <v-list density="compact">
+              <v-list-item v-for="(resp, i) in allResponses[selectedQuestionIndex]" :key="i">
+                <v-list-item-content>{{ resp }}</v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </div>
+          <div v-else class="text-grey">응답이 없습니다.</div>
+        </div>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -287,10 +314,16 @@ export default defineComponent({
       }
     }
 
+    const showResponsesModal = ref(false)
+    const selectedQuestionIndex = ref<number|null>(null)
+    // 임시 전체 응답 데이터 (질문별 배열)
+    const allResponses = [
+      ['정글', '미드', '정글', '원딜', '탑', '서포터', '정글'],
+      ['매칭 시스템이 너무 불공정해요.', '클라이언트가 자주 튕깁니다.', '버그가 많아요.', 'AFK 유저가 많아요.']
+    ]
     function viewAllResponses(index: number) {
-      // TODO: 실제 전체 응답 모달/페이지로 연결
-      // 현재는 콘솔 출력
-      console.log('전체 응답 보기:', index)
+      selectedQuestionIndex.value = index
+      showResponsesModal.value = true
     }
 
     const fetchSurveyDetail = async () => {
@@ -327,6 +360,9 @@ export default defineComponent({
       chartOptions,
       wordCloudData,
       getWordCloudStyle,
+      showResponsesModal,
+      selectedQuestionIndex,
+      allResponses,
       viewAllResponses
     }
   }
