@@ -100,6 +100,9 @@
                           class="me-2 mb-2"
                         >{{ option }}</v-chip>
                       </div>
+                      <div v-if="question.type === '객관식'" class="d-flex justify-center my-4">
+                        <Doughnut :data="chartData" :options="chartOptions" style="width:320px; height:320px;" />
+                      </div>
                       <v-textarea
                         v-else
                         placeholder="주관식 응답"
@@ -125,6 +128,10 @@ import { useRouter, useRoute } from 'vue-router'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { surveyApi } from '@/apis/surveyApi'
 import Sidebar from '@/components/common/Sidebar.vue'
+import { Doughnut } from 'vue-chartjs'
+import { Chart, ArcElement, Tooltip, Legend } from 'chart.js'
+
+Chart.register(ArcElement, Tooltip, Legend)
 
 interface Survey {
   id: number
@@ -138,7 +145,8 @@ interface Survey {
 export default defineComponent({
   name: 'SurveyResultsView',
   components: {
-    Sidebar
+    Sidebar,
+    Doughnut
   },
   setup() {
     const router = useRouter()
@@ -179,6 +187,38 @@ export default defineComponent({
       }
     ]
 
+    const positionResults = [
+      { name: '정글', percent: 28.5 },
+      { name: '미드', percent: 28.5 },
+      { name: '원딜', percent: 14.2 },
+      { name: '탑', percent: 14.2 },
+      { name: '서포터', percent: 14.2 }
+    ]
+
+    const chartData = {
+      labels: positionResults.map(r => r.name),
+      datasets: [
+        {
+          data: positionResults.map(r => r.percent),
+          backgroundColor: [
+            '#4caf50', // 정글
+            '#2196f3', // 미드
+            '#ff9800', // 원딜
+            '#9c27b0', // 탑
+            '#ffc107'  // 서포터
+          ]
+        }
+      ]
+    }
+
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { position: 'bottom' }
+      }
+    }
+
     const fetchSurveyDetail = async () => {
       try {
         isLoading.value = true
@@ -207,7 +247,10 @@ export default defineComponent({
       survey,
       summary,
       isLoading,
-      questions
+      questions,
+      positionResults,
+      chartData,
+      chartOptions
     }
   }
 })
