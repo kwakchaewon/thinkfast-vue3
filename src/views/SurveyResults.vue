@@ -79,17 +79,28 @@
                     style="background: none; border: none;"
                   >
                     <v-card class="pa-6" style="border-radius: 14px; box-shadow: 0 2px 8px rgba(33,150,243,0.04); border: 1px solid #e0e0e0;">
-                      <div class="d-flex align-center mb-2" style="gap: 12px;">
-                        <div class="question-number">{{ index + 1 }}</div>
-                        <div class="text-h6">
-                          {{ question.content }}
-                          <v-chip
-                            v-if="question.required"
-                            color="error"
-                            size="small"
-                            class="ms-2"
-                          >필수</v-chip>
+                      <div class="d-flex align-center justify-space-between mb-2">
+                        <div class="d-flex align-center" style="gap: 12px;">
+                          <div class="question-number">{{ index + 1 }}</div>
+                          <div class="text-h6">
+                            {{ question.content }}
+                            <v-chip
+                              v-if="question.required"
+                              color="error"
+                              size="small"
+                              class="ms-2"
+                            >필수</v-chip>
+                          </div>
                         </div>
+                        <v-btn
+                          variant="text"
+                          color="primary"
+                          size="small"
+                          @click="viewAllResponses(index)"
+                        >
+                          전체 응답 보기
+                          <v-icon end>mdi-eye</v-icon>
+                        </v-btn>
                       </div>
                       <v-list-item-subtitle class="text-caption text-grey mb-2">
                         {{ question.type }}
@@ -276,6 +287,12 @@ export default defineComponent({
       }
     }
 
+    function viewAllResponses(index: number) {
+      // TODO: 실제 전체 응답 모달/페이지로 연결
+      // 현재는 콘솔 출력
+      console.log('전체 응답 보기:', index)
+    }
+
     const fetchSurveyDetail = async () => {
       try {
         isLoading.value = true
@@ -309,7 +326,8 @@ export default defineComponent({
       chartData,
       chartOptions,
       wordCloudData,
-      getWordCloudStyle
+      getWordCloudStyle,
+      viewAllResponses
     }
   }
 })
