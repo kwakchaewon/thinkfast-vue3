@@ -419,7 +419,7 @@ export default defineComponent({
           await fetchInitialNotifications()
           
           // 설문 페이지로 이동
-          router.push(`/survey/${notification.surveyId}`)
+          await router.replace(`/survey/${notification.surveyId}`)
         } catch (error) {
           console.error('Failed to mark notification as read:', error)
           showError('알림 읽음 처리에 실패했습니다.')

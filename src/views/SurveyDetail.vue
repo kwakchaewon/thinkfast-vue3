@@ -220,7 +220,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed } from 'vue'
+import { defineComponent, ref, onMounted, computed, watch } from 'vue'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { surveyApi } from '@/apis/surveyApi'
 import { useRouter, useRoute } from 'vue-router'
@@ -238,7 +238,7 @@ export default defineComponent({
     const { showSuccess, showError } = useSnackbar()
     const router = useRouter()
     const route = useRoute()
-    const surveyId = Number(route.params.id)
+    const surveyId = computed(() => Number(route.params.id))
     const showResults = ref(false)
     const showDeleteDialog = ref(false)
     const isLoading = ref(false)
@@ -261,7 +261,7 @@ export default defineComponent({
 
     const confirmDelete = async () => {
       try {
-        await surveyApi.deleteSurvey(surveyId)
+        await surveyApi.deleteSurvey(surveyId.value)
         showSuccess('설문이 삭제되었습니다.')
         router.push('/')
       } catch (error) {
@@ -285,8 +285,8 @@ export default defineComponent({
     const fetchSurveyDetail = async () => {
       try {
         isLoading.value = true
-        const surveyDetail = await surveyApi.getSurveyDetail(surveyId)
-        const questions = await surveyApi.getQuestionsBySurveyId(surveyId)
+        const surveyDetail = await surveyApi.getSurveyDetail(surveyId.value)
+        const questions = await surveyApi.getQuestionsBySurveyId(surveyId.value)
         
         // API 응답을 survey ref에 바인딩
         survey.value = {
@@ -310,6 +310,13 @@ export default defineComponent({
         isLoading.value = false
       }
     }
+
+    // 라우트 파라미터 변경 감지
+    watch(() => route.params.id, (newId) => {
+      if (newId) {
+        fetchSurveyDetail()
+      }
+    })
 
     onMounted(() => {
       fetchSurveyDetail()
