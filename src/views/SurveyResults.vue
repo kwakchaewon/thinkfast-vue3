@@ -68,7 +68,7 @@
           <v-col cols="12">
             <v-card class="content-card">
               <v-card-title class="d-flex align-center px-4 py-3 bg-grey-lighten-4">
-                <span class="text-h6">설문 질문</span>
+                <span class="text-h6">응답 결과</span>
               </v-card-title>
               <v-card-text class="pa-4">
                 <v-list>
@@ -93,16 +93,24 @@
                       {{ question.type }}
                     </v-list-item-subtitle>
                     <v-list-item-text>
-                      <div v-if="question.type === '객관식'" class="d-flex flex-wrap gap-2">
+                      <div v-if="question.type === '객관식'" class="d-flex flex-wrap gap-2 mb-2">
                         <!-- <v-chip
                           v-for="option in question.options"
                           :key="option"
                           class="me-2 mb-2"
                         >{{ option }}</v-chip> -->
                       </div>
-                      <div v-if="question.type === '객관식'" class="d-flex justify-center my-4">
-                        <Doughnut :data="chartData" :options="chartOptions" style="width:320px; height:320px;" />
-                      </div>
+                      <v-row v-if="question.type === '객관식'" class="graph-insight-row mb-4" align="center">
+                        <v-col cols="12" md="6" class="d-flex justify-center">
+                          <Doughnut :data="chartData" :options="chartOptions" style="width:380px; height:380px;" />
+                        </v-col>
+                        <v-col cols="12" md="6" class="d-flex align-center">
+                          <div class="insight-text">
+                            정글과 미드가 응답자의 절반 이상을 차지하며,<br>
+                            원딜, 탑, 서포터는 동일한 비율로 나타났습니다.
+                          </div>
+                        </v-col>
+                      </v-row>
                       <v-textarea
                         v-else
                         placeholder="주관식 응답"
@@ -286,5 +294,18 @@ export default defineComponent({
   margin-right: 8px;
   box-shadow: none;
   border: none;
+}
+
+.graph-insight-row {
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+.insight-text {
+  font-size: 20px;
+  color: #757575;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  line-height: 1.5;
 }
 </style> 
