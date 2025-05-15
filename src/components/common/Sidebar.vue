@@ -269,12 +269,9 @@ export default defineComponent({
       try {
         console.log('Fetching initial notifications...')
         const response = await tbAxios.get('http://localhost:8080/notification')
-        console.log('Raw response:', response)
-        console.log('Response data:', response.data)
         
         if (response.data.data && Array.isArray(response.data.data)) {
           const processedNotifications = response.data.data.map((notification: any) => {
-            console.log('Processing raw notification:', notification)
             const processed = {
               id: Date.now() + Math.random(),
               title: formatNotificationTitle(notification),
@@ -288,14 +285,11 @@ export default defineComponent({
               createdAt: notification.createdAt,
               alarmCount: notification.alarmCount
             }
-            console.log('Processed notification:', processed)
             return processed
           })
           
-          console.log('Final processed notifications:', processedNotifications)
           notifications.value = processedNotifications
           resetPagination()
-          console.log('Current notifications value:', notifications.value)
         } else {
           console.error('Invalid response format:', response.data)
         }
