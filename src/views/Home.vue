@@ -137,6 +137,7 @@ export default defineComponent({
         await store.dispatch('setUser', {
           username: response.username,
           accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
           role: response.role
         })
 

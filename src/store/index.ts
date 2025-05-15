@@ -22,14 +22,15 @@ export default createStore<userState>({
 
   // mutations: state 직접 변경, 변수 증가와 같은 간단 로직
   mutations: {
-    SET_USER_DATA(state: userState, payload: { accessToken: string; username: string; role: string}) {
-      const { accessToken, username, role } = payload
+    SET_USER_DATA(state: userState, payload: { username: string; accessToken: string; refreshToken:string; role: string}) {
+      const { username, accessToken, refreshToken, role } = payload
       state.accessToken = accessToken
       state.username = username
       state.role = role
 
       // LocalStorage 에도 저장
       localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('username', username);
       localStorage.setItem('role', role);
     },
@@ -59,9 +60,8 @@ export default createStore<userState>({
 
     setUser(
         { commit }: { commit: Function },
-        payload: { username: string; accessToken: string; role: string }
+        payload: { username: string; accessToken: string; refreshToken:string; role: string }
     ) {
-      console.log('setUser', payload);
       commit('SET_USER_DATA', payload)
     }
   },

@@ -26,6 +26,22 @@ tbAxios.interceptors.request.use(
     }
 );
 
+// 리프레시 토큰 갱신 중인지 확인하는 플래그
+let isRefreshing = false;
+// 갱신 대기 중인 요청들을 저장할 배열
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+// 토큰 갱신 후 대기 중인 요청들을 처리하는 함수
+const onRefreshed = (token: string) => {
+    refreshSubscribers.forEach(callback => callback(token));
+    refreshSubscribers = [];
+};
+
+// 토큰 갱신 중일 때 요청을 큐에 추가하는 함수
+const addRefreshSubscriber = (callback: (token: string) => void) => {
+    refreshSubscribers.push(callback);
+};
+
 // Response Interceptor - 토큰 만료 처리
 tbAxios.interceptors.response.use(
     (response) => response,
@@ -34,28 +50,45 @@ tbAxios.interceptors.response.use(
 
         // 액세스 토큰 만료 && 재시도하지 않은 요청
         if (error.response?.status === 401 && !originalRequest._retry) {
+            if (isRefreshing) {
+                // 이미 토큰 갱신 중이면 새로운 토큰을 기다림
+                return new Promise(resolve => {
+                    addRefreshSubscriber(token => {
+                        originalRequest.headers.Authorization = `Bearer ${token}`;
+                        resolve(tbAxios(originalRequest));
+                    });
+                });
+            }
+
             originalRequest._retry = true;
+            isRefreshing = true;
 
             try {
-                // 리프레시 토큰으로 새 액세스 토큰 발급
                 const refreshToken = localStorage.getItem("refreshToken");
+                console.log("refreshToken", refreshToken);
                 if (!refreshToken) {
                     throw new Error("No refresh token");
                 }
 
-                const response = await tbAxios.post("/auth/refresh", {
-                    refreshToken
-                });
+                const response = await tbAxios.post("/auth/refresh", 
+                    { refreshToken },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
 
-                const { accessToken } = response.data;
-
-                // 새로운 엑세스 토큰 저장
+                const accessToken = response.data.data.accessToken;
+                const newRefreshToken = response.data.data.refreshToken;
                 localStorage.setItem("accessToken", accessToken);
-                
-                // 원래 요청의 헤더 업데이트
-                originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+                localStorage.setItem("refreshToken", newRefreshToken);
+
+                // 대기 중인 모든 요청에 새 토큰 적용
+                onRefreshed(accessToken);
                 
                 // 원래 요청 재시도
+                originalRequest.headers.Authorization = `Bearer ${accessToken}`;
                 return tbAxios(originalRequest);
             } catch (refreshError) {
                 // 리프레시 실패 시 로그아웃 처리
@@ -66,6 +99,8 @@ tbAxios.interceptors.response.use(
                 router.push("/login");
                 store.dispatch("handleTokenExpiration");
                 return Promise.reject(refreshError);
+            } finally {
+                isRefreshing = false;
             }
         }
         return Promise.reject(error);
