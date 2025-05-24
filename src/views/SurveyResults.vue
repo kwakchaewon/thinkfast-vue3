@@ -292,16 +292,41 @@ export default defineComponent({
     ]
 
     function getWordCloudStyle(item: { word: string; count: number }, i: number) {
-      const minFont = 18, maxFont = 48
+      const minFont = 16, maxFont = 36
       const minCount = Math.min(...wordCloudData.map(w => w.count))
       const maxCount = Math.max(...wordCloudData.map(w => w.count))
       const size = minFont + ((item.count - minCount) / (maxCount - minCount || 1)) * (maxFont - minFont)
-      // 랜덤 위치 (5~75% top/left)
-      const top = Math.random() * 70 + 5
-      const left = Math.random() * 70 + 5
-      // 랜덤 색상
-      const colors = ['#1976d2', '#43a047', '#fbc02d', '#8e24aa', '#039be5', '#e64a19']
-      const color = colors[i % colors.length]
+      
+      // 원형 레이아웃을 위한 각도 계산
+      const angle = (i / wordCloudData.length) * 2 * Math.PI
+      const radius = 35 // 중심으로부터의 거리 (%)
+      
+      // 원형 레이아웃에 약간의 랜덤성 추가
+      const randomRadius = radius * (0.8 + Math.random() * 0.4) // 80%~120% 범위
+      const randomAngle = angle + (Math.random() - 0.5) * 0.5 // ±0.25 라디안 범위
+      
+      // 극좌표를 직교좌표로 변환
+      const left = 50 + randomRadius * Math.cos(randomAngle)
+      const top = 50 + randomRadius * Math.sin(randomAngle)
+      
+      // 다양한 색상 팔레트
+      const colors = [
+        '#2196F3', // 파랑
+        '#4CAF50', // 초록
+        '#FF9800', // 주황
+        '#9C27B0', // 보라
+        '#E91E63', // 분홍
+        '#00BCD4', // 청록
+        '#FFC107', // 노랑
+        '#795548', // 갈색
+        '#607D8B', // 청회색
+        '#F44336'  // 빨강
+      ]
+      
+      // 빈도수에 따라 색상 선택 (빈도가 높을수록 더 선명한 색상)
+      const colorIndex = Math.floor((item.count - minCount) / (maxCount - minCount || 1) * (colors.length - 1))
+      const color = colors[colorIndex]
+      
       return {
         position: 'absolute' as const,
         top: `${top}%`,
@@ -310,7 +335,10 @@ export default defineComponent({
         fontWeight: 700,
         color,
         opacity: 0.7 + ((item.count - minCount) / (maxCount - minCount || 1)) * 0.3,
-        zIndex: 10 + item.count
+        zIndex: 10 + item.count,
+        transform: 'translate(-50%, -50%)',
+        transition: 'all 0.3s ease-out',
+        textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
       }
     }
 
@@ -475,30 +503,40 @@ export default defineComponent({
   margin-left: 2px;
 }
 .wordcloud-visual {
-  background: #f5f5f5;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
   border-radius: 12px;
-  padding: 0;
-  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.04);
-  min-height: 180px;
-  max-width: 600px;
+  padding: 40px;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.08);
+  min-height: 400px;
+  width: 100%;
   margin-bottom: 12px;
   margin-top: 8px;
   position: relative;
-  height: 220px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .wordcloud-key {
   font-family: 'Pretendard', 'Noto Sans KR', 'sans-serif';
   font-weight: 700;
-  transition: font-size 0.2s, color 0.2s;
+  transition: all 0.3s ease-out;
   line-height: 1.1;
   display: inline-block;
   pointer-events: none;
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
 }
 .wordcloud-count {
-  font-size: 0.8em;
-  color: #888;
-  margin-left: 2px;
-  font-weight: 400;
+  font-size: 0.7em;
+  color: rgba(0, 0, 0, 0.5);
+  margin-left: 4px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 6px;
+  border-radius: 10px;
 }
 </style> 
