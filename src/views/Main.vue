@@ -169,7 +169,6 @@ export default defineComponent({
       try {
         isLoading.value = true
         const response = await surveyApi.getRecentSurveys()
-        console.log(response)
         recentSurveys.value = response.data
       } catch (error) {
         console.error('Failed to fetch recent surveys:', error)
