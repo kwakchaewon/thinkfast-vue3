@@ -12,11 +12,11 @@ import {
 const { showError } = useSnackbar()
 
 export const surveyApi = {
-  // 설문 목록 조회
+  // 전체 설문 목록 조회
   async getSurveys(): Promise<Survey[]> {
     try {
-      const response = await tbAxios.get('/surveys')
-      return response.data
+      const response = await tbAxios.get('/survey')
+      return response.data.data
     } catch (error) {
       showError('설문 목록을 불러오는데 실패했습니다.')
       throw error

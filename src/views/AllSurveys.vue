@@ -62,7 +62,14 @@
 
           <!-- 설문 목록 테이블 -->
           <v-card-text class="pa-4 pt-0">
-            <v-table>
+            <v-progress-linear
+              v-if="isLoading"
+              indeterminate
+              color="primary"
+              class="mb-4"
+            ></v-progress-linear>
+            
+            <v-table v-else>
               <thead>
                 <tr>
                   <th class="text-subtitle-2">설문 제목</th>
@@ -91,6 +98,11 @@
                   <td class="text-body-1">{{ survey.responseCount }}개</td>
                   <td class="text-body-1">{{ survey.createdAt }}</td>
                 </tr>
+                <tr v-if="paginatedSurveys.length === 0">
+                  <td colspan="4" class="text-center py-4 text-grey">
+                    설문이 없습니다.
+                  </td>
+                </tr>
               </tbody>
             </v-table>
 
@@ -111,8 +123,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useSnackbar } from '@/composables/useSnackbar'
+import { surveyApi } from '@/apis/surveyApi'
 import Sidebar from '@/components/common/Sidebar.vue'
 
 interface Survey {
@@ -130,37 +144,15 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter()
+    const { showError } = useSnackbar()
     const search = ref('')
     const statusFilter = ref('all')
     const sortBy = ref('newest')
     const currentPage = ref(1)
     const itemsPerPage = 10
+    const isLoading = ref(false)
 
-    // 임시 데이터
-    const surveys = ref<Survey[]>([
-      {
-        id: 1,
-        title: '2024년 직원 만족도 조사',
-        isActive: true,
-        responseCount: 45,
-        createdAt: '2024-03-15'
-      },
-      {
-        id: 2,
-        title: '서비스 개선을 위한 고객 의견 수렴',
-        isActive: true,
-        responseCount: 128,
-        createdAt: '2024-03-14'
-      },
-      {
-        id: 3,
-        title: '신규 제품 사용자 피드백',
-        isActive: false,
-        responseCount: 89,
-        createdAt: '2024-03-10'
-      },
-      // ... 더 많은 임시 데이터
-    ])
+    const surveys = ref<Survey[]>([])
 
     const statusOptions = [
       { title: '전체', value: 'all' },
@@ -173,6 +165,25 @@ export default defineComponent({
       { title: '오래된순', value: 'oldest' },
       { title: '응답수 많은순', value: 'responses' }
     ]
+
+    // 설문 목록 가져오기
+    const fetchSurveys = async () => {
+      try {
+        isLoading.value = true
+        const response = await surveyApi.getSurveys()
+        surveys.value = response.map((survey: any) => ({
+          id: survey.id,
+          title: survey.title,
+          isActive: survey.isActive,
+          responseCount: survey.responseCount,
+          createdAt: new Date(survey.createdAt).toLocaleDateString()
+        }))
+      } catch (error) {
+        showError('설문 목록을 불러오는데 실패했습니다.')
+      } finally {
+        isLoading.value = false
+      }
+    }
 
     // 필터링된 설문 목록
     const filteredSurveys = computed(() => {
@@ -239,6 +250,10 @@ export default defineComponent({
       router.push(`/survey/${surveyId}`)
     }
 
+    onMounted(() => {
+      fetchSurveys()
+    })
+
     return {
       search,
       statusFilter,
@@ -248,6 +263,7 @@ export default defineComponent({
       statusOptions,
       sortOptions,
       paginatedSurveys,
+      isLoading,
       handleSearch,
       handleFilter,
       handleSort,
