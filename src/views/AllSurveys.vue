@@ -179,6 +179,7 @@ export default defineComponent({
           createdAt: new Date(survey.createdAt).toLocaleDateString()
         }))
       } catch (error) {
+        console.log(error);
         showError('설문 목록을 불러오는데 실패했습니다.')
       } finally {
         isLoading.value = false

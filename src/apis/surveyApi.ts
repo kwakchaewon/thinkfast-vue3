@@ -38,11 +38,11 @@ export const surveyApi = {
     try {
       const response = await tbAxios.get('/survey/' + id)
       if (!response.data.success){
+        showError(response.data.message)
         throw new Error(response.data.message)
       }
       return response.data.data
-    } catch (error) {
-      showError((error as Error).message)
+    } catch (error: any) {
       throw error
     }
   },

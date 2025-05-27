@@ -147,7 +147,6 @@ export default defineComponent({
         const surveyId = Number(route.params.id)
         const response = await surveyApi.getSurveyDetail(surveyId)
         const questions = await surveyApi.getQuestionsBySurveyId(surveyId)
-
         survey.value = {
           id: surveyId,
           title: response.title,
@@ -156,8 +155,14 @@ export default defineComponent({
           endTime: response.endTime,
           questions: questions
         }
+
+        if(response.isActive === false){
+          showError('설문이 종료되었습니다.')
+          router.push('/')
+        }
+        
       } catch (error: any) {
-        showError(error.response?.data?.message || '설문을 불러오는데 실패했습니다.')
+        console.log(error || '설문을 불러오는데 실패했습니다.')
         router.push('/')
       } finally {
         isLoading.value = false
