@@ -1,99 +1,31 @@
 <template>
   <v-layout class="rounded rounded-md">
-    <v-navigation-drawer
-      permanent
-      color="grey-lighten-4"
-      width="280"
-    >
-      <v-list>
-        <v-list-item
-          prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-          :title="username"
-          class="profile-item"
-        >
-          <template v-slot:append>
-            <div class="d-flex align-center">
-              <v-badge
-                :content="notifications.length.toString()"
-                :model-value="notifications.length > 0"
-                color="error"
-                offset-x="12"
-              >
-                <v-btn
-                  icon="mdi-bell"
-                  variant="text"
-                  @click="showNotifications = true"
-                  class="notification-btn"
-                >
-                  <v-icon>mdi-bell</v-icon>
-                </v-btn>
-              </v-badge>
-            </div>
-          </template>
-        </v-list-item>
-      </v-list>
-
-      <v-divider></v-divider>
-
-      <v-list density="compact" nav>
-        <v-list-item
-          prepend-icon="mdi-view-dashboard"
-          title="대시보드"
-          value="dashboard"
-          to="/main"
-        ></v-list-item>
-        
-        <v-list-subheader>설문 관리</v-list-subheader>
-        <v-list-item
-          prepend-icon="mdi-plus"
-          title="새 설문 만들기"
-          value="create"
-          active
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-poll"
-          title="내 설문"
-          value="my-surveys"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-vote"
-          title="참여 가능한 설문"
-          value="available"
-        ></v-list-item>
-
-        <v-divider class="my-2"></v-divider>
-        <v-list-subheader>분석</v-list-subheader>
-        <v-list-item
-          prepend-icon="mdi-chart-box"
-          title="설문 결과"
-          value="results"
-        ></v-list-item>
-        <v-list-item
-          prepend-icon="mdi-chart-timeline-variant"
-          title="인사이트"
-          value="insights"
-        ></v-list-item>
-
-        <v-divider class="my-2"></v-divider>
-        
-        <v-list-item
-          prepend-icon="mdi-logout"
-          title="로그아웃"
-          value="logout"
-          @click="handleLogout"
-          class="logout-item"
-        ></v-list-item>
-      </v-list>
-
-      <v-divider></v-divider>
-
-      <v-list-item class="copyright-item">
-        <v-list-item-title class="text-caption text-grey">
-          © 2024 Andrew Kwak. All rights reserved.
-        </v-list-item-title>
-      </v-list-item>
-    </v-navigation-drawer>
-
+    <!-- 모바일: AppBar + 상단 block 메뉴만 (Sidebar 절대 렌더링 안함) -->
+    <div v-if="isMobile">
+      <v-app-bar color="#e0e3e8" flat app>
+        <v-app-bar-nav-icon @click="menuOpen = !menuOpen" :class="{ 'menu-active': menuOpen }" />
+        <v-toolbar-title class="font-weight-bold">ThinkFast</v-toolbar-title>
+      </v-app-bar>
+      <v-slide-y-transition>
+        <v-sheet v-if="menuOpen" class="mobile-header-bar elevation-1">
+          <v-list nav>
+            <v-list-item to="/" prepend-icon="mdi-view-dashboard" title="대시보드" @click="menuOpen = false" />
+            <v-list-item to="/create-survey" prepend-icon="mdi-plus" title="새 설문 만들기" @click="menuOpen = false" />
+            <v-list-item to="/all-surveys" prepend-icon="mdi-poll" title="전체 설문" @click="menuOpen = false" />
+            <v-list-item to="/my-surveys" prepend-icon="mdi-poll" title="내 설문" @click="menuOpen = false" />
+            <v-list-item to="/available" prepend-icon="mdi-vote" title="참여 가능한 설문" @click="menuOpen = false" />
+            <v-divider class="my-2" />
+            <v-list-item to="/results" prepend-icon="mdi-chart-box" title="설문 결과" @click="menuOpen = false" />
+            <v-list-item to="/insights" prepend-icon="mdi-chart-timeline-variant" title="인사이트" @click="menuOpen = false" />
+            <v-divider class="my-2" />
+            <v-list-item prepend-icon="mdi-logout" title="로그아웃" @click="handleLogout" />
+          </v-list>
+        </v-sheet>
+      </v-slide-y-transition>
+    </div>
+    <!-- 데스크탑: 고정 사이드바만 (모바일에서는 절대 렌더링 안함) -->
+    <Sidebar v-if="!isMobile" />
+    <!-- 메인 컨텐츠 -->
     <v-main class="bg-grey-lighten-3">
       <v-container fluid class="py-8">
         <v-row>
@@ -380,10 +312,27 @@ import { useSnackbar } from '@/composables/useSnackbar'
 import { useStore } from 'vuex'
 import { surveyApi } from '@/apis/surveyApi'
 import { QuestionType, CreateSurveyRequest } from '@/interfaces/surveyInterface'
+import Sidebar from '@/components/common/Sidebar.vue'
+import { useDisplay } from 'vuetify'
+import { authApi } from '@/apis/authApi'
 
 const router = useRouter()
 const store = useStore()
 const { showSuccess, showError } = useSnackbar()
+const { smAndDown } = useDisplay()
+const isMobile = computed(() => smAndDown.value)
+const menuOpen = ref(false)
+
+// 로그아웃 핸들러
+const handleLogout = async () => {
+  try {
+    await authApi.logout()
+    showSuccess('로그아웃에 성공했습니다.')
+    menuOpen.value = false
+  } catch (error) {
+    console.error('Logout failed:', error)
+  }
+}
 
 const showDatePicker = ref(false)
 const showTimePicker = ref(false)
@@ -447,10 +396,7 @@ const removeOption = (questionIndex: number, optionIndex: number) => {
   survey.value.questions[questionIndex].options?.splice(optionIndex, 1)
 }
 
-const handleLogout = () => {
-  store.dispatch('logout')
-  router.push('/')
-}
+
 
 const handleDateSelect = (date: string) => {
   survey.value.endDate = date
@@ -518,12 +464,57 @@ const handleCreateSurvey = async () => {
     console.error(error)
   }
 }
+
+
 </script>
 
 <style scoped>
 .content-card {
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.question-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.add-option-btn {
+  border: 2px dashed #ccc;
+  color: #666;
+}
+
+.add-option-btn:hover {
+  border-color: #1976d2;
+  color: #1976d2;
+}
+
+.mobile-header-bar {
+  background: #fff;
+  border-radius: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  left: 0;
+  z-index: 10;
+}
+
+.menu-active {
+  background: #d1d5db !important;
+  border-radius: 50%;
+}
+
+@media (max-width: 600px) {
+  .mobile-header-bar {
+    border-radius: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    width: 100vw;
+    left: 0;
+  }
 }
 
 .profile-item {
