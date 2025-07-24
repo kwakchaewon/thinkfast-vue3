@@ -1,5 +1,5 @@
 <template>
-  <ResponsiveLayout>
+  <HeaderMenu>
     <v-container fluid class="pb-16">
       <!-- 설문 정보 헤더 -->
       <v-card class="mb-4">
@@ -182,7 +182,7 @@
           </v-col>
         </v-row>
       </v-container>
-    </ResponsiveLayout>
+         </HeaderMenu>
 
   <!-- 삭제 확인 다이얼로그 -->
   <v-dialog v-model="showDeleteDialog" max-width="400">
@@ -220,13 +220,13 @@ import { surveyApi } from '@/apis/surveyApi'
 import { useRouter, useRoute } from 'vue-router'
 import QrcodeVue from 'qrcode.vue'
 import { getQuestionsResponse, GetSurveyDetailResponse } from '@/interfaces/surveyInterface'
-import ResponsiveLayout from '@/components/common/ResponsiveLayout.vue'
+import HeaderMenu from '@/components/mobile/HeaderMenu.vue'
 
 export default defineComponent({
   name: 'SurveyDetailView',
   components: {
     QrcodeVue,
-    ResponsiveLayout
+    HeaderMenu
   },
   setup() {
     const { showSuccess, showError } = useSnackbar()

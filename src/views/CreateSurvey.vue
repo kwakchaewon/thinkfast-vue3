@@ -1,5 +1,5 @@
 <template>
-  <ResponsiveLayout>
+  <HeaderMenu>
     <v-container fluid class="py-8">
       <v-row>
         <v-col cols="12" lg="8">
@@ -274,7 +274,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </ResponsiveLayout>
+     </HeaderMenu>
 </template>
 
 <script setup lang="ts">
@@ -284,7 +284,7 @@ import { useSnackbar } from '@/composables/useSnackbar'
 import { useStore } from 'vuex'
 import { surveyApi } from '@/apis/surveyApi'
 import { QuestionType, CreateSurveyRequest } from '@/interfaces/surveyInterface'
-import ResponsiveLayout from '@/components/common/ResponsiveLayout.vue'
+import HeaderMenu from '@/components/mobile/HeaderMenu.vue'
 
 const router = useRouter()
 const store = useStore()

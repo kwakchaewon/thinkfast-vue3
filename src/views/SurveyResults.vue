@@ -1,5 +1,5 @@
 <template>
-  <ResponsiveLayout>
+  <HeaderMenu>
     <v-container fluid class="pb-16">
       <!-- 설문 정보 헤더 -->
       <v-card class="mb-4">
@@ -151,7 +151,7 @@
           </v-col>
         </v-row>
       </v-container>
-    </ResponsiveLayout>
+         </HeaderMenu>
 
   <!-- 전체 응답 모달 -->
   <v-dialog v-model="showResponsesModal" max-width="500">
@@ -185,7 +185,7 @@ import { useSnackbar } from '@/composables/useSnackbar'
 import { surveyApi } from '@/apis/surveyApi'
 import { Doughnut } from 'vue-chartjs'
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js'
-import ResponsiveLayout from '@/components/common/ResponsiveLayout.vue'
+import HeaderMenu from '@/components/mobile/HeaderMenu.vue'
 
 Chart.register(ArcElement, Tooltip, Legend)
 
@@ -202,7 +202,7 @@ export default defineComponent({
   name: 'SurveyResultsView',
   components: {
     Doughnut,
-    ResponsiveLayout
+    HeaderMenu
   },
   setup() {
     const router = useRouter()

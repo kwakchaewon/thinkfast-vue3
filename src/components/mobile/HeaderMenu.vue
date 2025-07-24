@@ -40,7 +40,7 @@ import { authApi } from '@/apis/authApi'
 import Sidebar from '@/components/common/Sidebar.vue'
 
 export default defineComponent({
-  name: 'ResponsiveLayout',
+  name: 'HeaderMenu',
   components: {
     Sidebar
   },

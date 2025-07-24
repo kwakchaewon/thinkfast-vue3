@@ -1,5 +1,5 @@
 <template>
-  <ResponsiveLayout>
+  <HeaderMenu>
     <v-container fluid class="pb-16">
       <v-card class="content-card">
         <v-card-title class="d-flex align-center px-4 py-3 bg-grey-lighten-4">
@@ -145,7 +145,7 @@
         </v-card-text>
       </v-card>
     </v-container>
-  </ResponsiveLayout>
+     </HeaderMenu>
 </template>
 
 <script lang="ts">
@@ -153,7 +153,7 @@ import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { surveyApi } from '@/apis/surveyApi'
-import ResponsiveLayout from '@/components/common/ResponsiveLayout.vue'
+import HeaderMenu from '@/components/mobile/HeaderMenu.vue'
 import { useDisplay } from 'vuetify'
 
 interface Survey {
@@ -167,7 +167,7 @@ interface Survey {
 export default defineComponent({
   name: 'AllSurveysView',
   components: {
-    ResponsiveLayout
+    HeaderMenu
   },
   setup() {
     const router = useRouter()

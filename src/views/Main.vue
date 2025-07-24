@@ -1,5 +1,5 @@
 <template>
-  <ResponsiveLayout>
+  <HeaderMenu>
     <v-container fluid class="pb-16">
       <!-- 상단 통계 카드 -->
       <v-row>
@@ -137,7 +137,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </ResponsiveLayout>
+     </HeaderMenu>
 </template>
 
 <script lang="ts">
@@ -146,12 +146,12 @@ import { useSnackbar } from '@/composables/useSnackbar'
 import { surveyApi } from '@/apis/surveyApi'
 import { useRouter } from 'vue-router'
 import { recentSurvey } from '@/interfaces/surveyInterface'
-import ResponsiveLayout from '@/components/common/ResponsiveLayout.vue'
+import HeaderMenu from '@/components/mobile/HeaderMenu.vue'
 
 export default defineComponent({
   name: 'MainView',
   components: {
-    ResponsiveLayout
+    HeaderMenu
   },
   setup() {
     const router = useRouter()
