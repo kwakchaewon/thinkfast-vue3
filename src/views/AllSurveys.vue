@@ -1,7 +1,7 @@
 <template>
   <v-layout class="rounded rounded-md">
-    <!-- 사이드바 -->
-    <Sidebar />
+    <!-- 사이드바: 모바일에서는 숨김 -->
+    <Sidebar v-if="!isMobile" />
 
     <!-- 메인 컨텐츠 -->
     <v-main class="bg-grey-lighten-3">
@@ -23,8 +23,8 @@
 
           <!-- 검색 및 필터 -->
           <v-card-text class="pa-4">
-            <v-row>
-              <v-col cols="12" sm="4">
+            <v-row :class="isMobile ? 'mobile-filter-row' : ''">
+              <v-col :cols="12" :sm="4">
                 <v-text-field
                   v-model="search"
                   label="설문 검색"
@@ -35,7 +35,7 @@
                   @input="handleSearch"
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" sm="4">
+              <v-col :cols="12" :sm="4">
                 <v-select
                   v-model="statusFilter"
                   :items="statusOptions"
@@ -46,7 +46,7 @@
                   @update:model-value="handleFilter"
                 ></v-select>
               </v-col>
-              <v-col cols="12" sm="4">
+              <v-col :cols="12" :sm="4">
                 <v-select
                   v-model="sortBy"
                   :items="sortOptions"
@@ -60,7 +60,7 @@
             </v-row>
           </v-card-text>
 
-          <!-- 설문 목록 테이블 -->
+          <!-- 설문 목록: 데스크탑은 테이블, 모바일은 카드 -->
           <v-card-text class="pa-4 pt-0">
             <v-progress-linear
               v-if="isLoading"
@@ -68,8 +68,9 @@
               color="primary"
               class="mb-4"
             ></v-progress-linear>
-            
-            <v-table v-else>
+
+            <!-- 데스크탑: 테이블 -->
+            <v-table v-if="!isMobile">
               <thead>
                 <tr>
                   <th class="text-subtitle-2">설문 제목</th>
@@ -106,12 +107,43 @@
               </tbody>
             </v-table>
 
+            <!-- 모바일: 카드 리스트 -->
+            <div v-else>
+              <v-card
+                v-for="survey in paginatedSurveys"
+                :key="survey.id"
+                class="survey-mobile-card mb-3"
+                @click="goToSurveyDetail(survey.id)"
+                elevation="1"
+              >
+                <v-card-item class="pa-3">
+                  <div class="d-flex align-center justify-space-between mb-1">
+                    <span class="text-body-1 font-weight-medium">{{ survey.title }}</span>
+                    <v-chip
+                      :color="survey.isActive ? 'success' : 'error'"
+                      size="small"
+                      class="font-weight-medium"
+                    >
+                      {{ survey.isActive ? '진행중' : '종료' }}
+                    </v-chip>
+                  </div>
+                  <div class="d-flex justify-space-between text-caption text-grey">
+                    <span>응답수: {{ survey.responseCount }}개</span>
+                    <span>생성일: {{ survey.createdAt }}</span>
+                  </div>
+                </v-card-item>
+              </v-card>
+              <div v-if="paginatedSurveys.length === 0" class="text-center py-4 text-grey">
+                설문이 없습니다.
+              </div>
+            </div>
+
             <!-- 페이지네이션 -->
             <div class="d-flex justify-center mt-4">
               <v-pagination
                 v-model="currentPage"
                 :length="totalPages"
-                :total-visible="7"
+                :total-visible="isMobile ? 3 : 7"
                 @update:model-value="handlePageChange"
               ></v-pagination>
             </div>
@@ -128,6 +160,7 @@ import { useRouter } from 'vue-router'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { surveyApi } from '@/apis/surveyApi'
 import Sidebar from '@/components/common/Sidebar.vue'
+import { useDisplay } from 'vuetify'
 
 interface Survey {
   id: number
@@ -151,6 +184,8 @@ export default defineComponent({
     const currentPage = ref(1)
     const itemsPerPage = 10
     const isLoading = ref(false)
+    const { smAndDown } = useDisplay() // Vuetify 3
+    const isMobile = computed(() => smAndDown.value)
 
     const surveys = ref<Survey[]>([])
 
@@ -269,7 +304,8 @@ export default defineComponent({
       handleFilter,
       handleSort,
       handlePageChange,
-      goToSurveyDetail
+      goToSurveyDetail,
+      isMobile
     }
   }
 })
@@ -295,5 +331,33 @@ export default defineComponent({
 
 .survey-row:hover {
   background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* 모바일 카드 스타일 */
+.survey-mobile-card {
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.survey-mobile-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* 모바일 필터 세로 정렬 */
+.mobile-filter-row {
+  flex-direction: column !important;
+}
+
+@media (max-width: 600px) {
+  .content-card {
+    padding: 0 !important;
+  }
+  .v-card-title, .v-card-text {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  .survey-mobile-card {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 </style> 
