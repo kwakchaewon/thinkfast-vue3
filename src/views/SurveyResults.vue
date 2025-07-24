@@ -1,55 +1,28 @@
 <template>
-  <v-layout class="rounded rounded-md">
-    <!-- 모바일: AppBar + 상단 block 메뉴만 (Sidebar 절대 렌더링 안함) -->
-    <div v-if="isMobile">
-      <v-app-bar color="#e0e3e8" flat app>
-        <v-app-bar-nav-icon @click="menuOpen = !menuOpen" :class="{ 'menu-active': menuOpen }" />
-        <v-toolbar-title class="font-weight-bold">ThinkFast</v-toolbar-title>
-      </v-app-bar>
-      <v-slide-y-transition>
-        <v-sheet v-if="menuOpen" class="mobile-header-bar elevation-1">
-          <v-list nav>
-            <v-list-item to="/" prepend-icon="mdi-view-dashboard" title="대시보드" @click="menuOpen = false" />
-            <v-list-item to="/create-survey" prepend-icon="mdi-plus" title="새 설문 만들기" @click="menuOpen = false" />
-            <v-list-item to="/all-surveys" prepend-icon="mdi-poll" title="전체 설문" @click="menuOpen = false" />
-            <v-list-item to="/my-surveys" prepend-icon="mdi-poll" title="내 설문" @click="menuOpen = false" />
-            <v-list-item to="/available" prepend-icon="mdi-vote" title="참여 가능한 설문" @click="menuOpen = false" />
-            <v-divider class="my-2" />
-            <v-list-item to="/results" prepend-icon="mdi-chart-box" title="설문 결과" @click="menuOpen = false" />
-            <v-list-item to="/insights" prepend-icon="mdi-chart-timeline-variant" title="인사이트" @click="menuOpen = false" />
-            <v-divider class="my-2" />
-            <v-list-item prepend-icon="mdi-logout" title="로그아웃" @click="handleLogout" />
-          </v-list>
-        </v-sheet>
-      </v-slide-y-transition>
-    </div>
-    <!-- 데스크탑: 고정 사이드바만 (모바일에서는 절대 렌더링 안함) -->
-    <Sidebar v-if="!isMobile" />
-    <!-- 메인 컨텐츠 -->
-    <v-main class="bg-grey-lighten-3">
-      <v-container fluid class="pb-16">
-        <!-- 설문 정보 헤더 -->
-        <v-card class="mb-4">
-          <v-card-item>
-            <div class="d-flex align-center justify-space-between">
-              <div>
-                <v-chip
-                  :color="survey.isActive ? 'success' : 'error'"
-                  size="small"
-                  class="mb-2"
-                >
-                  {{ survey.isActive ? '진행중' : '종료' }}
-                </v-chip>
-                <h1 class="text-h4 mb-2">{{ survey.title }}</h1>
-                <p class="text-body-1 text-grey">{{ survey.description }}</p>
-              </div>
-              <div class="text-right">
-                <div class="text-caption text-grey mb-1">마감일</div>
-                <div class="text-body-2 mb-4">{{ survey.endTime }}</div>
-              </div>
+  <ResponsiveLayout>
+    <v-container fluid class="pb-16">
+      <!-- 설문 정보 헤더 -->
+      <v-card class="mb-4">
+        <v-card-item>
+          <div class="d-flex align-center justify-space-between">
+            <div>
+              <v-chip
+                :color="survey.isActive ? 'success' : 'error'"
+                size="small"
+                class="mb-2"
+              >
+                {{ survey.isActive ? '진행중' : '종료' }}
+              </v-chip>
+              <h1 class="text-h4 mb-2">{{ survey.title }}</h1>
+              <p class="text-body-1 text-grey">{{ survey.description }}</p>
             </div>
-          </v-card-item>
-        </v-card>
+            <div class="text-right">
+              <div class="text-caption text-grey mb-1">마감일</div>
+              <div class="text-body-2 mb-4">{{ survey.endTime }}</div>
+            </div>
+          </div>
+        </v-card-item>
+      </v-card>
 
         <!-- 요약 리포트 카드 -->
         <v-card class="mb-4">
@@ -178,8 +151,7 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-main>
-  </v-layout>
+    </ResponsiveLayout>
 
   <!-- 전체 응답 모달 -->
   <v-dialog v-model="showResponsesModal" max-width="500">
@@ -211,11 +183,9 @@ import { defineComponent, ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { surveyApi } from '@/apis/surveyApi'
-import Sidebar from '@/components/common/Sidebar.vue'
 import { Doughnut } from 'vue-chartjs'
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js'
-import { useDisplay } from 'vuetify'
-import { authApi } from '@/apis/authApi'
+import ResponsiveLayout from '@/components/common/ResponsiveLayout.vue'
 
 Chart.register(ArcElement, Tooltip, Legend)
 
@@ -231,29 +201,16 @@ interface Survey {
 export default defineComponent({
   name: 'SurveyResultsView',
   components: {
-    Sidebar,
-    Doughnut
+    Doughnut,
+    ResponsiveLayout
   },
   setup() {
     const router = useRouter()
     const route = useRoute()
-    const { showError, showSuccess } = useSnackbar()
+    const { showError } = useSnackbar()
     const surveyId = computed(() => Number(route.params.id))
     const isLoading = ref(false)
-    const { smAndDown } = useDisplay()
-    const isMobile = computed(() => smAndDown.value)
-    const menuOpen = ref(false)
 
-    // 로그아웃 핸들러
-    const handleLogout = async () => {
-      try {
-        await authApi.logout()
-        showSuccess('로그아웃에 성공했습니다.')
-        menuOpen.value = false
-      } catch (error) {
-        console.error('Logout failed:', error)
-      }
-    }
 
     const survey = ref<Survey>({
       id: 0,
@@ -429,10 +386,7 @@ export default defineComponent({
       showResponsesModal,
       selectedQuestionIndex,
       allResponses,
-      viewAllResponses,
-      isMobile,
-      menuOpen,
-      handleLogout
+      viewAllResponses
     }
   }
 })
@@ -579,31 +533,5 @@ export default defineComponent({
   background: rgba(255, 255, 255, 0.2);
   padding: 2px 6px;
   border-radius: 10px;
-}
-
-.mobile-header-bar {
-  background: #fff;
-  border-radius: 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  width: 100vw;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  left: 0;
-  z-index: 10;
-}
-
-.menu-active {
-  background: #d1d5db !important;
-  border-radius: 50%;
-}
-
-@media (max-width: 600px) {
-  .mobile-header-bar {
-    border-radius: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    width: 100vw;
-    left: 0;
-  }
 }
 </style> 
