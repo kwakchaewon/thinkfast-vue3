@@ -19,7 +19,7 @@
         <!-- 검색 및 필터 -->
         <v-card-text class="pa-4">
           <v-row :class="isMobile ? 'mobile-filter-row' : ''">
-            <v-col :cols="12" :sm="4">
+            <v-col :cols="12" :md="4">
               <v-text-field
                 v-model="search"
                 label="설문 검색"
@@ -30,7 +30,7 @@
                 @input="handleSearch"
               ></v-text-field>
             </v-col>
-            <v-col :cols="12" :sm="4">
+            <v-col :cols="12" :md="4">
               <v-select
                 v-model="statusFilter"
                 :items="statusOptions"
@@ -41,7 +41,7 @@
                 @update:model-value="handleFilter"
               ></v-select>
             </v-col>
-            <v-col :cols="12" :sm="4">
+            <v-col :cols="12" :md="4">
               <v-select
                 v-model="sortBy"
                 :items="sortOptions"
@@ -178,8 +178,8 @@ export default defineComponent({
     const currentPage = ref(1)
     const itemsPerPage = 10
     const isLoading = ref(false)
-    const { smAndDown } = useDisplay()
-    const isMobile = computed(() => smAndDown.value)
+    const { xs } = useDisplay()
+    const isMobile = computed(() => xs.value)
 
     const surveys = ref<Survey[]>([])
 
