@@ -347,17 +347,29 @@ export default defineComponent({
   .content-card {
     height: auto !important;
     min-height: calc(100vh - 150px) !important; /* 모바일에서 더 큰 높이 */
+    margin-bottom: 16px !important; /* 카드 하단 여백 추가 */
+  }
+
+  .v-container {
+    padding-bottom: 24px !important; /* 하단 여백 추가 */
+  }
+
+  /* 페이지네이션 하단 여백 */
+  .v-pagination {
+    margin-bottom: 20px !important;
   }
 }
 
 @media (max-width: 600px) {
   .v-container {
     padding: 8px !important;
+    padding-bottom: 24px !important; /* 하단 여백 유지 */
     min-height: calc(100vh - 80px); /* 최소 높이 보장 */
   }
   
   .content-card {
     margin: 0 !important;
+    margin-bottom: 16px !important; /* 카드 하단 여백 유지 */
     min-height: calc(100vh - 120px) !important;
   }
   
