@@ -1,6 +1,6 @@
 <template>
   <HeaderMenu>
-    <v-container fluid class="pb-16">
+    <v-container fluid class="pa-4">
       <v-card class="content-card">
         <v-card-title class="d-flex align-center px-4 py-3 bg-grey-lighten-4">
           <span class="text-h6">전체 설문</span>
@@ -145,7 +145,7 @@
         </v-card-text>
       </v-card>
     </v-container>
-     </HeaderMenu>
+  </HeaderMenu>
 </template>
 
 <script lang="ts">
@@ -178,8 +178,8 @@ export default defineComponent({
     const currentPage = ref(1)
     const itemsPerPage = 10
     const isLoading = ref(false)
-    const { xs } = useDisplay()
-    const isMobile = computed(() => xs.value)
+    const { smAndDown } = useDisplay()
+    const isMobile = computed(() => smAndDown.value)
 
     const surveys = ref<Survey[]>([])
 
@@ -308,11 +308,13 @@ export default defineComponent({
 <style scoped>
 .v-main {
   min-height: 100vh;
+  overflow: visible !important;
 }
 
 .content-card {
-  height: 100%;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  width: 100%;
+  min-height: calc(100vh - 100px); /* 충분한 높이 보장 */
 }
 
 .content-card .v-card-title {
@@ -341,14 +343,29 @@ export default defineComponent({
   flex-direction: column !important;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 960px) {
   .content-card {
-    padding: 0 !important;
+    height: auto !important;
+    min-height: calc(100vh - 150px) !important; /* 모바일에서 더 큰 높이 */
   }
+}
+
+@media (max-width: 600px) {
+  .v-container {
+    padding: 8px !important;
+    min-height: calc(100vh - 80px); /* 최소 높이 보장 */
+  }
+  
+  .content-card {
+    margin: 0 !important;
+    min-height: calc(100vh - 120px) !important;
+  }
+  
   .v-card-title, .v-card-text {
     padding-left: 12px !important;
     padding-right: 12px !important;
   }
+  
   .survey-mobile-card {
     margin-left: 0;
     margin-right: 0;
