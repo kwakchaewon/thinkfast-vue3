@@ -144,7 +144,7 @@
                       {{ questionTypeLabels[question.type] }}
                     </v-list-item-subtitle>
                     <v-list-item-text>
-                      <div v-if="question.type === 'MULTIPLE_CHOICE'">
+                      <div v-if="question.type === 'MULTIPLE_CHOICE'" class="d-flex flex-wrap">
                         <v-chip
                           v-for="option in question.options"
                           :key="option.id"
@@ -376,5 +376,83 @@ export default defineComponent({
 
 .h-100 {
   height: 100%;
+}
+
+/* 모바일 환경 최적화 */
+@media (max-width: 960px) {
+  .v-container {
+    padding-bottom: 24px !important;
+  }
+
+  .content-card {
+    margin-bottom: 16px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .v-container {
+    padding: 8px !important;
+    padding-bottom: 24px !important;
+  }
+
+  .content-card {
+    margin: 0 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .v-card-title, .v-card-text {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* 질문 제목 텍스트 wrapping */
+  .v-list-item-title {
+    white-space: normal !important;
+    word-break: keep-all !important;
+    line-height: 1.4 !important;
+  }
+
+  /* 질문 내용 텍스트 개선 */
+  .v-list-item-text {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+  }
+
+  /* v-chip 여러 줄 배치 */
+  .v-chip {
+    margin-bottom: 4px !important;
+    margin-right: 4px !important;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 24px !important;
+    padding: 4px 8px !important;
+  }
+
+  /* 질문 번호 크기 조정 */
+  .question-number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.875rem;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  /* 리스트 아이템 패딩 조정 */
+  .v-list-item {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    align-items: flex-start !important;
+  }
+
+  /* 긴 URL 처리 */
+  .v-text-field input {
+    font-size: 0.875rem !important;
+  }
+
+  /* QR 코드 크기 조정 */
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
 }
 </style> 
