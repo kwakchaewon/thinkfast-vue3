@@ -201,8 +201,12 @@ export default defineComponent({
         } else {
           showError(response.data.message)
         }
-      } catch (error) {
-        showError('설문 제출에 실패했습니다.')
+      } catch (error: any) {
+        const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        '설문 응답 제출에 실패했습니다.';
+        showError(message)
       } finally {
         isSubmitting.value = false
       }

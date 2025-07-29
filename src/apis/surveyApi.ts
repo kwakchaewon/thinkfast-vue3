@@ -105,11 +105,27 @@ export const surveyApi = {
           deviceId: getDeviceId()
         }
       }
+
+      // 유효성 검사: answers의 값이 null인 항목이 있는지 확인
+      const hasNull = payload.answers.some(answer => {
+        // MULTIPLE_CHOICE: optionId가 null/undefined
+        if (answer.type === 'MULTIPLE_CHOICE') {
+          return answer.optionId === null || answer.optionId === undefined
+        }
+        // SUBJECTIVE: content가 null/undefined/빈 문자열
+        if (answer.type === 'SUBJECTIVE') {
+          return answer.content === null || answer.content === undefined || answer.content === ''
+        }
+        // SCALE 등 기타 타입: content가 null/undefined/빈 문자열
+        return answer.content === null || answer.content === undefined || answer.content === ''
+      })
+      if (hasNull) {
+        throw new Error('미응답 항목이 있습니다.')
+      }
+
       const response = await tbAxios.post(`/survey/${surveyId}/responses`, enhancedPayload)
       return response  
-    } catch (error) {
-      console.log(error)
-      showError('설문 응답 제출에 실패했습니다.')
+    } catch (error: any) {
       throw error
     }
   },
