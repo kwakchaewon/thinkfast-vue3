@@ -51,7 +51,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { ref } from 'vue'
-import authApi from '../apis/authApi'
+import { authApi } from '../apis/authApi'
 
 export default {
   name: 'Login',
