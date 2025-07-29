@@ -54,6 +54,7 @@ export type GetRecentSurveysResponse = {
 }
 
 export interface CreateAnswerRequest {
+  clientInfo: ClientAnswerRequest;
   answers: CreateAnswerDto[];
 }
 
@@ -62,4 +63,28 @@ export interface CreateAnswerDto {
   type: string;
   optionId?: number | null;
   content?: string | null;
+}
+
+export interface ClientAnswerRequest {
+  deviceId: string;
+}
+
+// Question 타입 정의 및 export
+export interface Question {
+  id: number;
+  content: string;
+  type: string;
+  required?: boolean;
+  options?: Array<{ id: number, content: string }>;
+}
+
+// Survey 타입 정의 및 export
+export interface Survey {
+  id: number;
+  title: string;
+  description: string;
+  isActive: boolean;
+  endTime: string;
+  responseCount: number;
+  questions: Question[];
 }

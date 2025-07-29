@@ -72,9 +72,43 @@ export const surveyApi = {
   // 설문 응답 제출
   async createAnswer(surveyId: number, payload: CreateAnswerRequest): Promise<any> {
     try {
-      const response = await tbAxios.post(`/survey/${surveyId}/responses`, payload)
+      // deviceId 생성 및 주입
+      const getDeviceId = (): string => {
+        const storageKey = 'thinkfast_device_id'
+        let deviceId = localStorage.getItem(storageKey)
+        if (!deviceId) {
+          const canvas = document.createElement('canvas')
+          const ctx = canvas.getContext('2d')
+          if (ctx) {
+            ctx.textBaseline = 'top'
+            ctx.font = '14px Arial'
+            ctx.fillText('Device fingerprint', 2, 2)
+          }
+          const fingerprint = [
+            navigator.userAgent,
+            navigator.language,
+            screen.width + 'x' + screen.height,
+            new Date().getTimezoneOffset().toString(),
+            canvas.toDataURL()
+          ].join('|')
+          deviceId = btoa(fingerprint).replace(/[^a-zA-Z0-9]/g, '').substring(0, 16)
+          localStorage.setItem(storageKey, deviceId)
+        }
+        return deviceId
+      }
+
+      // payload에 clientInfo.deviceId 주입
+      const enhancedPayload: CreateAnswerRequest = {
+        ...payload,
+        clientInfo: {
+          ...payload.clientInfo,
+          deviceId: getDeviceId()
+        }
+      }
+      const response = await tbAxios.post(`/survey/${surveyId}/responses`, enhancedPayload)
       return response  
     } catch (error) {
+      console.log(error)
       showError('설문 응답 제출에 실패했습니다.')
       throw error
     }
