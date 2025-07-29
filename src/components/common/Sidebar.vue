@@ -257,10 +257,12 @@ export default defineComponent({
 
     const formatNotificationTitle = (notification: RawNotification) => {
       if (notification.type === 'SURVEY_RESPONSE') {
-        const truncatedTitle = notification.surveyTitle.length > 20 
-          ? notification.surveyTitle.substring(0, 20) + '...'
-          : notification.surveyTitle
-        return `📢 [설문 응답] "${truncatedTitle}"에\n새로운 응답이 도착했습니다. (총 ${notification.alarmCount}건의 응답)`
+        const maxLen = 13;
+        const truncatedTitle = notification.surveyTitle.length > maxLen
+          ? notification.surveyTitle.substring(0, maxLen) + '...'
+          : notification.surveyTitle;
+        return `📢 [설문 응답] "${truncatedTitle}"
+      새로운 응답이 도착했습니다. (총 ${notification.alarmCount}건의 응답)`;
       }
       return `알림: ${notification.type}`
     }
