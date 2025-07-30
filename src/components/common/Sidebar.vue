@@ -261,8 +261,16 @@ export default defineComponent({
         const truncatedTitle = notification.surveyTitle.length > maxLen
           ? notification.surveyTitle.substring(0, maxLen) + '...'
           : notification.surveyTitle;
-        return `📢 [설문 응답] "${truncatedTitle}"
+        return `📢 [응답 알림] "${truncatedTitle}"
       새로운 응답이 도착했습니다. (총 ${notification.alarmCount}건의 응답)`;
+      }
+      if (notification.type === 'SURVEY_EXPIRED') {
+        const maxLen = 13;
+        const truncatedTitle = notification.surveyTitle.length > maxLen
+          ? notification.surveyTitle.substring(0, maxLen) + '...'
+          : notification.surveyTitle;
+        return `📢 [설문 종료] "${truncatedTitle}"
+      설문이 종료 됐습니다. (총 ${notification.alarmCount}건의 응답)`;
       }
       return `알림: ${notification.type}`
     }
@@ -406,7 +414,7 @@ export default defineComponent({
     }
 
     const handleNotificationClick = async (notification: Notification) => {
-      if (notification.type === 'SURVEY_RESPONSE') {
+      if (notification.type === 'SURVEY_RESPONSE' || notification.type === 'SURVEY_EXPIRED') {
         try {
           // 알림 읽음 처리 API 호출
           await tbAxios.post('http://localhost:8080/notification/read', [notification.surveyId])
