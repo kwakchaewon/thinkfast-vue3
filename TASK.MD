@@ -475,9 +475,9 @@ colors: {
 - [x] Button 컴포넌트
 - [x] Input 컴포넌트
 - [x] Card 컴포넌트
-- [ ] Form 컴포넌트
+- [x] Form 컴포넌트
 - [ ] Toast/Sonner 컴포넌트 (스낵바 대체)
-- [ ] Label 컴포넌트
+- [x] Label 컴포넌트
 - [ ] Container/Layout 관련 컴포넌트
 - [ ] 기타 필요한 컴포넌트들
 
@@ -761,14 +761,33 @@ colors: {
 - 사용 방법: `import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'`
 - Vuetify의 v-card, v-card-title, v-card-text, v-card-actions를 대체
 
-**다음 작업 (작업 3-4): Form 컴포넌트 설치**
+### 작업 3-4, 3-6 완료 (Form 컴포넌트 및 Label 컴포넌트 설치)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- Form 컴포넌트 설치 완료 (Label 컴포넌트도 함께 설치됨)
+- 생성된 파일 (10개):
+  - src/components/ui/form/FormControl.vue
+  - src/components/ui/form/FormDescription.vue
+  - src/components/ui/form/FormItem.vue
+  - src/components/ui/form/FormLabel.vue
+  - src/components/ui/form/FormMessage.vue
+  - src/components/ui/form/index.ts
+  - src/components/ui/form/injectionKeys.ts
+  - src/components/ui/form/useFormField.ts
+  - src/components/ui/label/Label.vue
+  - src/components/ui/label/index.ts
+- 필요한 의존성 자동 설치됨 (vee-validate 등)
+- 사용 방법: `import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form'`
+- Label 사용: `import { Label } from '@/components/ui/label'`
+- Vuetify의 v-form, v-text-field validation을 대체
+
+**다음 작업 (작업 3-5): Toast/Sonner 컴포넌트 설치**
 - 필요 정보:
-  - 명령어: `npx shadcn-vue@latest add form`
-  - Form 컴포넌트는 폼 유효성 검사를 위한 컴포넌트
-  - vee-validate 또는 react-hook-form 기반 (Vue에서는 vee-validate 사용)
-  - FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage로 구성
-  - 설치 후 Form.vue 등 파일이 src/components/ui/form/ 디렉토리에 생성됨
-  - 참고: vee-validate 라이브러리가 필요할 수 있음
+  - 명령어: `npx shadcn-vue@latest add sonner` (또는 `toast`)
+  - Sonner는 현대적인 Toast 알림 라이브러리 (v-snackbar 대체)
+  - 설치 후 Toaster 컴포넌트와 toast 함수 제공
+  - 사용 방법: `import { toast } from 'sonner'` 및 `<Toaster />` 컴포넌트 추가
+  - 설치 후 파일이 src/components/ui/sonner/ 디렉토리에 생성됨
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
