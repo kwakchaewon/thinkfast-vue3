@@ -482,9 +482,9 @@ colors: {
 - [x] 기타 필요한 컴포넌트들
 
 ### 4. 아이콘 시스템 마이그레이션
-- [ ] MDI 아이콘 대체 라이브러리 선택 (lucide-vue-next 등)
-- [ ] 아이콘 라이브러리 설치
-- [ ] 기존 MDI 아이콘을 새 아이콘으로 매핑
+- [x] MDI 아이콘 대체 라이브러리 선택 (lucide-vue-next 등)
+- [x] 아이콘 라이브러리 설치
+- [x] 기존 MDI 아이콘을 새 아이콘으로 매핑
 
 ### 5. 레이아웃 컴포넌트 마이그레이션
 - [ ] App.vue (v-app → 레이아웃 컴포넌트)
@@ -833,16 +833,14 @@ colors: {
 - 모든 컴포넌트는 src/components/ui/ 디렉토리에 설치됨
 - 마이그레이션에 필요한 주요 컴포넌트 모두 준비 완료
 
-### 작업 2-1 보완 완료 (Tailwind CSS v3로 다운그레이드)
+### 작업 2-1 보완 완료 (Tailwind CSS v3로 다운그레이드 및 재설치)
 **완료 날짜:** 작업 완료  
 **결과:** 
-- Tailwind CSS v4.1.16을 v3.4.0으로 다운그레이드 완료
+- Tailwind CSS v4.1.16 → v3.4.18로 다운그레이드 완료
+- node_modules 재설치 완료 (581개 패키지)
 - PostCSS 플러그인 에러 해결 (v4는 별도 패키지 필요, v3는 직접 지원)
 - src/style.css에서 Tailwind v4 전용 구문 제거:
-  - `@import "tw-animate-css"` 제거
-  - `@plugin "tailwindcss-animate"` 제거
-  - `@custom-variant dark` 제거
-  - `@theme inline` 블록 제거
+  - `@import "tw-animate-css"`, `@plugin`, `@custom-variant`, `@theme inline` 제거
 - tailwind.config.js에 tailwindcss-animate 플러그인 추가 (v3 방식)
 - shadcn-vue와의 호환성 확보 (shadcn-vue는 Tailwind v3 기준)
 
@@ -850,13 +848,100 @@ colors: {
 - Tailwind CSS v4는 PostCSS 플러그인이 별도 패키지(`@tailwindcss/postcss`)로 분리됨
 - v4는 CSS 기반 설정 방식으로 변경되어 기존 config.js 방식과 호환되지 않음
 - shadcn-vue는 Tailwind v3를 기준으로 개발되어 v4 사용 시 호환성 이슈 발생 가능
+- node_modules 캐시 문제로 인해 v4가 남아있을 수 있어 재설치 필요했음
 
-**다음 작업 (작업 4): 아이콘 시스템 마이그레이션**
+**참고:**
+- 실제 설치된 버전: tailwindcss@3.4.18 (루트)
+- shadcn-vue는 내부적으로 tailwindcss@4.1.16을 의존성으로 가지지만, 프로젝트 루트의 v3가 우선 사용됨
+
+### 작업 4 완료 (아이콘 시스템 마이그레이션)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- lucide-vue-next는 이미 설치되어 있음 (v0.552.0, shadcn-vue 초기화 시 설치됨)
+- 프로젝트 전체에서 사용 중인 MDI 아이콘 31종 식별 완료
+- MDI 아이콘 → Lucide 아이콘 매핑 테이블 작성 완료
+
+**MDI → Lucide 아이콘 매핑 테이블:**
+
+| MDI 아이콘 | Lucide 아이콘 | 사용 위치 | 비고 |
+|-----------|--------------|----------|------|
+| `mdi-account` | `User` | Signup.vue, Home.vue | 사용자 계정 |
+| `mdi-lock` | `Lock` | Login.vue, Signup.vue, Home.vue | 잠금 |
+| `mdi-lock-check` | `ShieldCheck` | Signup.vue | 잠금 확인 |
+| `mdi-email` | `Mail` | Login.vue, Signup.vue | 이메일 |
+| `mdi-eye` | `Eye` | Signup.vue, Home.vue, CreateSurvey.vue, SurveyResults.vue | 보기 |
+| `mdi-eye-off` | `EyeOff` | Signup.vue, Home.vue | 숨기기 |
+| `mdi-calendar` | `Calendar` | Signup.vue, CreateSurvey.vue | 달력 |
+| `mdi-bell` | `Bell` | Sidebar.vue | 알림 |
+| `mdi-menu` | `Menu` | HeaderMenu.vue | 메뉴 |
+| `mdi-close` | `X` | Sidebar.vue, SurveyResults.vue | 닫기 |
+| `mdi-chevron-left` | `ChevronLeft` | Sidebar.vue | 왼쪽 화살표 |
+| `mdi-chevron-right` | `ChevronRight` | Sidebar.vue, Main.vue | 오른쪽 화살표 |
+| `mdi-view-dashboard` | `LayoutDashboard` | Sidebar.vue, HeaderMenu.vue | 대시보드 |
+| `mdi-plus` | `Plus` | Sidebar.vue, HeaderMenu.vue, RecentSurveys.vue, CreateSurvey.vue, AllSurveys.vue | 추가 |
+| `mdi-poll` | `BarChart3` 또는 `PieChart` | Sidebar.vue, HeaderMenu.vue | 설문 |
+| `mdi-vote` | `Vote` | Sidebar.vue, HeaderMenu.vue | 투표 |
+| `mdi-chart-box` | `BarChart3` | Sidebar.vue, HeaderMenu.vue | 차트 박스 |
+| `mdi-chart-timeline-variant` | `TrendingUp` 또는 `Activity` | Sidebar.vue, HeaderMenu.vue | 타임라인 차트 |
+| `mdi-chart-line` | `TrendingUp` | Main.vue | 선형 차트 |
+| `mdi-chart-bar` | `BarChart` | SurveyDetail.vue | 막대 차트 |
+| `mdi-logout` | `LogOut` | Sidebar.vue, HeaderMenu.vue | 로그아웃 |
+| `mdi-clock-outline` | `Clock` | SurveyResponse.vue, Main.vue, CreateSurvey.vue | 시계 |
+| `mdi-file-document-edit` | `FileEdit` | CreateSurvey.vue | 문서 편집 |
+| `mdi-format-title` | `Heading` | CreateSurvey.vue | 제목 |
+| `mdi-text` | `Type` | CreateSurvey.vue | 텍스트 |
+| `mdi-format-list-checks` | `ListChecks` | CreateSurvey.vue | 체크 리스트 |
+| `mdi-format-list-bulleted-type` | `List` | CreateSurvey.vue | 불릿 리스트 |
+| `mdi-playlist-plus` | `ListPlus` | CreateSurvey.vue | 플레이리스트 추가 |
+| `mdi-help-circle` | `HelpCircle` | CreateSurvey.vue | 도움말 |
+| `mdi-delete` | `Trash2` | CreateSurvey.vue, SurveyDetail.vue | 삭제 |
+| `mdi-cog` | `Settings` | CreateSurvey.vue | 설정 |
+| `mdi-account-multiple` | `Users` | CreateSurvey.vue | 여러 계정 |
+| `mdi-content-save` | `Save` | CreateSurvey.vue | 저장 |
+| `mdi-content-copy` | `Copy` | SurveyDetail.vue | 복사 |
+| `mdi-magnify` | `Search` | AllSurveys.vue | 검색 |
+| `mdi-message-reply` | `Reply` | Main.vue | 답장 |
+| `mdi-check-circle` | `CheckCircle2` | SurveyCompletion.vue | 체크 원 |
+
+**사용 파일 목록:**
+- src/components/common/Sidebar.vue (12개 아이콘)
+- src/components/mobile/HeaderMenu.vue (9개 아이콘)
+- src/views/Login.vue (2개 아이콘)
+- src/views/Signup.vue (7개 아이콘)
+- src/views/Home.vue (4개 아이콘)
+- src/views/CreateSurvey.vue (15개 아이콘)
+- src/views/Main.vue (4개 아이콘)
+- src/views/SurveyDetail.vue (2개 아이콘)
+- src/views/SurveyResponse.vue (1개 아이콘)
+- src/views/SurveyResults.vue (2개 아이콘)
+- src/views/AllSurveys.vue (2개 아이콘)
+- src/views/RecentSurveys.vue (1개 아이콘)
+- src/views/SurveyCompletion.vue (1개 아이콘)
+
+**Lucide 아이콘 사용 방법:**
+```vue
+<script setup>
+import { User, Mail, Lock, Bell } from 'lucide-vue-next'
+</script>
+
+<template>
+  <User class="w-4 h-4" />
+  <Mail class="w-5 h-5 text-primary" />
+</template>
+```
+
+**참고:**
+- Lucide 아이콘은 컴포넌트로 import하여 사용
+- 크기는 `class="w-4 h-4"` 등의 Tailwind 클래스로 제어
+- 색상은 `class="text-primary"` 등의 Tailwind 클래스로 제어
+- MDI의 `v-icon` 대신 직접 컴포넌트로 사용
+
+**다음 작업 (작업 5): 레이아웃 컴포넌트 마이그레이션**
 - 필요 정보:
-  - lucide-vue-next는 이미 설치되어 있음 (shadcn-vue 초기화 시 설치됨)
-  - 기존 MDI 아이콘 사용 위치 파악 필요
-  - MDI 아이콘 → lucide 아이콘 매핑 작업
-  - 주요 아이콘: mdi-account, mdi-lock, mdi-email, mdi-bell, mdi-menu 등
+  - App.vue에서 v-app 제거 및 레이아웃 구조 변경
+  - Sidebar.vue에서 v-navigation-drawer를 커스텀 컴포넌트로 대체
+  - HeaderMenu.vue 반응형 헤더 구현
+  - Main.vue 반응형 그리드 시스템 적용
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
