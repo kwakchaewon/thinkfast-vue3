@@ -351,7 +351,7 @@ const handleSignup = handleSubmit(async (values: {
     }
     
     // 성공 처리
-    showSuccess('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.')
+    showSuccess('회원가입이 완료되었습니다.')
     await navigateWithDelay('/')
   } catch (error: any) {
     // 에러 응답 처리
