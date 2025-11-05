@@ -833,6 +833,24 @@ colors: {
 - 모든 컴포넌트는 src/components/ui/ 디렉토리에 설치됨
 - 마이그레이션에 필요한 주요 컴포넌트 모두 준비 완료
 
+### 작업 2-1 보완 완료 (Tailwind CSS v3로 다운그레이드)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- Tailwind CSS v4.1.16을 v3.4.0으로 다운그레이드 완료
+- PostCSS 플러그인 에러 해결 (v4는 별도 패키지 필요, v3는 직접 지원)
+- src/style.css에서 Tailwind v4 전용 구문 제거:
+  - `@import "tw-animate-css"` 제거
+  - `@plugin "tailwindcss-animate"` 제거
+  - `@custom-variant dark` 제거
+  - `@theme inline` 블록 제거
+- tailwind.config.js에 tailwindcss-animate 플러그인 추가 (v3 방식)
+- shadcn-vue와의 호환성 확보 (shadcn-vue는 Tailwind v3 기준)
+
+**에러 원인:**
+- Tailwind CSS v4는 PostCSS 플러그인이 별도 패키지(`@tailwindcss/postcss`)로 분리됨
+- v4는 CSS 기반 설정 방식으로 변경되어 기존 config.js 방식과 호환되지 않음
+- shadcn-vue는 Tailwind v3를 기준으로 개발되어 v4 사용 시 호환성 이슈 발생 가능
+
 **다음 작업 (작업 4): 아이콘 시스템 마이그레이션**
 - 필요 정보:
   - lucide-vue-next는 이미 설치되어 있음 (shadcn-vue 초기화 시 설치됨)
