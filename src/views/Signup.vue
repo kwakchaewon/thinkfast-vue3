@@ -99,37 +99,26 @@
           <FormField v-slot="{ componentField, errorMessage }" name="birthDate">
             <FormItem>
               <FormControl>
-                <Popover v-model:open="isDatePickerOpen" @update:open="handleDatePickerOpen">
-                  <PopoverTrigger as-child>
-                    <button
-                      type="button"
-                      class="relative w-full pl-10 pr-10 h-12 bg-white border border-gray-300 rounded-lg text-left text-sm focus:outline-none focus:ring-1 focus:ring-primary-400 focus:border-primary-400 cursor-pointer"
-                      :class="{ 'border-destructive': errorMessage }"
-                    >
-                      <CalendarIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
-                      <span :class="{ 'text-muted-foreground': !selectedDate }">
-                        {{ selectedDate ? formatBirthDate(selectedDate) : '생년월일 (YYMMDD)' }}
-                      </span>
-                      <CalendarIcon class="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent 
-                    class="w-auto p-0 bg-white shadow-lg border border-gray-200" 
-                    align="start"
+                <div class="relative">
+                  <CalendarIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none z-10" />
+                  <input
+                    v-bind="componentField"
+                    ref="dateInputRef"
+                    type="text"
+                    placeholder="생년월일 (YYMMDD)"
+                    readonly
+                    class="flex h-12 w-full pl-10 pr-10 rounded-lg border bg-white px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-400 focus-visible:border-primary-400 cursor-pointer border-gray-300"
+                    :class="{ 'border-destructive': errorMessage }"
+                    @click="() => flatpickrInstance?.open()"
+                  />
+                  <button
+                    type="button"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors z-10"
+                    @click="() => flatpickrInstance?.open()"
                   >
-                    <Calendar 
-                      v-model="selectedDate"
-                      :calendar-level="calendarLevel"
-                      @update:calendar-level="calendarLevel = $event"
-                    />
-                  </PopoverContent>
-                </Popover>
-                <!-- Hidden input for form validation -->
-                <input
-                  type="hidden"
-                  v-bind="componentField"
-                  :value="formatBirthDate(selectedDate)"
-                />
+                    <CalendarIcon class="h-5 w-5" />
+                  </button>
+                </div>
               </FormControl>
               <FormMessage class="text-xs text-red-500 mt-1" />
             </FormItem>
@@ -163,7 +152,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, nextTick, watch } from 'vue'
+import { ref, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -181,8 +170,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Mail, Lock, LockKeyhole, User, Calendar as CalendarIcon, Eye, EyeOff, Loader2 } from 'lucide-vue-next'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import flatpickr from 'flatpickr'
+import 'flatpickr/dist/flatpickr.min.css'
 
 const router = useRouter()
 const { navigateWithDelay } = useDelayedRouter(router)
@@ -191,9 +180,8 @@ const { showError, showSuccess } = useSnackbar()
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const loading = ref(false)
-const isDatePickerOpen = ref(false)
-const selectedDate = ref<Date | undefined>(undefined)
-const calendarLevel = ref<'day' | 'month' | 'year'>('day')
+const dateInputRef = ref<HTMLInputElement | null>(null)
+const flatpickrInstance = ref<flatpickr.Instance | null>(null)
 
 // 생년월일 유효성 검사 함수
 const validateBirthDate = (value: string): boolean => {
@@ -276,31 +264,64 @@ const { handleSubmit, setValue } = useForm({
   validationSchema: schema,
 })
 
-// selectedDate가 변경될 때 form 값 업데이트 및 popover 닫기
-watch(selectedDate, (newDate, oldDate) => {
-  // 새로운 날짜가 선택되었을 때만 처리
-  if (newDate && oldDate !== newDate) {
-    const formattedDate = formatBirthDate(newDate)
-    setValue('birthDate', formattedDate)
-    
-    // calendar-level이 'day'일 때만 popover 닫기 (년도/월 선택 시에는 닫지 않음)
-    if (calendarLevel.value === 'day') {
-      nextTick(() => {
-        isDatePickerOpen.value = false
+// Flatpickr 초기화
+onMounted(() => {
+  nextTick(() => {
+    if (dateInputRef.value) {
+      // 한국어 로케일 설정
+      flatpickr.localize({
+        firstDayOfWeek: 0,
+        weekdays: {
+          shorthand: ['일', '월', '화', '수', '목', '금', '토'],
+          longhand: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일']
+        },
+        months: {
+          shorthand: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+          longhand: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
+        }
+      })
+
+      flatpickrInstance.value = flatpickr(dateInputRef.value, {
+        dateFormat: 'Y-m-d', // 내부적으로는 Y-m-d 형식 사용
+        maxDate: new Date(), // 오늘 이후 날짜 선택 불가
+        defaultDate: undefined,
+        onChange: (selectedDates, dateStr) => {
+          if (selectedDates.length > 0) {
+            const date = selectedDates[0]
+            const formatted = formatBirthDate(date)
+            // Input에 YYMMDD 형식으로 표시
+            if (dateInputRef.value) {
+              dateInputRef.value.value = formatted
+              // v-model 업데이트를 위한 이벤트 발생
+              dateInputRef.value.dispatchEvent(new Event('input', { bubbles: true }))
+            }
+            // form 값 업데이트
+            setValue('birthDate', formatted)
+          }
+        },
+        onReady: (selectedDates, dateStr, instance) => {
+          // 초기화 시 기존 값이 있으면 YYMMDD 형식으로 표시
+          if (selectedDates.length > 0 && dateInputRef.value) {
+            dateInputRef.value.value = formatBirthDate(selectedDates[0])
+          }
+        },
+        onValueUpdate: (selectedDates, dateStr, instance) => {
+          // 값이 업데이트될 때 YYMMDD 형식으로 표시
+          if (selectedDates.length > 0 && dateInputRef.value) {
+            dateInputRef.value.value = formatBirthDate(selectedDates[0])
+          }
+        },
       })
     }
-  }
+  })
 })
 
-// datepicker가 열릴 때 년도 선택부터 시작
-const handleDatePickerOpen = (open: boolean) => {
-  if (open) {
-    calendarLevel.value = 'year' // 년도 선택부터 시작
-  } else {
-    // 닫힐 때 레벨 초기화
-    calendarLevel.value = 'day'
+// 컴포넌트 언마운트 시 정리
+onUnmounted(() => {
+  if (flatpickrInstance.value) {
+    flatpickrInstance.value.destroy()
   }
-}
+})
 
 const handleSignup = handleSubmit(async (values: { 
   email: string
@@ -334,5 +355,44 @@ const handleSignup = handleSubmit(async (values: {
 </script>
 
 <style scoped>
-/* 추가 스타일이 필요한 경우 */
+/* Flatpickr 스타일 커스터마이징 */
+:deep(.flatpickr-calendar) {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+:deep(.flatpickr-day.selected) {
+  background: #5C6BC0;
+  border-color: #5C6BC0;
+  color: white;
+}
+
+:deep(.flatpickr-day.selected:hover) {
+  background: #3949AB;
+  border-color: #3949AB;
+}
+
+:deep(.flatpickr-day.today) {
+  border-color: #5C6BC0;
+}
+
+:deep(.flatpickr-day.today:hover) {
+  background: #E8EAF6;
+  border-color: #5C6BC0;
+}
+
+:deep(.flatpickr-months .flatpickr-month) {
+  color: #1f2937;
+}
+
+:deep(.flatpickr-weekday) {
+  color: #6b7280;
+  font-weight: 600;
+}
+
+:deep(.flatpickr-day):hover {
+  background: #f3f4f6;
+}
 </style>
