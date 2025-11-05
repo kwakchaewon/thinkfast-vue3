@@ -495,9 +495,9 @@ colors: {
   - [x] 데스크톱: 고정 사이드바
   - [x] 부드러운 전환 애니메이션
   - [x] 터치 제스처 지원 (모바일, HeaderMenu에서 처리)
-- [ ] HeaderMenu.vue
-  - [ ] 반응형 헤더 (모바일: 컴팩트, 데스크톱: 전체)
-  - [ ] 스크롤 시 헤더 숨김/표시 기능
+- [x] HeaderMenu.vue
+  - [x] 반응형 헤더 (모바일: 컴팩트, 데스크톱: 전체)
+  - [x] 스크롤 시 헤더 숨김/표시 기능
 - [ ] Main.vue 레이아웃 구조
   - [ ] 반응형 그리드 시스템 적용
   - [ ] 카드 레이아웃 반응형 조정
@@ -994,12 +994,49 @@ import { User, Mail, Lock, Bell } from 'lucide-vue-next'
 - 모바일에서는 HeaderMenu.vue의 드로어 메뉴를 사용하므로, Sidebar는 데스크톱 전용
 - 메인 컨텐츠 영역에 `ml-[280px]` 클래스를 추가하여 사이드바 공간 확보 필요
 
-**다음 작업 (작업 5-3): HeaderMenu.vue 마이그레이션**
+### 작업 5-3 완료 (HeaderMenu.vue 마이그레이션)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- 모든 Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체:
+  - `v-layout` → `<div class="flex h-screen">`
+  - `v-btn` → `Button` 컴포넌트
+  - `v-icon` → Lucide 아이콘
+  - `v-list`, `v-list-item` → Tailwind CSS 리스트 (`<nav>`, `<a>`, `<button>`)
+  - `v-divider` → `Separator` 컴포넌트
+  - `v-sheet` → Tailwind CSS div
+  - `v-slide-y-transition` → Vue `<Transition>` + Tailwind 애니메이션
+  - `v-main` → `<main>` 태그 + Tailwind 클래스
+- 모든 MDI 아이콘을 Lucide 아이콘으로 교체:
+  - `mdi-menu` → `Menu`
+  - `mdi-view-dashboard` → `LayoutDashboard`
+  - `mdi-plus` → `Plus`
+  - `mdi-poll` → `BarChart3`
+  - `mdi-vote` → `Vote`
+  - `mdi-chart-box` → `BarChart3`
+  - `mdi-chart-timeline-variant` → `TrendingUp`
+  - `mdi-logout` → `LogOut`
+- 모바일 감지: `useDisplay()` → VueUse의 `useBreakpoints()`
+- 반응형 헤더 구현:
+  - 모바일: 고정 헤더 + 드로어 메뉴 (슬라이드 인/아웃)
+  - 데스크톱: Sidebar 표시 + 메인 컨텐츠
+- 스크롤 시 헤더 숨김/표시 기능 유지 (80px 이상 스크롤 시)
+- 부드러운 전환 애니메이션 (Tailwind transition + Vue Transition)
+- 모바일 전용 헤더 스타일링 (고정 위치, 그림자, 전환 효과)
+
+**주요 변경사항:**
+- Options API → Composition API (`<script setup>`)로 변경
+- `useDisplay()` → `useBreakpoints()` (VueUse)
+- 드로어 메뉴 애니메이션: `v-slide-y-transition` → Vue `<Transition>` + Tailwind 클래스
+- 모바일/데스크톱 레이아웃 분기 처리 개선
+
+**참고:**
+- 모바일에서는 헤더가 고정되고, 데스크톱에서는 Sidebar가 고정됨
+- 메인 컨텐츠는 모바일: `pt-16`, 데스크톱: `ml-[280px]`로 사이드바 공간 확보
+
+**다음 작업 (작업 5-4): Main.vue 레이아웃 구조 마이그레이션**
 - 필요 정보:
-  - 모바일 헤더를 Tailwind CSS로 구현
-  - 햄버거 메뉴 드로어 패턴 (슬라이드 인/아웃)
-  - 스크롤 시 헤더 숨김/표시 기능 유지
-  - Lucide 아이콘으로 교체
+  - Main.vue 확인 및 반응형 그리드 시스템 적용
+  - 카드 레이아웃 반응형 조정
   - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체
 
 **참고 링크:**
