@@ -136,17 +136,6 @@
             <span v-else>회원가입</span>
           </Button>
 
-          <!-- 테스트용 버튼 (개발 중에만 표시) -->
-          <Button
-            v-if="isDev"
-            type="button"
-            variant="outline"
-            class="w-full"
-            @click="testToast"
-          >
-            테스트: 토스트 확인
-          </Button>
-
           <div class="text-center pt-2">
             <span class="text-sm text-gray-600">이미 계정이 있으신가요? </span>
             <router-link
@@ -188,18 +177,11 @@ const router = useRouter()
 const { navigateWithDelay } = useDelayedRouter(router)
 const { showError, showSuccess } = useSnackbar()
 
-const isDev = import.meta.env.DEV
-
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const loading = ref(false)
 const dateInputRef = ref<HTMLInputElement | null>(null)
 const flatpickrInstance = ref<flatpickr.Instance | null>(null)
-
-// 테스트 함수
-const testToast = () => {
-  showError('테스트 에러 메시지')
-}
 
 // 생년월일 유효성 검사 함수
 const validateBirthDate = (value: string): boolean => {
