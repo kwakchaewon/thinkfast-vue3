@@ -58,7 +58,7 @@
 ### 1. 프로젝트 분석 및 마이그레이션 계획
 - [x] 현재 사용 중인 모든 Vuetify 컴포넌트 목록 작성
 - [x] 각 컴포넌트별 shadcn-vue 대응 컴포넌트 매핑
-- [ ] 마이그레이션 우선순위 결정
+- [x] 마이그레이션 우선순위 결정
 - [ ] 커스텀 테마 및 스타일 분석
 
 #### 사용 중인 Vuetify 컴포넌트 목록
@@ -236,6 +236,118 @@
 - Button, Input, Textarea, Card, Dialog, Select, Switch, RadioGroup, Slider
 - Badge, Avatar, Progress, Table, Accordion, Separator
 - Toast/Sonner (snackbar 대체)
+
+#### 마이그레이션 우선순위 결정
+
+**프로젝트 핵심 기능 분석:**
+- **주요 기능**: AI 기반 실시간 설문조사 플랫폼
+- **핵심 사용자 플로우**:
+  1. 인증 (로그인/회원가입) → Home.vue, Login.vue, Signup.vue
+  2. 메인 대시보드 → Main.vue
+  3. 설문 생성 → CreateSurvey.vue
+  4. 설문 관리 및 조회 → SurveyDetail.vue, AllSurveys.vue
+  5. 설문 응답 → SurveyResponse.vue
+  6. 결과 조회 → SurveyResults.vue
+
+**컴포넌트 사용 빈도 분석:**
+- v-btn, v-input, v-text-field, v-card, v-form: 276회 사용 (14개 파일)
+- 가장 많이 사용되는 기본 컴포넌트들
+
+**마이그레이션 우선순위 (단계별):**
+
+**Phase 1: 기반 환경 구축 (최우선)**
+1. **shadcn-vue 환경 설정** (작업 2)
+   - Tailwind CSS 설치 및 설정
+   - shadcn-vue 초기화
+   - 필수 설정 파일 생성
+
+2. **기본 컴포넌트 설치** (작업 3)
+   - Button, Input, Textarea, Label (다른 컴포넌트의 의존성)
+   - Card (가장 많이 사용)
+   - Separator (Divider)
+
+**Phase 2: 핵심 기능 컴포넌트 (우선순위 높음)**
+3. **폼 관련 컴포넌트**
+   - Form, Select, Switch, RadioGroup, Slider
+   - Toast/Sonner (알림 시스템)
+
+4. **레이아웃 컴포넌트**
+   - Navigation Drawer (Sidebar) - 커스텀 개발 필요
+   - 반응형 레이아웃 유틸리티
+
+**Phase 3: 데이터 표시 컴포넌트 (우선순위 중간)**
+5. **테이블 및 리스트**
+   - Table
+   - Badge, Avatar
+   - 커스텀 List 컴포넌트 (Tailwind 구현)
+
+6. **다이얼로그 및 확장**
+   - Dialog
+   - Accordion (CreateSurvey.vue에서 사용)
+
+7. **기타 데이터 표시**
+   - Progress
+   - Timeline (커스텀 개발 필요, Main.vue)
+
+**Phase 4: 부가 기능 및 최적화 (우선순위 낮음)**
+8. **아이콘 시스템**
+   - lucide-vue-next 설치 및 매핑
+
+9. **커스텀 컴포넌트**
+   - Pagination (커스텀 개발 또는 라이브러리)
+
+10. **테마 및 스타일링**
+    - 디자인 시스템 통합
+    - 반응형 최적화
+
+**Phase 5: 뷰별 마이그레이션 순서**
+
+**우선순위 1 (인증 - 접근성):**
+- Home.vue (로그인 폼)
+- Login.vue
+- Signup.vue
+
+**우선순위 2 (핵심 기능):**
+- App.vue (루트 레이아웃)
+- Sidebar.vue (네비게이션)
+- HeaderMenu.vue
+- Main.vue (대시보드)
+
+**우선순위 3 (설문 관리):**
+- CreateSurvey.vue (복잡한 폼)
+- SurveyDetail.vue
+- AllSurveys.vue
+- RecentSurveys.vue
+
+**우선순위 4 (설문 응답):**
+- SurveyResponse.vue
+- SurveyResults.vue
+- SurveyCompletion.vue
+
+**우선순위 5 (기타):**
+- About.vue
+
+**의존성 관계:**
+- Button, Input, Card → 모든 뷰에서 사용 (Phase 1 필수)
+- Form, Select → 폼 뷰에서 사용 (Phase 2)
+- Navigation Drawer → Sidebar, HeaderMenu (Phase 2)
+- Table, Badge → 데이터 표시 뷰 (Phase 3)
+- Dialog, Accordion → 특정 뷰에서 사용 (Phase 3)
+
+**예상 작업 시간 (상대적):**
+- Phase 1: 1-2일 (환경 설정)
+- Phase 2: 3-5일 (핵심 컴포넌트)
+- Phase 3: 2-3일 (데이터 표시)
+- Phase 4: 1-2일 (부가 기능)
+- Phase 5: 5-7일 (뷰 마이그레이션)
+
+**총 예상 기간**: 12-19일 (작업량에 따라 조정)
+
+**위험 요소 및 대응:**
+1. **Navigation Drawer 커스텀 개발** - 복잡도 높음, 조기 시작 권장
+2. **Timeline 컴포넌트** - 간단한 커스텀 구현 가능
+3. **반응형 레이아웃** - Tailwind Grid/Flexbox로 대체, 테스트 중요
+4. **폼 유효성 검사** - vee-validate 또는 직접 구현 필요
 
 ### 2. shadcn-vue 환경 설정
 - [ ] Tailwind CSS 설치 및 설정
@@ -440,18 +552,21 @@
 - Tailwind CSS로 대체 가능한 컴포넌트: 레이아웃 관련 대부분
 - 커스텀 컴포넌트 개발 필요: Navigation Drawer, Timeline, Pagination
 
-**다음 작업 (작업 1-3): 마이그레이션 우선순위 결정**
+### 작업 1-3 완료 (마이그레이션 우선순위 결정)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- 5단계 Phase별 마이그레이션 계획 수립
+- 뷰별 우선순위 결정 (인증 → 핵심 기능 → 설문 관리 → 설문 응답)
+- 의존성 관계 분석 완료
+- 예상 작업 시간 및 위험 요소 식별
+
+**다음 작업 (작업 1-4): 커스텀 테마 및 스타일 분석**
 - 필요 정보:
-  - 프로젝트의 핵심 기능 파악
-  - 사용 빈도가 높은 컴포넌트 우선순위 결정
-  - 커스텀 컴포넌트 개발 우선순위 정리
-  - 의존성 관계 분석 (예: Button, Input 등 기본 컴포넌트 먼저 마이그레이션)
-  
-**우선순위 결정 기준:**
-1. 기본/기반 컴포넌트 (Button, Input, Card 등) - 다른 컴포넌트의 의존성
-2. 핵심 기능 컴포넌트 (Form, Dialog, Navigation 등)
-3. 데이터 표시 컴포넌트 (Table, Timeline 등)
-4. 부가 기능 컴포넌트 (Badge, Avatar, Progress 등)
+  - 현재 Vuetify 테마 설정 파일 분석 (src/plugins/vuetify.ts)
+  - 전역 스타일 파일 분석 (src/style.css)
+  - 사용 중인 커스텀 색상, 간격, 타이포그래피 확인
+  - 반응형 breakpoint 설정 확인
+  - Tailwind CSS로 변환할 커스텀 스타일 식별
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
