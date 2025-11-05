@@ -136,6 +136,17 @@
             <span v-else>회원가입</span>
           </Button>
 
+          <!-- 테스트용 버튼 (개발 중에만 표시) -->
+          <Button
+            v-if="isDev"
+            type="button"
+            variant="outline"
+            class="w-full"
+            @click="testToast"
+          >
+            테스트: 토스트 확인
+          </Button>
+
           <div class="text-center pt-2">
             <span class="text-sm text-gray-600">이미 계정이 있으신가요? </span>
             <router-link
@@ -152,7 +163,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, nextTick, watch, onMounted, onUnmounted } from 'vue'
+import { ref, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -177,11 +188,18 @@ const router = useRouter()
 const { navigateWithDelay } = useDelayedRouter(router)
 const { showError, showSuccess } = useSnackbar()
 
+const isDev = import.meta.env.DEV
+
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const loading = ref(false)
 const dateInputRef = ref<HTMLInputElement | null>(null)
 const flatpickrInstance = ref<flatpickr.Instance | null>(null)
+
+// 테스트 함수
+const testToast = () => {
+  showError('테스트 에러 메시지')
+}
 
 // 생년월일 유효성 검사 함수
 const validateBirthDate = (value: string): boolean => {
@@ -340,15 +358,23 @@ const handleSignup = handleSubmit(async (values: {
       birthDate: values.birthDate
     })
     
-    if (response.success === false) {
-      showError(response.message || '회원가입에 실패했습니다.')
-      return
+    // 응답 구조 확인 및 에러 처리
+    if (response && typeof response === 'object' && 'success' in response) {
+      if (response.success === false) {
+        const errorMessage = (response as any).message || '회원가입에 실패했습니다.'
+        showError(errorMessage)
+        loading.value = false
+        return
+      }
     }
     
+    // 성공 처리
     showSuccess('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.')
     await navigateWithDelay('/')
   } catch (error: any) {
-    showError(error.response?.data?.message || '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.')
+    // 에러 응답 처리
+    const errorMessage = error.response?.data?.message || error.message || '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+    showError(errorMessage)
   } finally {
     loading.value = false
   }

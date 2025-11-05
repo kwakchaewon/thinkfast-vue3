@@ -127,4 +127,10 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* vue-sonner toast 스타일 보장 */
+[data-sonner-toaster] {
+  position: fixed !important;
+  z-index: 9999 !important;
 } 
