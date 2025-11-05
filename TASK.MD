@@ -59,7 +59,7 @@
 - [x] 현재 사용 중인 모든 Vuetify 컴포넌트 목록 작성
 - [x] 각 컴포넌트별 shadcn-vue 대응 컴포넌트 매핑
 - [x] 마이그레이션 우선순위 결정
-- [ ] 커스텀 테마 및 스타일 분석
+- [x] 커스텀 테마 및 스타일 분석
 
 #### 사용 중인 Vuetify 컴포넌트 목록
 
@@ -349,6 +349,121 @@
 3. **반응형 레이아웃** - Tailwind Grid/Flexbox로 대체, 테스트 중요
 4. **폼 유효성 검사** - vee-validate 또는 직접 구현 필요
 
+#### 커스텀 테마 및 스타일 분석
+
+**현재 Vuetify 테마 설정 (src/plugins/vuetify.ts):**
+```typescript
+const myCustomLightTheme = {
+  dark: false,
+  colors: {
+    primary: '#3949AB',      // 딥 인디고
+    secondary: '#5C6BC0',    // 밝은 인디고
+    accent: '#1A237E',       // 진한 인디고
+    error: '#FF5252',        // Vuetify 기본 에러 색상
+    info: '#2196F3',         // Vuetify 기본 정보 색상
+    success: '#4CAF50',      // Vuetify 기본 성공 색상
+    warning: '#FFC107',      // Vuetify 기본 경고 색상
+  },
+}
+```
+
+**반응형 Breakpoint 설정:**
+- `mobileBreakpoint: 'sm'` (Vuetify 기본: 600px)
+- Tailwind CSS와 매핑 필요: sm = 640px
+
+**전역 스타일 (src/style.css):**
+- 폰트: `Inter, system-ui, Avenir, Helvetica, Arial, sans-serif`
+- 라인 높이: 1.5
+- 폰트 웨이트: 400
+- 기본 색상 스키마: light/dark 지원
+- 배경색: 라이트 모드 #ffffff, 다크 모드 #242424
+
+**커스텀 스타일 패턴 분석:**
+
+**1. 배경 그라데이션 (Home.vue, Signup.vue):**
+```css
+background: linear-gradient(135deg, #E8EAF6 0%, #5C6BC0 100%);
+```
+- 인디고 계열 그라데이션
+- Tailwind로 변환: `bg-gradient-to-br from-indigo-50 to-indigo-400`
+
+**2. 카드 스타일:**
+- `border-radius: 8px` → Tailwind: `rounded-lg`
+- `padding: 1.5rem 1rem` → Tailwind: `py-6 px-4`
+- `transform: translateY(-5%)` → 커스텀 유틸리티 필요
+
+**3. Vuetify 유틸리티 클래스 사용:**
+- `text-h4`, `text-h5`, `text-h6` → Tailwind: `text-2xl`, `text-xl`, `text-lg`
+- `text-body-1`, `text-body-2` → Tailwind: `text-base`, `text-sm`
+- `text-subtitle-1`, `text-subtitle-2` → Tailwind: `text-lg`, `text-base`
+- `text-caption` → Tailwind: `text-xs`
+- `mb-2`, `mb-4`, `pa-4` → Tailwind: `mb-2`, `mb-4`, `p-4`
+- `d-flex`, `align-center`, `justify-center` → Tailwind: `flex`, `items-center`, `justify-center`
+
+**4. 색상 사용 패턴:**
+- `primary` → 인디고 (#3949AB)
+- `secondary` → 밝은 인디고 (#5C6BC0)
+- `success` → 초록 (#4CAF50)
+- `error` → 빨강 (#FF5252)
+- `text-grey` → 회색 텍스트
+
+**Tailwind CSS 변환 계획:**
+
+**색상 팔레트 (tailwind.config.js):**
+```javascript
+colors: {
+  primary: {
+    DEFAULT: '#3949AB',
+    50: '#E8EAF6',
+    100: '#C5CAE9',
+    200: '#9FA8DA',
+    300: '#7986CB',
+    400: '#5C6BC0',
+    500: '#3949AB',  // DEFAULT
+    600: '#303F9F',
+    700: '#283593',
+    800: '#1A237E',  // accent
+    900: '#0D47A1',
+  },
+  // 기타 색상은 Tailwind 기본 색상 사용
+  // success: green-500, error: red-500 등
+}
+```
+
+**커스텀 유틸리티 클래스:**
+- `.text-h4` → `@apply text-2xl font-semibold`
+- `.text-h5` → `@apply text-xl font-semibold`
+- `.text-h6` → `@apply text-lg font-semibold`
+- `.text-body-1` → `@apply text-base`
+- `.text-body-2` → `@apply text-sm`
+- `.text-subtitle-1` → `@apply text-lg`
+- `.text-subtitle-2` → `@apply text-base`
+- `.text-caption` → `@apply text-xs`
+
+**간격 시스템:**
+- Vuetify: 4px 단위 (0.25rem)
+- Tailwind: 4px 단위 (기본값과 동일)
+- 변환 1:1 매핑 가능
+
+**그림자 및 테두리:**
+- Vuetify `elevation-12` → Tailwind `shadow-lg` 또는 `shadow-xl`
+- 카드 `border-radius: 8px` → Tailwind `rounded-lg`
+
+**반응형 Breakpoint 매핑:**
+- Vuetify `sm` (600px) → Tailwind `sm` (640px) - 약간 차이 있음
+- Vuetify `md` (960px) → Tailwind `md` (768px) - 차이 있음
+- Vuetify `lg` (1264px) → Tailwind `lg` (1024px) - 차이 있음
+- **주의**: Breakpoint 차이로 인한 레이아웃 조정 필요
+
+**커스텀 스타일 변환 체크리스트:**
+- [ ] Tailwind config에 커스텀 색상 팔레트 추가
+- [ ] 커스텀 유틸리티 클래스 정의 (text-h4, text-h5 등)
+- [ ] 그라데이션 배경 Tailwind 클래스로 변환
+- [ ] 반응형 breakpoint 차이 조정
+- [ ] 전역 폰트 설정 Tailwind로 통합
+- [ ] 카드 스타일 Tailwind 클래스로 변환
+- [ ] 간격 시스템 확인 및 통일
+
 ### 2. shadcn-vue 환경 설정
 - [ ] Tailwind CSS 설치 및 설정
 - [ ] shadcn-vue CLI 설치
@@ -560,13 +675,24 @@
 - 의존성 관계 분석 완료
 - 예상 작업 시간 및 위험 요소 식별
 
-**다음 작업 (작업 1-4): 커스텀 테마 및 스타일 분석**
+### 작업 1-4 완료 (커스텀 테마 및 스타일 분석)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- Vuetify 테마 색상 팔레트 분석 완료 (인디고 계열)
+- 전역 스타일 및 폰트 설정 확인
+- 커스텀 스타일 패턴 식별 (그라데이션, 카드 스타일 등)
+- Vuetify 유틸리티 클래스 → Tailwind CSS 매핑 정리
+- 반응형 breakpoint 차이점 식별 및 주의사항 정리
+- Tailwind CSS 변환 계획 수립
+
+**다음 작업 (작업 2): shadcn-vue 환경 설정**
 - 필요 정보:
-  - 현재 Vuetify 테마 설정 파일 분석 (src/plugins/vuetify.ts)
-  - 전역 스타일 파일 분석 (src/style.css)
-  - 사용 중인 커스텀 색상, 간격, 타이포그래피 확인
-  - 반응형 breakpoint 설정 확인
-  - Tailwind CSS로 변환할 커스텀 스타일 식별
+  - Tailwind CSS 설치 및 설정
+  - shadcn-vue CLI 설치 (`npm install -D shadcn-vue`)
+  - shadcn-vue 초기화 (`npx shadcn-vue@latest init`)
+  - components.json 설정 파일 생성
+  - Radix Vue 의존성 확인
+  - 커스텀 색상 팔레트를 tailwind.config.js에 추가
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
