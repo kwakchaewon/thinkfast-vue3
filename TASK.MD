@@ -85,6 +85,12 @@
 - 포커스: 파란색 테두리 및 링 (`focus:border-primary-400 focus:ring-primary-400`)
 - **플레이스홀더 색상**: 연한 회색 (`placeholder:text-gray-400`) - 검정색 금지
 
+**Select 박스 스타일**:
+- SelectTrigger: 흰색 배경 (`bg-white`)
+- SelectContent: 흰색 배경 (`bg-white`) - 투명 배경 금지
+- SelectItem: 흰색 배경 (`bg-white`), 호버 시 연한 회색 (`hover:bg-gray-50`)
+- 모든 Select 컴포넌트는 불투명한 흰색 배경을 사용하여 뒤가 비치지 않도록 함
+
 **4. 버튼 스타일**
 - Primary 버튼:
   - 배경: `bg-primary-400` (부드러운 파란색)
@@ -152,6 +158,7 @@
 - ❌ 과도한 그림자 사용 금지 (shadow-md 이하)
 - ❌ 밝은 색상 배경 사용 금지 (흰색 배경 유지)
 - ❌ 카드 헤더에 `bg-gray-50` 사용 금지 (흰색 배경 유지)
+- ❌ Select 박스 및 옵션에 투명 배경 사용 금지 (항상 `bg-white` 사용)
 - ❌ 복잡한 애니메이션 사용 금지
 - ❌ 라벨과 플레이스홀더 동시 사용 금지 (플레이스홀더만 사용)
 - ❌ 과도한 색상 사용 금지 (파란색 계열과 회색만 사용)
@@ -188,6 +195,18 @@
             class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400 placeholder:text-gray-400"
           />
         </div>
+        
+        <!-- Select 박스: 흰색 배경 -->
+        <Select>
+          <SelectTrigger class="h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400">
+            <SelectValue placeholder="선택" />
+          </SelectTrigger>
+          <SelectContent class="bg-white">
+            <SelectItem value="option1" class="bg-white hover:bg-gray-50">
+              옵션 1
+            </SelectItem>
+          </SelectContent>
+        </Select>
         
         <!-- 버튼: 부드러운 파란색 -->
         <Button class="w-full h-12 bg-primary-400 hover:bg-primary-500 text-white rounded-lg shadow-sm transition-colors">

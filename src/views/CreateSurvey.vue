@@ -50,11 +50,12 @@
                     <SelectTrigger class="h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400">
                       <SelectValue placeholder="시" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent class="bg-white">
                       <SelectItem
                         v-for="hour in hours"
                         :key="hour"
                         :value="hour"
+                        class="bg-white hover:bg-gray-50"
                       >
                         {{ hour }}
                       </SelectItem>
@@ -65,11 +66,12 @@
                     <SelectTrigger class="h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400">
                       <SelectValue placeholder="분" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent class="bg-white">
                       <SelectItem
                         v-for="minute in minutes"
                         :key="minute"
                         :value="minute"
+                        class="bg-white hover:bg-gray-50"
                       >
                         {{ minute }}
                       </SelectItem>
@@ -144,11 +146,12 @@
                             <SelectTrigger class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400">
                               <SelectValue placeholder="질문 유형" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent class="bg-white">
                               <SelectItem
                                 v-for="type in questionTypes"
                                 :key="type.value"
                                 :value="type.value"
+                                class="bg-white hover:bg-gray-50"
                               >
                                 {{ type.title }}
                               </SelectItem>
