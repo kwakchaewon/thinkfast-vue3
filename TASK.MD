@@ -4,6 +4,52 @@
 - **현재 라이브러리**: Vuetify 3.8.2
 - **대체 라이브러리**: shadcn-vue (Radix Vue + Tailwind CSS)
 - **프로젝트**: Vue 3 + TypeScript + Vite
+- **디자인 목표**: 반응형 웹, 사용자 친화적, 현대적이고 심플한 디자인
+
+---
+
+## 디자인 원칙 및 가이드라인
+
+### 반응형 디자인 전략
+- **모바일 퍼스트 접근**: 모바일부터 시작하여 데스크톱으로 확장
+- **Breakpoint 설정**:
+  - Mobile: < 640px (sm 미만)
+  - Tablet: 640px ~ 1024px (sm ~ lg)
+  - Desktop: > 1024px (lg 이상)
+- **Tailwind CSS 반응형 클래스 활용**: `sm:`, `md:`, `lg:`, `xl:` prefix 사용
+- **유연한 레이아웃**: Flexbox와 Grid를 활용한 적응형 레이아웃
+- **터치 친화적 인터페이스**: 모바일에서 최소 터치 영역 44x44px 확보
+
+### 현대적이고 심플한 디자인 원칙
+1. **미니멀리즘**: 불필요한 요소 제거, 핵심 기능에 집중
+2. **일관성**: 통일된 간격, 색상, 타이포그래피 시스템
+3. **계층 구조**: 명확한 시각적 계층으로 정보 전달
+4. **여백 활용**: 충분한 여백(whitespace)으로 가독성 향상
+5. **부드러운 애니메이션**: 미묘하고 자연스러운 전환 효과
+6. **접근성**: WCAG 2.1 AA 기준 준수 (색상 대비, 키보드 네비게이션 등)
+
+### 사용자 경험(UX) 고려사항
+- **직관적인 네비게이션**: 명확한 메뉴 구조와 브레드크럼
+- **빠른 로딩**: 이미지 최적화, 코드 스플리팅
+- **명확한 피드백**: 버튼 클릭, 폼 제출, 에러 상태 등 즉각적인 시각적 피드백
+- **에러 처리**: 명확하고 도움되는 에러 메시지
+- **로딩 상태**: 진행 중인 작업에 대한 명확한 인디케이터
+
+### 디자인 시스템
+- **색상 팔레트**: 기존 인디고 계열 유지, Tailwind CSS 색상 시스템으로 통합
+  - Primary: #3949AB (인디고)
+  - Secondary: #5C6BC0 (밝은 인디고)
+  - Accent: #1A237E (진한 인디고)
+  - Success: #4CAF50
+  - Error: #EF4444 (Tailwind red-500)
+  - Warning: #F59E0B (Tailwind amber-500)
+  - Info: #3B82F6 (Tailwind blue-500)
+- **타이포그래피**: 
+  - 폰트: 시스템 폰트 스택 또는 Inter/Pretendard
+  - 크기: Tailwind의 text-sm, text-base, text-lg 등 활용
+- **간격 시스템**: Tailwind의 spacing scale (4px 단위)
+- **그림자**: 부드러운 그림자로 깊이감 표현 (shadow-sm, shadow-md)
+- **둥근 모서리**: 일관된 border-radius (rounded-md, rounded-lg)
 
 ---
 
@@ -11,7 +57,7 @@
 
 ### 1. 프로젝트 분석 및 마이그레이션 계획
 - [x] 현재 사용 중인 모든 Vuetify 컴포넌트 목록 작성
-- [ ] 각 컴포넌트별 shadcn-vue 대응 컴포넌트 매핑
+- [x] 각 컴포넌트별 shadcn-vue 대응 컴포넌트 매핑
 - [ ] 마이그레이션 우선순위 결정
 - [ ] 커스텀 테마 및 스타일 분석
 
@@ -91,6 +137,106 @@
 - Vuetify의 반응형 유틸리티 클래스 사용 (sm, md, lg 등)
 - 커스텀 테마 색상: primary (#3949AB), secondary (#5C6BC0), accent (#1A237E)
 
+#### Vuetify → shadcn-vue 컴포넌트 매핑
+
+**레이아웃 컴포넌트:**
+| Vuetify 컴포넌트 | shadcn-vue 대응 | 비고 |
+|----------------|----------------|------|
+| `v-app` | 없음 (Tailwind CSS + 커스텀 레이아웃) | Root div로 대체, 전역 스타일 적용 |
+| `v-container` | 없음 (Tailwind: `container mx-auto`) | Tailwind container 클래스 사용 |
+| `v-row` / `v-col` | 없음 (Tailwind: `grid`, `flex`) | Tailwind Grid/Flexbox 사용 |
+| `v-layout` | 없음 (Tailwind: `flex`, `grid`) | Tailwind 레이아웃 유틸리티 사용 |
+| `v-main` | 없음 (Tailwind: `main` 태그 + 스타일) | HTML `<main>` 태그 + Tailwind 클래스 |
+| `v-spacer` | 없음 (Tailwind: `flex-1` 또는 `ml-auto`) | Tailwind flex 유틸리티 사용 |
+
+**카드 & 표면 컴포넌트:**
+| Vuetify 컴포넌트 | shadcn-vue 대응 | 비고 |
+|----------------|----------------|------|
+| `v-card` | `Card` (Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter) | shadcn-vue Card 컴포넌트 사용 |
+| `v-card-title` | `CardTitle` | Card 내부 컴포넌트 |
+| `v-card-text` | `CardContent` | Card 내부 컴포넌트 |
+| `v-card-item` | `CardHeader` 또는 `CardContent` | 용도에 따라 선택 |
+| `v-card-actions` | `CardFooter` | Card 내부 컴포넌트 |
+| `v-sheet` | 없음 (Tailwind: `div` + 스타일) | Tailwind로 커스텀 div 구현 |
+
+**폼 컴포넌트:**
+| Vuetify 컴포넌트 | shadcn-vue 대응 | 비고 |
+|----------------|----------------|------|
+| `v-form` | `Form` (react-hook-form 기반, Vue에서는 vee-validate 사용) | vee-validate 또는 직접 구현 |
+| `v-text-field` | `Input` | shadcn-vue Input 컴포넌트 |
+| `v-textarea` | `Textarea` | shadcn-vue Textarea 컴포넌트 |
+| `v-select` | `Select` (Select, SelectTrigger, SelectContent, SelectItem) | shadcn-vue Select 컴포넌트 |
+| `v-switch` | `Switch` | shadcn-vue Switch 컴포넌트 |
+| `v-radio-group` / `v-radio` | `RadioGroup` (RadioGroup, RadioGroupItem) | shadcn-vue RadioGroup 컴포넌트 |
+| `v-slider` | `Slider` | shadcn-vue Slider 컴포넌트 |
+
+**버튼 & 액션:**
+| Vuetify 컴포넌트 | shadcn-vue 대응 | 비고 |
+|----------------|----------------|------|
+| `v-btn` | `Button` | shadcn-vue Button 컴포넌트 (variant, size 지원) |
+| `v-icon` | 없음 (lucide-vue-next 아이콘 사용) | lucide-vue-next로 교체 필요 |
+
+**리스트 & 네비게이션:**
+| Vuetify 컴포넌트 | shadcn-vue 대응 | 비고 |
+|----------------|----------------|------|
+| `v-list` | 없음 (Tailwind: `ul`, `div` + 스타일) | Tailwind로 커스텀 리스트 구현 |
+| `v-list-item` | 없음 (Tailwind: `li` + 스타일) | Tailwind로 커스텀 리스트 아이템 구현 |
+| `v-list-item-title` | 없음 (Tailwind: `span` + 스타일) | Tailwind로 커스텀 구현 |
+| `v-list-item-subtitle` | 없음 (Tailwind: `span` + 스타일) | Tailwind로 커스텀 구현 |
+| `v-list-item-text` | 없음 (Tailwind: `div` + 스타일) | Tailwind로 커스텀 구현 |
+| `v-list-subheader` | 없음 (Tailwind: `h3` + 스타일) | Tailwind로 커스텀 구현 |
+| `v-navigation-drawer` | 없음 (커스텀 컴포넌트 필요) | **커스텀 컴포넌트 개발 필요** |
+| `v-menu` | `DropdownMenu` (DropdownMenu, DropdownMenuTrigger, DropdownMenuContent) | shadcn-vue DropdownMenu 컴포넌트 |
+
+**피드백 & 알림:**
+| Vuetify 컴포넌트 | shadcn-vue 대응 | 비고 |
+|----------------|----------------|------|
+| `v-snackbar` | `Toast` 또는 `Sonner` | shadcn-vue Toast 또는 Sonner 사용 권장 |
+| `v-chip` | `Badge` | shadcn-vue Badge 컴포넌트로 대체 |
+| `v-badge` | `Badge` | shadcn-vue Badge 컴포넌트 |
+| `v-progress-linear` | `Progress` | shadcn-vue Progress 컴포넌트 |
+
+**데이터 표시:**
+| Vuetify 컴포넌트 | shadcn-vue 대응 | 비고 |
+|----------------|----------------|------|
+| `v-table` | `Table` (Table, TableHeader, TableBody, TableRow, TableHead, TableCell) | shadcn-vue Table 컴포넌트 |
+| `v-timeline` / `v-timeline-item` | 없음 (커스텀 컴포넌트 필요) | **커스텀 컴포넌트 개발 필요** |
+| `v-avatar` | `Avatar` (Avatar, AvatarImage, AvatarFallback) | shadcn-vue Avatar 컴포넌트 |
+| `v-img` | 없음 (HTML `img` + Tailwind) | HTML img 태그 + Tailwind 클래스 사용 |
+
+**다이얼로그 & 오버레이:**
+| Vuetify 컴포넌트 | shadcn-vue 대응 | 비고 |
+|----------------|----------------|------|
+| `v-dialog` | `Dialog` (Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter) | shadcn-vue Dialog 컴포넌트 |
+
+**확장/축소:**
+| Vuetify 컴포넌트 | shadcn-vue 대응 | 비고 |
+|----------------|----------------|------|
+| `v-expansion-panels` / `v-expansion-panel` | `Accordion` (Accordion, AccordionItem, AccordionTrigger, AccordionContent) | shadcn-vue Accordion 컴포넌트 |
+
+**페이지네이션:**
+| Vuetify 컴포넌트 | shadcn-vue 대응 | 비고 |
+|----------------|----------------|------|
+| `v-pagination` | 없음 (커스텀 컴포넌트 필요) | **커스텀 컴포넌트 개발 필요** 또는 shadcn-vue Pagination 추가 확인 |
+
+**기타:**
+| Vuetify 컴포넌트 | shadcn-vue 대응 | 비고 |
+|----------------|----------------|------|
+| `v-divider` | `Separator` | shadcn-vue Separator 컴포넌트 |
+| `v-toolbar` / `v-toolbar-title` | 없음 (Tailwind: `header` + 스타일) | Tailwind로 커스텀 헤더 구현 |
+| `v-slide-y-transition` | 없음 (Vue Transition + Tailwind) | Vue `<Transition>` + Tailwind 애니메이션 |
+
+**커스텀 컴포넌트 개발이 필요한 항목:**
+1. **Navigation Drawer (Sidebar)** - 가장 중요, Sidebar.vue에서 핵심적으로 사용
+2. **Timeline** - Main.vue에서 사용, 우선순위 중간
+3. **Pagination** - AllSurveys.vue에서 사용, 우선순위 낮음 (일반 컴포넌트로 대체 가능)
+4. **List Components** - 리스트 아이템들을 Tailwind로 구현 (복잡도 낮음)
+
+**직접 매핑 가능한 컴포넌트 (우선순위 높음):**
+- Button, Input, Textarea, Card, Dialog, Select, Switch, RadioGroup, Slider
+- Badge, Avatar, Progress, Table, Accordion, Separator
+- Toast/Sonner (snackbar 대체)
+
 ### 2. shadcn-vue 환경 설정
 - [ ] Tailwind CSS 설치 및 설정
 - [ ] shadcn-vue CLI 설치
@@ -115,23 +261,62 @@
 
 ### 5. 레이아웃 컴포넌트 마이그레이션
 - [ ] App.vue (v-app → 레이아웃 컴포넌트)
+  - [ ] 반응형 루트 컨테이너 설정
+  - [ ] 모바일/데스크톱 레이아웃 분기 처리
 - [ ] Sidebar.vue (v-navigation-drawer 등)
+  - [ ] 모바일: 햄버거 메뉴 + 드로어 패턴
+  - [ ] 데스크톱: 고정 사이드바
+  - [ ] 부드러운 전환 애니메이션
+  - [ ] 터치 제스처 지원 (모바일)
 - [ ] HeaderMenu.vue
+  - [ ] 반응형 헤더 (모바일: 컴팩트, 데스크톱: 전체)
+  - [ ] 스크롤 시 헤더 숨김/표시 기능
 - [ ] Main.vue 레이아웃 구조
+  - [ ] 반응형 그리드 시스템 적용
+  - [ ] 카드 레이아웃 반응형 조정
 
 ### 6. 인증 관련 뷰 마이그레이션
 - [ ] Login.vue (v-form, v-text-field, v-btn 등)
+  - [ ] 반응형 폼 레이아웃 (모바일: 전체 너비, 데스크톱: 중앙 정렬)
+  - [ ] 현대적인 카드 디자인 (그림자, 둥근 모서리)
+  - [ ] 터치 친화적 버튼 크기
+  - [ ] 명확한 에러 메시지 표시
 - [ ] Signup.vue
+  - [ ] 반응형 폼 레이아웃
+  - [ ] 단계별 입력 가이드 (선택사항)
+  - [ ] 실시간 유효성 검사 피드백
 - [ ] Home.vue
+  - [ ] 반응형 로고 및 타이틀
+  - [ ] 모바일 최적화된 폼 레이아웃
 
 ### 7. 설문조사 관련 뷰 마이그레이션
 - [ ] CreateSurvey.vue
+  - [ ] 반응형 2단 레이아웃 (데스크톱: 사이드바 + 메인, 모바일: 세로 스택)
+  - [ ] Accordion 컴포넌트로 질문 관리 UI 개선
+  - [ ] 드래그 앤 드롭으로 질문 순서 변경 (선택사항)
 - [ ] SurveyDetail.vue
+  - [ ] 반응형 카드 레이아웃
+  - [ ] QR 코드 모바일 최적화
+  - [ ] 터치 친화적 버튼 배치
 - [ ] SurveyResponse.vue
+  - [ ] 모바일 최적화된 폼 입력
+  - [ ] 스크롤 가능한 질문 목록
+  - [ ] 하단 고정 제출 버튼 (모바일)
+  - [ ] 진행 상황 표시 (선택사항)
 - [ ] SurveyResults.vue
+  - [ ] 반응형 차트 (모바일: 세로 스택, 데스크톱: 가로 배치)
+  - [ ] 워드클라우드 모바일 최적화
+  - [ ] 테이블 모바일 대응 (가로 스크롤 또는 카드 변환)
 - [ ] SurveyCompletion.vue
+  - [ ] 심플한 완료 화면
+  - [ ] 명확한 CTA 버튼
 - [ ] AllSurveys.vue
+  - [ ] 반응형 테이블 (모바일: 카드, 데스크톱: 테이블)
+  - [ ] 필터 및 검색 모바일 최적화
+  - [ ] 무한 스크롤 또는 페이지네이션
 - [ ] RecentSurveys.vue
+  - [ ] 반응형 그리드 레이아웃
+  - [ ] 카드 호버 효과
 
 ### 8. 기타 뷰 마이그레이션
 - [ ] About.vue
@@ -140,12 +325,19 @@
 - [ ] useSnackbar composable 업데이트 (v-snackbar → Toast/Sonner)
 - [ ] 스타일 유틸리티 클래스 변환
 - [ ] 반응형 레이아웃 클래스 변환
+- [ ] 반응형 헬퍼 유틸리티 함수 생성 (useBreakpoint, useResponsive 등)
+- [ ] 공통 애니메이션 유틸리티 구현
 
 ### 10. 테마 및 스타일링 설정
 - [ ] Tailwind CSS 커스텀 테마 설정
 - [ ] 기존 Vuetify 테마 색상 (primary, secondary 등) Tailwind로 변환
-- [ ] 다크모드 지원 여부 결정 및 설정
+- [ ] 다크모드 지원 여부 결정 및 설정 (권장: 라이트 모드 우선)
 - [ ] 전역 스타일 정리 (style.css)
+- [ ] 반응형 breakpoint 커스터마이징 (tailwind.config.js)
+- [ ] 일관된 간격 시스템 설정 (spacing scale)
+- [ ] 타이포그래피 스케일 정의
+- [ ] 그림자 및 border-radius 시스템 설정
+- [ ] 접근성 개선 (색상 대비 비율 확인)
 
 ### 11. Vite 설정 업데이트
 - [ ] Tailwind CSS 플러그인 설정 확인
@@ -161,11 +353,22 @@
 
 ### 13. 테스트 및 검증
 - [ ] 모든 페이지 레이아웃 검증
-- [ ] 반응형 디자인 확인 (모바일, 태블릿, 데스크톱)
+- [ ] 반응형 디자인 확인
+  - [ ] 모바일 (320px, 375px, 414px)
+  - [ ] 태블릿 (768px, 1024px)
+  - [ ] 데스크톱 (1280px, 1920px)
+  - [ ] 가로/세로 모드 전환 테스트
+- [ ] 터치 인터랙션 테스트 (모바일 디바이스)
 - [ ] 폼 유효성 검사 기능 확인
 - [ ] 스낵바/Toast 알림 기능 확인
 - [ ] 네비게이션 및 라우팅 확인
-- [ ] 브라우저 호환성 테스트
+- [ ] 브라우저 호환성 테스트 (Chrome, Firefox, Safari, Edge)
+- [ ] 접근성 테스트
+  - [ ] 키보드 네비게이션
+  - [ ] 스크린 리더 테스트
+  - [ ] 색상 대비 비율 확인
+- [ ] 성능 테스트 (Lighthouse 점수)
+- [ ] 로딩 속도 최적화 확인
 
 ### 14. 문서화 및 정리
 - [ ] 마이그레이션 가이드 문서 작성
@@ -187,6 +390,30 @@
 - 기존 Vuetify의 그리드 시스템(v-row, v-col)은 Tailwind의 Grid/Flexbox로 대체해야 합니다
 - Vuetify의 v-snackbar는 shadcn-vue의 Toast 또는 Sonner로 대체됩니다
 
+## 반응형 디자인 체크리스트
+- [ ] 모든 페이지가 모바일(< 640px)에서 정상 작동
+- [ ] 모든 페이지가 태블릿(640px ~ 1024px)에서 정상 작동
+- [ ] 모든 페이지가 데스크톱(> 1024px)에서 정상 작동
+- [ ] 이미지가 반응형으로 크기 조정됨
+- [ ] 텍스트가 모든 화면 크기에서 가독성 확보
+- [ ] 버튼과 터치 영역이 모바일에서 충분히 큼 (최소 44x44px)
+- [ ] 테이블이 모바일에서 가로 스크롤 또는 카드로 변환됨
+- [ ] 폼 입력 필드가 모바일에서 적절한 크기
+- [ ] 네비게이션이 모든 화면 크기에서 접근 가능
+- [ ] 모달/다이얼로그가 모바일에서 전체 화면 또는 적절한 크기
+
+## 디자인 품질 체크리스트
+- [ ] 일관된 색상 시스템 사용
+- [ ] 일관된 간격 시스템 사용 (Tailwind spacing scale)
+- [ ] 일관된 타이포그래피 시스템 사용
+- [ ] 충분한 여백(whitespace) 확보
+- [ ] 명확한 시각적 계층 구조
+- [ ] 부드러운 애니메이션 및 전환 효과
+- [ ] 명확한 피드백 (버튼, 폼, 에러 등)
+- [ ] 접근성 고려 (색상 대비, 키보드 네비게이션)
+- [ ] 불필요한 요소 제거 (미니멀리즘)
+- [ ] 로딩 상태 명확히 표시
+
 ---
 
 ## 마이그레이션 체크리스트 상태
@@ -205,12 +432,26 @@
 - 15개 파일에서 사용 중인 컴포넌트 매핑 완료
 - 주요 카테고리: 레이아웃, 폼, 카드, 리스트, 네비게이션, 피드백, 데이터 표시
 
-**다음 작업 (작업 1-2): 각 컴포넌트별 shadcn-vue 대응 컴포넌트 매핑**
+### 작업 1-2 완료 (각 컴포넌트별 shadcn-vue 대응 컴포넌트 매핑)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- 총 40개 이상의 Vuetify 컴포넌트를 shadcn-vue 컴포넌트와 매핑 완료
+- 직접 매핑 가능한 컴포넌트: 20개 이상 (Button, Input, Card, Dialog, Select 등)
+- Tailwind CSS로 대체 가능한 컴포넌트: 레이아웃 관련 대부분
+- 커스텀 컴포넌트 개발 필요: Navigation Drawer, Timeline, Pagination
+
+**다음 작업 (작업 1-3): 마이그레이션 우선순위 결정**
 - 필요 정보:
-  - shadcn-vue 공식 문서 확인 필요
-  - 각 Vuetify 컴포넌트의 기능과 shadcn-vue 컴포넌트 대응 관계 정리
-  - 없거나 대체가 필요한 컴포넌트 식별 (예: v-timeline, v-expansion-panels 등)
-  - 커스텀 컴포넌트 생성이 필요한 항목 목록 작성
+  - 프로젝트의 핵심 기능 파악
+  - 사용 빈도가 높은 컴포넌트 우선순위 결정
+  - 커스텀 컴포넌트 개발 우선순위 정리
+  - 의존성 관계 분석 (예: Button, Input 등 기본 컴포넌트 먼저 마이그레이션)
+  
+**우선순위 결정 기준:**
+1. 기본/기반 컴포넌트 (Button, Input, Card 등) - 다른 컴포넌트의 의존성
+2. 핵심 기능 컴포넌트 (Form, Dialog, Navigation 등)
+3. 데이터 표시 컴포넌트 (Table, Timeline 등)
+4. 부가 기능 컴포넌트 (Badge, Avatar, Progress 등)
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
