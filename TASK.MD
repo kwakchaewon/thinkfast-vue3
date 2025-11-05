@@ -467,9 +467,9 @@ colors: {
 ### 2. shadcn-vue 환경 설정
 - [x] Tailwind CSS 설치 및 설정
 - [x] shadcn-vue CLI 설치
-- [ ] shadcn-vue 초기화 (`npx shadcn-vue@latest init`)
-- [ ] Radix Vue 의존성 확인
-- [ ] shadcn-vue 설정 파일 생성 (components.json)
+- [x] shadcn-vue 초기화 (`npx shadcn-vue@latest init`)
+- [x] Radix Vue 의존성 확인
+- [x] shadcn-vue 설정 파일 생성 (components.json)
 
 ### 3. 필수 shadcn-vue 컴포넌트 설치
 - [ ] Button 컴포넌트
@@ -701,17 +701,37 @@ colors: {
 - devDependencies에 shadcn-vue 추가됨
 - 참고: Node.js 버전 경고 발생 (현재 v21.6.1, 권장 20 또는 >=22) - 기능 사용에는 문제 없음
 
-**다음 작업 (작업 2-3): shadcn-vue 초기화**
+### 작업 2-3, 2-4, 2-5 완료 (shadcn-vue 초기화 및 설정)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- shadcn-vue 초기화 완료 (`npx shadcn-vue@latest init --base-color slate`)
+- components.json 파일 생성됨
+  - Style: new-york
+  - Base color: slate
+  - CSS variables: true
+  - TypeScript: true
+  - Icon library: lucide
+  - Aliases: @/components, @/lib/utils, @/components/ui 등 설정됨
+- src/lib/utils.ts 파일 생성됨 (cn 유틸리티 함수 포함)
+- CSS variables가 src/style.css에 추가됨 (shadcn-vue 테마 변수)
+- 필수 의존성 자동 설치됨:
+  - lucide-vue-next (아이콘 라이브러리)
+  - clsx, tailwind-merge (클래스 유틸리티)
+  - class-variance-authority (컴포넌트 variant 관리)
+  - tailwindcss-animate (애니메이션)
+- Radix Vue 의존성: 컴포넌트 추가 시 자동 설치됨 (예: Button 추가 시 @radix-ui/react-slot 등)
+
+**다음 작업 (작업 3): 필수 shadcn-vue 컴포넌트 설치**
 - 필요 정보:
-  - 명령어: `npx shadcn-vue@latest init`
-  - 초기화 시 대화형 설정 화면 표시됨
-  - 설정 항목:
-    - Style: New York 또는 Default 선택
-    - Base color: Slate, Gray, Zinc, Neutral, Stone 중 선택 (또는 커스텀)
-    - CSS variables: Yes (Tailwind CSS와 호환)
-  - 초기화 완료 후 components.json 파일 자동 생성됨
-  - Radix Vue 의존성 자동 설치 확인 필요
-  - components.json의 paths 설정 확인 (components, utils 등)
+  - 명령어: `npx shadcn-vue@latest add [component-name]`
+  - 설치할 컴포넌트 목록 (우선순위 순):
+    1. Button (기본 컴포넌트, 다른 컴포넌트의 의존성)
+    2. Input (폼 입력)
+    3. Label (폼 레이블)
+    4. Card (카드 컨테이너)
+    5. Separator (구분선, Divider 대체)
+  - 각 컴포넌트 추가 시 Radix Vue 의존성 자동 설치됨
+  - 컴포넌트는 src/components/ui/ 디렉토리에 생성됨
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
