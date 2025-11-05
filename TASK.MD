@@ -478,7 +478,7 @@ colors: {
 - [x] Form 컴포넌트
 - [x] Toast/Sonner 컴포넌트 (스낵바 대체)
 - [x] Label 컴포넌트
-- [ ] Container/Layout 관련 컴포넌트
+- [x] Container/Layout 관련 컴포넌트
 - [ ] 기타 필요한 컴포넌트들
 
 ### 4. 아이콘 시스템 마이그레이션
@@ -796,12 +796,37 @@ colors: {
 - Vuetify의 v-snackbar를 완전히 대체
 - Toast 타입: success, error, info, warning 등 지원
 
-**다음 작업 (작업 3-7): Container/Layout 관련 컴포넌트**
+### 작업 3-7 완료 (Container/Layout 관련 컴포넌트)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- Separator 컴포넌트 설치 완료 (v-divider 대체)
+- 생성된 파일:
+  - src/components/ui/separator/Separator.vue
+  - src/components/ui/separator/index.ts (업데이트됨)
+- 사용 방법: `import { Separator } from '@/components/ui/separator'`
+- Container/Layout: shadcn-vue에는 직접적인 컴포넌트가 없음
+  - Tailwind CSS 유틸리티 클래스 사용:
+    - `v-container` → `container mx-auto px-4` (또는 `container mx-auto`)
+    - `v-row` / `v-col` → `grid grid-cols-12` / `col-span-*` 또는 `flex flex-col` / `flex-*`
+    - `v-spacer` → `flex-1` 또는 `ml-auto`
+    - `v-main` → `<main>` 태그 + Tailwind 클래스
+  - 커스텀 레이아웃 컴포넌트는 필요시 생성
+
+**다음 작업 (작업 3-8): 기타 필요한 컴포넌트들**
 - 필요 정보:
-  - shadcn-vue에는 직접적인 Container/Layout 컴포넌트가 없음
-  - Tailwind CSS의 container 클래스와 grid/flex 유틸리티 사용
-  - 또는 커스텀 레이아웃 컴포넌트 생성 필요
-  - Separator 컴포넌트 설치 가능 (구분선)
+  - 마이그레이션 계획에 따라 추가 컴포넌트 설치 필요:
+    - Select (v-select 대체)
+    - Switch (v-switch 대체)
+    - RadioGroup (v-radio-group 대체)
+    - Slider (v-slider 대체)
+    - Textarea (v-textarea 대체)
+    - Dialog (v-dialog 대체)
+    - Accordion (v-expansion-panels 대체)
+    - Table (v-table 대체)
+    - Badge (v-chip, v-badge 대체)
+    - Avatar (v-avatar 대체)
+    - Progress (v-progress-linear 대체)
+    - DropdownMenu (v-menu 대체)
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
