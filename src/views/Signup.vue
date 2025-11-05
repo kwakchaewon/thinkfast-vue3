@@ -105,7 +105,7 @@
                     v-bind="componentField"
                     ref="dateInputRef"
                     type="text"
-                    placeholder="생년월일 (YYMMDD)"
+                    placeholder="생년월일"
                     readonly
                     class="flex h-12 w-full pl-10 pr-10 rounded-lg border bg-white px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-400 focus-visible:border-primary-400 cursor-pointer border-gray-300"
                     :class="{ 'border-destructive': errorMessage }"
@@ -209,23 +209,24 @@ const validateBirthDate = (value: string): boolean => {
 const schema = toTypedSchema(
   z.object({
     email: z
-      .string()
+      .string({ required_error: '필수 입력 항목입니다.' })
       .min(1, '필수 입력 항목입니다.')
       .email('올바른 이메일 형식이 아닙니다.'),
     password: z
-      .string()
+      .string({ required_error: '필수 입력 항목입니다.' })
       .min(1, '필수 입력 항목입니다.')
       .min(8, '비밀번호는 8자 이상이어야 합니다.'),
     confirmPassword: z
-      .string()
+      .string({ required_error: '필수 입력 항목입니다.' })
       .min(1, '필수 입력 항목입니다.'),
     name: z
-      .string()
+      .string({ required_error: '필수 입력 항목입니다.' })
       .min(1, '필수 입력 항목입니다.'),
     birthDate: z
-      .string()
+      .string({ required_error: '필수 입력 항목입니다.' })
       .min(1, '필수 입력 항목입니다.')
       .refine((val) => {
+        if (!val || val.trim() === '') return false
         const pattern = /^([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/
         if (!pattern.test(val)) {
           return false
@@ -355,44 +356,190 @@ const handleSignup = handleSubmit(async (values: {
 </script>
 
 <style scoped>
-/* Flatpickr 스타일 커스터마이징 */
+/* Flatpickr 스타일 커스터마이징 - Signup.vue 깔끔한 디자인과 일치 */
 :deep(.flatpickr-calendar) {
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  font-family: inherit;
+  padding: 0;
+  width: 100%;
+  max-width: 320px;
 }
 
-:deep(.flatpickr-day.selected) {
-  background: #5C6BC0;
-  border-color: #5C6BC0;
-  color: white;
+:deep(.flatpickr-months) {
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+  margin-bottom: 0;
 }
 
-:deep(.flatpickr-day.selected:hover) {
-  background: #3949AB;
-  border-color: #3949AB;
-}
-
-:deep(.flatpickr-day.today) {
-  border-color: #5C6BC0;
-}
-
-:deep(.flatpickr-day.today:hover) {
-  background: #E8EAF6;
-  border-color: #5C6BC0;
-}
-
-:deep(.flatpickr-months .flatpickr-month) {
+:deep(.flatpickr-month) {
   color: #1f2937;
+  font-weight: 600;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+:deep(.flatpickr-current-month) {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+:deep(.flatpickr-prev-month),
+:deep(.flatpickr-next-month) {
+  color: #9ca3af;
+  padding: 0.375rem;
+  border-radius: 0.375rem;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+:deep(.flatpickr-prev-month:hover),
+:deep(.flatpickr-next-month:hover) {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+:deep(.flatpickr-prev-month svg),
+:deep(.flatpickr-next-month svg) {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+}
+
+:deep(.flatpickr-weekdays) {
+  background: transparent;
+  border-bottom: 1px solid #f3f4f6;
+  padding: 0.75rem 0.5rem 0.5rem;
+  margin-bottom: 0;
 }
 
 :deep(.flatpickr-weekday) {
   color: #6b7280;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: none;
 }
 
-:deep(.flatpickr-day):hover {
+:deep(.flatpickr-days) {
+  padding: 0.5rem;
+}
+
+:deep(.flatpickr-day) {
+  border-radius: 0.5rem;
+  border: none;
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 400;
+  height: 2.25rem;
+  width: 2.25rem;
+  line-height: 2.25rem;
+  margin: 0.125rem;
+  transition: all 0.15s ease;
+}
+
+:deep(.flatpickr-day:hover) {
   background: #f3f4f6;
+  border: none;
+  color: #1f2937;
+  transform: scale(1.05);
+}
+
+:deep(.flatpickr-day.today) {
+  border: none;
+  background: transparent;
+  color: #374151;
+  font-weight: 600;
+  position: relative;
+}
+
+:deep(.flatpickr-day.today::before) {
+  content: '';
+  position: absolute;
+  bottom: 0.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.25rem;
+  height: 0.25rem;
+  background: #5C6BC0;
+  border-radius: 50%;
+}
+
+:deep(.flatpickr-day.today:hover) {
+  background: #f3f4f6;
+  transform: scale(1.05);
+}
+
+:deep(.flatpickr-day.selected) {
+  background: #5C6BC0;
+  border: none;
+  color: white;
+  font-weight: 500;
+  box-shadow: none;
+}
+
+:deep(.flatpickr-day.selected:hover) {
+  background: #3949AB;
+  color: white;
+  transform: scale(1.05);
+}
+
+:deep(.flatpickr-day.selected.startRange),
+:deep(.flatpickr-day.selected.endRange) {
+  background: #5C6BC0;
+  border: none;
+}
+
+:deep(.flatpickr-day.inRange) {
+  background: #f3f4f6;
+  border: none;
+  color: #374151;
+  box-shadow: none;
+}
+
+:deep(.flatpickr-day.flatpickr-disabled),
+:deep(.flatpickr-day.prevMonthDay),
+:deep(.flatpickr-day.nextMonthDay) {
+  color: #d1d5db;
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+:deep(.flatpickr-day.flatpickr-disabled:hover) {
+  background: transparent;
+  transform: none;
+}
+
+:deep(.flatpickr-time) {
+  border-top: 1px solid #f3f4f6;
+  padding: 0.75rem;
+}
+
+:deep(.flatpickr-time .flatpickr-time-separator) {
+  color: #9ca3af;
+}
+
+:deep(.flatpickr-time input) {
+  color: #374151;
+  font-size: 0.875rem;
+  border-radius: 0.375rem;
+  border: 1px solid #e5e7eb;
+}
+
+:deep(.flatpickr-time input:hover) {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+:deep(.flatpickr-time input:focus) {
+  background: white;
+  border-color: #5C6BC0;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.1);
 }
 </style>
