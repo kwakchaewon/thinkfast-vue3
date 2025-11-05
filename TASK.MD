@@ -487,9 +487,9 @@ colors: {
 - [x] 기존 MDI 아이콘을 새 아이콘으로 매핑
 
 ### 5. 레이아웃 컴포넌트 마이그레이션
-- [ ] App.vue (v-app → 레이아웃 컴포넌트)
-  - [ ] 반응형 루트 컨테이너 설정
-  - [ ] 모바일/데스크톱 레이아웃 분기 처리
+- [x] App.vue (v-app → 레이아웃 컴포넌트)
+  - [x] 반응형 루트 컨테이너 설정
+  - [x] 모바일/데스크톱 레이아웃 분기 처리
 - [ ] Sidebar.vue (v-navigation-drawer 등)
   - [ ] 모바일: 햄버거 메뉴 + 드로어 패턴
   - [ ] 데스크톱: 고정 사이드바
@@ -936,12 +936,34 @@ import { User, Mail, Lock, Bell } from 'lucide-vue-next'
 - 색상은 `class="text-primary"` 등의 Tailwind 클래스로 제어
 - MDI의 `v-icon` 대신 직접 컴포넌트로 사용
 
-**다음 작업 (작업 5): 레이아웃 컴포넌트 마이그레이션**
+### 작업 5-1 완료 (App.vue 마이그레이션)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- `v-app` 제거 및 Tailwind CSS 기반 레이아웃으로 변경
+- `v-snackbar` 제거 및 Sonner의 `Toaster` 컴포넌트로 대체
+- 반응형 루트 컨테이너 설정:
+  - `min-h-screen w-full` - 전체 화면 레이아웃
+  - `bg-background text-foreground` - shadcn-vue 테마 색상 적용
+- Composition API (`<script setup>`)로 변경
+- 스타일링을 Tailwind 클래스로 완전히 대체
+
+**변경 사항:**
+- `v-app` → `<div class="min-h-screen w-full bg-background text-foreground">`
+- `v-snackbar` → `<Toaster />` (Sonner 컴포넌트)
+- Vuetify 의존성 제거 (App.vue에서)
+
+**참고:**
+- `useSnackbar` composable은 아직 Vuetify 기반이므로, 작업 9에서 Sonner의 `toast`로 업데이트 필요
+- 현재는 Toaster 컴포넌트만 추가되어 있고, 실제 toast 호출은 기존 useSnackbar 사용
+
+**다음 작업 (작업 5-2): Sidebar.vue 마이그레이션**
 - 필요 정보:
-  - App.vue에서 v-app 제거 및 레이아웃 구조 변경
-  - Sidebar.vue에서 v-navigation-drawer를 커스텀 컴포넌트로 대체
-  - HeaderMenu.vue 반응형 헤더 구현
-  - Main.vue 반응형 그리드 시스템 적용
+  - `v-navigation-drawer`를 커스텀 컴포넌트로 대체
+  - 모바일: 햄버거 메뉴 + 드로어 패턴 (슬라이드 인/아웃)
+  - 데스크톱: 고정 사이드바 (항상 표시)
+  - 부드러운 전환 애니메이션 (Tailwind transition)
+  - 터치 제스처 지원 (모바일, 선택사항)
+  - Lucide 아이콘으로 교체 (작업 4에서 매핑 완료)
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
