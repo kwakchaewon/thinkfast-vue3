@@ -476,7 +476,7 @@ colors: {
 - [x] Input 컴포넌트
 - [x] Card 컴포넌트
 - [x] Form 컴포넌트
-- [ ] Toast/Sonner 컴포넌트 (스낵바 대체)
+- [x] Toast/Sonner 컴포넌트 (스낵바 대체)
 - [x] Label 컴포넌트
 - [ ] Container/Layout 관련 컴포넌트
 - [ ] 기타 필요한 컴포넌트들
@@ -781,13 +781,27 @@ colors: {
 - Label 사용: `import { Label } from '@/components/ui/label'`
 - Vuetify의 v-form, v-text-field validation을 대체
 
-**다음 작업 (작업 3-5): Toast/Sonner 컴포넌트 설치**
+### 작업 3-5 완료 (Toast/Sonner 컴포넌트 설치)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- Sonner 컴포넌트 설치 완료
+- 생성된 파일:
+  - src/components/ui/sonner/Sonner.vue
+  - src/components/ui/sonner/index.ts (업데이트됨)
+- 필요한 의존성 자동 설치됨 (sonner 라이브러리)
+- 사용 방법:
+  - `import { Toaster } from '@/components/ui/sonner'` (컴포넌트)
+  - `import { toast } from 'sonner'` (함수)
+  - App.vue에 `<Toaster />` 컴포넌트 추가 필요
+- Vuetify의 v-snackbar를 완전히 대체
+- Toast 타입: success, error, info, warning 등 지원
+
+**다음 작업 (작업 3-7): Container/Layout 관련 컴포넌트**
 - 필요 정보:
-  - 명령어: `npx shadcn-vue@latest add sonner` (또는 `toast`)
-  - Sonner는 현대적인 Toast 알림 라이브러리 (v-snackbar 대체)
-  - 설치 후 Toaster 컴포넌트와 toast 함수 제공
-  - 사용 방법: `import { toast } from 'sonner'` 및 `<Toaster />` 컴포넌트 추가
-  - 설치 후 파일이 src/components/ui/sonner/ 디렉토리에 생성됨
+  - shadcn-vue에는 직접적인 Container/Layout 컴포넌트가 없음
+  - Tailwind CSS의 container 클래스와 grid/flex 유틸리티 사용
+  - 또는 커스텀 레이아웃 컴포넌트 생성 필요
+  - Separator 컴포넌트 설치 가능 (구분선)
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
