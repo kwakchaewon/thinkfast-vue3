@@ -490,11 +490,11 @@ colors: {
 - [x] App.vue (v-app → 레이아웃 컴포넌트)
   - [x] 반응형 루트 컨테이너 설정
   - [x] 모바일/데스크톱 레이아웃 분기 처리
-- [ ] Sidebar.vue (v-navigation-drawer 등)
-  - [ ] 모바일: 햄버거 메뉴 + 드로어 패턴
-  - [ ] 데스크톱: 고정 사이드바
-  - [ ] 부드러운 전환 애니메이션
-  - [ ] 터치 제스처 지원 (모바일)
+- [x] Sidebar.vue (v-navigation-drawer 등)
+  - [x] 모바일: 햄버거 메뉴 + 드로어 패턴 (HeaderMenu에서 처리)
+  - [x] 데스크톱: 고정 사이드바
+  - [x] 부드러운 전환 애니메이션
+  - [x] 터치 제스처 지원 (모바일, HeaderMenu에서 처리)
 - [ ] HeaderMenu.vue
   - [ ] 반응형 헤더 (모바일: 컴팩트, 데스크톱: 전체)
   - [ ] 스크롤 시 헤더 숨김/표시 기능
@@ -956,14 +956,51 @@ import { User, Mail, Lock, Bell } from 'lucide-vue-next'
 - `useSnackbar` composable은 아직 Vuetify 기반이므로, 작업 9에서 Sonner의 `toast`로 업데이트 필요
 - 현재는 Toaster 컴포넌트만 추가되어 있고, 실제 toast 호출은 기존 useSnackbar 사용
 
-**다음 작업 (작업 5-2): Sidebar.vue 마이그레이션**
+### 작업 5-2 완료 (Sidebar.vue 마이그레이션)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- `v-navigation-drawer`를 Tailwind CSS 기반 고정 사이드바로 대체
+- 데스크톱 전용 고정 사이드바 구현 (`fixed left-0 top-0 h-screen w-[280px]`)
+- 모든 Vuetify 컴포넌트를 shadcn-vue 컴포넌트로 교체:
+  - `v-list` → Tailwind CSS 리스트 (`<nav>`, `<div>`)
+  - `v-list-item` → Tailwind CSS 링크/버튼
+  - `v-menu` → `DropdownMenu` (알림 메뉴)
+  - `v-badge` → `Badge` (알림 뱃지)
+  - `v-avatar` → `Avatar` (프로필 이미지)
+  - `v-divider` → `Separator`
+  - `v-btn` → `Button`
+- 모든 MDI 아이콘을 Lucide 아이콘으로 교체:
+  - `mdi-view-dashboard` → `LayoutDashboard`
+  - `mdi-plus` → `Plus`
+  - `mdi-poll` → `BarChart3`
+  - `mdi-vote` → `Vote`
+  - `mdi-chart-box` → `BarChart3`
+  - `mdi-chart-timeline-variant` → `TrendingUp`
+  - `mdi-logout` → `LogOut`
+  - `mdi-bell` → `Bell`
+  - `mdi-close` → `X`
+  - `mdi-chevron-left/right` → `ChevronLeft/Right`
+- 알림 기능 유지 (WebSocket, 드롭다운 메뉴, 페이지네이션)
+- 반응형 디자인 적용 (Tailwind breakpoint 클래스)
+- 부드러운 전환 애니메이션 (Tailwind transition)
+
+**주요 변경사항:**
+- Options API → Composition API (`<script setup>`)로 변경
+- `v-navigation-drawer` → `<aside>` 태그 + Tailwind CSS
+- 프로필 섹션, 네비게이션 메뉴, 알림 드롭다운, 로그아웃 기능 모두 유지
+- 스타일링을 Tailwind 유틸리티 클래스로 완전히 대체
+
+**참고:**
+- 모바일에서는 HeaderMenu.vue의 드로어 메뉴를 사용하므로, Sidebar는 데스크톱 전용
+- 메인 컨텐츠 영역에 `ml-[280px]` 클래스를 추가하여 사이드바 공간 확보 필요
+
+**다음 작업 (작업 5-3): HeaderMenu.vue 마이그레이션**
 - 필요 정보:
-  - `v-navigation-drawer`를 커스텀 컴포넌트로 대체
-  - 모바일: 햄버거 메뉴 + 드로어 패턴 (슬라이드 인/아웃)
-  - 데스크톱: 고정 사이드바 (항상 표시)
-  - 부드러운 전환 애니메이션 (Tailwind transition)
-  - 터치 제스처 지원 (모바일, 선택사항)
-  - Lucide 아이콘으로 교체 (작업 4에서 매핑 완료)
+  - 모바일 헤더를 Tailwind CSS로 구현
+  - 햄버거 메뉴 드로어 패턴 (슬라이드 인/아웃)
+  - 스크롤 시 헤더 숨김/표시 기능 유지
+  - Lucide 아이콘으로 교체
+  - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
