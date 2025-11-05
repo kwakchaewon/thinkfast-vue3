@@ -465,7 +465,7 @@ colors: {
 - [ ] 간격 시스템 확인 및 통일
 
 ### 2. shadcn-vue 환경 설정
-- [ ] Tailwind CSS 설치 및 설정
+- [x] Tailwind CSS 설치 및 설정
 - [ ] shadcn-vue CLI 설치
 - [ ] shadcn-vue 초기화 (`npx shadcn-vue@latest init`)
 - [ ] Radix Vue 의존성 확인
@@ -685,14 +685,22 @@ colors: {
 - 반응형 breakpoint 차이점 식별 및 주의사항 정리
 - Tailwind CSS 변환 계획 수립
 
-**다음 작업 (작업 2): shadcn-vue 환경 설정**
+### 작업 2-1 완료 (Tailwind CSS 설치 및 설정)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- Tailwind CSS, PostCSS, Autoprefixer 설치 완료
+- tailwind.config.js 생성 및 커스텀 색상 팔레트 추가 (인디고 계열)
+- postcss.config.js 생성
+- src/style.css에 Tailwind 디렉티브 추가 (@tailwind base/components/utilities)
+- 커스텀 폰트 설정 (Inter) 및 borderRadius 설정 완료
+
+**다음 작업 (작업 2-2): shadcn-vue CLI 설치**
 - 필요 정보:
-  - Tailwind CSS 설치 및 설정
   - shadcn-vue CLI 설치 (`npm install -D shadcn-vue`)
   - shadcn-vue 초기화 (`npx shadcn-vue@latest init`)
-  - components.json 설정 파일 생성
-  - Radix Vue 의존성 확인
-  - 커스텀 색상 팔레트를 tailwind.config.js에 추가
+  - 초기화 시 components.json 파일 자동 생성됨
+  - Radix Vue 의존성 자동 설치 확인 필요
+  - components.json 설정 확인 및 필요시 수정
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
