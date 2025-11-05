@@ -473,7 +473,7 @@ colors: {
 
 ### 3. 필수 shadcn-vue 컴포넌트 설치
 - [x] Button 컴포넌트
-- [ ] Input 컴포넌트
+- [x] Input 컴포넌트
 - [ ] Card 컴포넌트
 - [ ] Form 컴포넌트
 - [ ] Toast/Sonner 컴포넌트 (스낵바 대체)
@@ -734,12 +734,23 @@ colors: {
 - Variants 지원: default, destructive, outline, secondary, ghost, link
 - Sizes 지원: default, sm, lg, icon
 
-**다음 작업 (작업 3-2): Input 컴포넌트 설치**
+### 작업 3-2 완료 (Input 컴포넌트 설치)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- Input 컴포넌트 설치 완료
+- 생성된 파일:
+  - src/components/ui/input/Input.vue
+  - src/components/ui/input/index.ts (업데이트됨)
+- 필요한 의존성 자동 설치됨
+- 사용 방법: `import { Input } from '@/components/ui/input'`
+- Label 컴포넌트와 함께 사용 권장 (폼 레이블링)
+
+**다음 작업 (작업 3-3): Card 컴포넌트 설치**
 - 필요 정보:
-  - 명령어: `npx shadcn-vue@latest add input`
-  - Input 컴포넌트는 폼 입력 필드의 기본 컴포넌트
-  - Label 컴포넌트와 함께 사용 권장
-  - 설치 후 Input.vue 파일이 src/components/ui/input/ 디렉토리에 생성됨
+  - 명령어: `npx shadcn-vue@latest add card`
+  - Card 컴포넌트는 카드 컨테이너 컴포넌트 (v-card 대체)
+  - Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter로 구성
+  - 설치 후 Card.vue 등 파일이 src/components/ui/card/ 디렉토리에 생성됨
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
