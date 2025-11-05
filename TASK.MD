@@ -52,8 +52,10 @@
 - **그림자**: 부드러운 그림자로 깊이감 표현 (shadow-sm, shadow-md)
 - **둥근 모서리**: 일관된 border-radius (rounded-md, rounded-lg)
 
-### 깔끔한 UI 디자인 가이드라인 (Home.vue 기준)
+### 깔끔한 UI 디자인 가이드라인 (Home.vue, Signup.vue, CreateSurvey.vue 기준)
 **목표**: 흰색 메인 배경에 파란색 계열 컴포넌트로 구성된 깔끔하고 미니멀한 디자인
+
+**적용 범위**: 모든 뷰 컴포넌트 (Home.vue, Signup.vue, CreateSurvey.vue 등)에 일관되게 적용
 
 **1. 배경 및 컨테이너**
 - 메인 배경: 순수 흰색 (`bg-white`)
@@ -120,38 +122,83 @@
 - 아이콘 호버: `hover:text-gray-600` (색상 변경)
 - 부드러운 전환 효과 사용
 
-**10. 일반적인 금지 사항**
+**10. 카드 헤더 스타일**
+- 카드 헤더: `bg-gray-50` 제거, 흰색 배경 유지
+- 헤더 테두리: `border-b border-gray-200` (하단 구분선만)
+- 헤더 패딩: `px-6 py-4`
+- 제목: `text-xl font-semibold text-gray-800`
+- 아이콘: `h-5 w-5 text-primary-400 mr-2`
+
+**11. 버튼 스타일 세부사항**
+- Primary 버튼 (주요 액션):
+  - 클래스: `bg-primary-400 hover:bg-primary-500 text-white h-12 px-6 rounded-lg shadow-sm transition-colors`
+  - 아이콘 포함 시: `h-4 w-4 mr-2`
+- Secondary 버튼 (보조 액션):
+  - 클래스: `h-10 px-4` (작은 크기)
+  - 또는 `variant="outline"` 사용
+- Ghost 버튼 (삭제 등):
+  - 클래스: `text-red-500 hover:text-red-600 hover:bg-red-50`
+
+**12. 텍스트 색상 계층**
+- 주요 제목: `text-gray-800` (진한 회색)
+- 부제목/설명: `text-gray-500` (중간 회색)
+- 보조 텍스트: `text-gray-600` (회색)
+- 플레이스홀더: `text-gray-400` (연한 회색)
+- 에러 메시지: `text-red-500` (빨간색)
+
+**13. 일반적인 금지 사항**
 - ❌ 그라데이션 배경 사용 금지
-- ❌ 과도한 그림자 사용 금지
+- ❌ 과도한 그림자 사용 금지 (shadow-md 이하)
 - ❌ 밝은 색상 배경 사용 금지 (흰색 배경 유지)
+- ❌ 카드 헤더에 `bg-gray-50` 사용 금지 (흰색 배경 유지)
 - ❌ 복잡한 애니메이션 사용 금지
 - ❌ 라벨과 플레이스홀더 동시 사용 금지 (플레이스홀더만 사용)
+- ❌ 과도한 색상 사용 금지 (파란색 계열과 회색만 사용)
 
-**적용 예시 (Home.vue):**
+**14. 반응형 레이아웃 고려사항**
+- 복잡한 레이아웃 (CreateSurvey.vue 등):
+  - 데스크톱: `grid grid-cols-1 lg:grid-cols-12` (2단 레이아웃)
+  - 모바일: `grid-cols-1` (세로 스택)
+  - 컨테이너: `container mx-auto px-4 py-8 max-w-7xl`
+  - 전체 배경: `min-h-screen bg-white`
+
+**적용 예시 (Home.vue, Signup.vue, CreateSurvey.vue):**
 ```vue
 <!-- 배경: 흰색 -->
-<div class="min-h-screen flex items-center justify-center bg-white p-4">
-  <!-- 카드: 미묘한 그림자, 연한 테두리 -->
-  <Card class="w-full max-w-md shadow-md border border-gray-200">
-    <!-- 제목: 진한 회색 -->
-    <CardTitle class="text-3xl font-bold text-gray-800">ThinkFast</CardTitle>
-    <!-- 부제목: 중간 회색 -->
-    <p class="text-sm text-gray-500">AI 기반 실시간 설문조사 플랫폼</p>
-    
-    <!-- 입력 필드: 라벨 없이 플레이스홀더만, 아이콘 포함 -->
-    <Input
-      placeholder="이메일"
-      class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400"
-    />
-    
-    <!-- 버튼: 부드러운 파란색 -->
-    <Button class="w-full h-12 bg-primary-400 hover:bg-primary-500 text-white rounded-lg">
-      로그인
-    </Button>
-    
-    <!-- 에러 메시지: 빨간색 -->
-    <FormMessage class="text-xs text-red-500 mt-1" />
-  </Card>
+<div class="min-h-screen bg-white">
+  <div class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- 카드: 미묘한 그림자, 연한 테두리, 흰색 배경 -->
+    <Card class="shadow-md border border-gray-200 bg-white">
+      <!-- 카드 헤더: 흰색 배경, 하단 구분선만 -->
+      <CardHeader class="border-b border-gray-200 px-6 py-4">
+        <CardTitle class="flex items-center text-xl font-semibold text-gray-800">
+          <FileEdit class="h-5 w-5 text-primary-400 mr-2" />
+          제목
+        </CardTitle>
+      </CardHeader>
+      
+      <!-- 카드 콘텐츠 -->
+      <CardContent class="p-6 space-y-4">
+        <!-- 입력 필드: 라벨 없이 플레이스홀더만, 아이콘 포함 -->
+        <div class="relative">
+          <User class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Input
+            placeholder="입력 필드"
+            class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400"
+          />
+        </div>
+        
+        <!-- 버튼: 부드러운 파란색 -->
+        <Button class="w-full h-12 bg-primary-400 hover:bg-primary-500 text-white rounded-lg shadow-sm transition-colors">
+          <Save class="h-4 w-4 mr-2" />
+          버튼
+        </Button>
+        
+        <!-- 에러 메시지: 빨간색 -->
+        <FormMessage class="text-xs text-red-500 mt-1" />
+      </CardContent>
+    </Card>
+  </div>
 </div>
 ```
 
@@ -618,9 +665,9 @@ colors: {
   - [x] 실시간 유효성 검사 피드백
 
 ### 7. 설문조사 관련 뷰 마이그레이션
-- [ ] CreateSurvey.vue
-  - [ ] 반응형 2단 레이아웃 (데스크톱: 사이드바 + 메인, 모바일: 세로 스택)
-  - [ ] Accordion 컴포넌트로 질문 관리 UI 개선
+- [x] CreateSurvey.vue
+  - [x] 반응형 2단 레이아웃 (데스크톱: 사이드바 + 메인, 모바일: 세로 스택)
+  - [x] Accordion 컴포넌트로 질문 관리 UI 개선
   - [ ] 드래그 앤 드롭으로 질문 순서 변경 (선택사항)
 - [ ] SurveyDetail.vue
   - [ ] 반응형 카드 레이아웃
@@ -764,11 +811,15 @@ colors: {
 - ✅ **작업 6**: 인증 관련 뷰 마이그레이션 (Home.vue, Signup.vue)
 
 ### 다음 작업 (작업 7): 설문조사 관련 뷰 마이그레이션
-- 첫 번째 작업: **CreateSurvey.vue**
+- **CreateSurvey.vue 완료** ✅
+  - 현대적이고 심플한 UI 디자인 적용 (Home.vue, Signup.vue 기준)
+  - 흰색 배경, 파란색 계열 컴포넌트, 깔끔한 스타일
+  - 카드 헤더 배경 제거, 일관된 색상 시스템 적용
+- 다음 작업: **SurveyDetail.vue**
 - 필요 정보:
-  - 반응형 2단 레이아웃 (데스크톱: 사이드바 + 메인, 모바일: 세로 스택)
-  - Accordion 컴포넌트로 질문 관리 UI
-  - 복잡한 폼 필드들 (질문 타입, 옵션 등)
+  - 반응형 카드 레이아웃
+  - QR 코드 모바일 최적화
+  - 터치 친화적 버튼 배치
   - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체
   - 깔끔한 UI 스타일 적용 (흰색 배경, 파란색 계열 컴포넌트)
 
