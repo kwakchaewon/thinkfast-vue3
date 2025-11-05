@@ -498,9 +498,9 @@ colors: {
 - [x] HeaderMenu.vue
   - [x] 반응형 헤더 (모바일: 컴팩트, 데스크톱: 전체)
   - [x] 스크롤 시 헤더 숨김/표시 기능
-- [ ] Main.vue 레이아웃 구조
-  - [ ] 반응형 그리드 시스템 적용
-  - [ ] 카드 레이아웃 반응형 조정
+- [x] Main.vue 레이아웃 구조
+  - [x] 반응형 그리드 시스템 적용
+  - [x] 카드 레이아웃 반응형 조정
 
 ### 6. 인증 관련 뷰 마이그레이션
 - [ ] Login.vue (v-form, v-text-field, v-btn 등)
@@ -1033,11 +1033,55 @@ import { User, Mail, Lock, Bell } from 'lucide-vue-next'
 - 모바일에서는 헤더가 고정되고, 데스크톱에서는 Sidebar가 고정됨
 - 메인 컨텐츠는 모바일: `pt-16`, 데스크톱: `ml-[280px]`로 사이드바 공간 확보
 
-**다음 작업 (작업 5-4): Main.vue 레이아웃 구조 마이그레이션**
+### 작업 5-4 완료 (Main.vue 레이아웃 구조 마이그레이션)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- 모든 Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체:
+  - `v-container` → `container mx-auto px-4` (Tailwind 클래스)
+  - `v-row`, `v-col` → Tailwind Grid 시스템 (`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`)
+  - `v-card`, `v-card-item`, `v-card-title`, `v-card-text` → `Card`, `CardHeader`, `CardTitle`, `CardContent`
+  - `v-icon` → Lucide 아이콘
+  - `v-chip` → `Badge` 컴포넌트
+  - `v-table` → `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableCell`
+  - `v-timeline`, `v-timeline-item` → 커스텀 Tailwind CSS 타임라인 (border-l-2, dot 스타일)
+  - `v-btn` → `Button` 컴포넌트
+  - `v-spacer` → `flex-1` 또는 `justify-between`
+- 모든 MDI 아이콘을 Lucide 아이콘으로 교체:
+  - `mdi-chart-line` → `TrendingUp`
+  - `mdi-message-reply` → `Reply`
+  - `mdi-clock-outline` → `Clock`
+  - `mdi-chevron-right` → `ChevronRight`
+- 반응형 그리드 시스템 적용:
+  - 통계 카드: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4` (모바일: 1열, 태블릿: 2열, 데스크톱: 4열)
+  - 메인 컨텐츠: `grid-cols-1 md:grid-cols-3` (모바일: 1열, 데스크톱: 3열, 최근 설문 2/3, 활동 1/3)
+- 카드 레이아웃 반응형 조정:
+  - 모바일: 카드가 세로로 스택
+  - 태블릿: 통계 카드는 2열, 메인 컨텐츠는 1열
+  - 데스크톱: 통계 카드는 4열, 메인 컨텐츠는 3열 그리드
+- 커스텀 타임라인 구현:
+  - Tailwind CSS로 간단한 타임라인 스타일 구현
+  - 색상별 dot (success, info, warning, error)
+  - 마지막 항목 제외하고 border-l 스타일 적용
+- 테이블 반응형 처리:
+  - `overflow-x-auto`로 모바일에서 가로 스크롤 가능
+  - hover 효과 유지
+
+**주요 변경사항:**
+- Options API → Composition API (`<script setup>`)로 변경
+- 반응형 디자인: Tailwind Grid 시스템 활용
+- 타임라인: Vuetify 컴포넌트 → 커스텀 Tailwind CSS 구현
+- 모든 기능 유지 (통계 계산, 설문 목록, 활동 타임라인)
+
+**참고:**
+- 타임라인은 간단한 Tailwind CSS 구현으로 대체 (복잡한 타임라인 라이브러리 불필요)
+- 테이블은 모바일에서 가로 스크롤 가능하도록 처리
+
+**다음 작업 (작업 6): 인증 관련 뷰 마이그레이션**
 - 필요 정보:
-  - Main.vue 확인 및 반응형 그리드 시스템 적용
-  - 카드 레이아웃 반응형 조정
+  - Login.vue, Signup.vue, Home.vue 마이그레이션
+  - 반응형 폼 레이아웃 구현
   - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체
+  - Lucide 아이콘으로 교체
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
