@@ -121,6 +121,14 @@ const router = createRouter({
           next()
         }
       }
+    },
+    {
+      path: '/posts',
+      name: 'posts',
+      component: () => import('@/views/Posts.vue'),
+      meta: {
+        requiresAuth: false
+      }
     }
   ]
 })
