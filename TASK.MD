@@ -83,6 +83,7 @@
 - 아이콘: 왼쪽에 배치 (`left-3`), `text-gray-400`, 크기 `h-5 w-5`
 - 패딩: 아이콘을 위한 왼쪽 패딩 (`pl-10`)
 - 포커스: 파란색 테두리 및 링 (`focus:border-primary-400 focus:ring-primary-400`)
+- **플레이스홀더 색상**: 연한 회색 (`placeholder:text-gray-400`) - 검정색 금지
 
 **4. 버튼 스타일**
 - Primary 버튼:
@@ -184,7 +185,7 @@
           <User class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
           <Input
             placeholder="입력 필드"
-            class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400"
+            class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400 placeholder:text-gray-400"
           />
         </div>
         

@@ -20,7 +20,7 @@
                   v-model="survey.title"
                   placeholder="설문 제목"
                   required
-                  class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400"
+                  class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400 placeholder:text-gray-400"
                 />
               </div>
 
@@ -30,7 +30,7 @@
                   v-model="survey.description"
                   placeholder="설문 설명"
                   rows="3"
-                  class="pl-10 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400 resize-none"
+                  class="pl-10 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400 resize-none placeholder:text-gray-400"
                 />
               </div>
 
@@ -42,7 +42,7 @@
                     type="date"
                     :min="minDate"
                     placeholder="응답 종료 날짜"
-                    class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400"
+                    class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400 placeholder:text-gray-400"
                   />
                 </div>
                 <div class="flex items-center gap-2">
@@ -133,7 +133,7 @@
                           v-model="question.content"
                           placeholder="질문"
                           required
-                          class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400"
+                          class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400 placeholder:text-gray-400"
                         />
                       </div>
 
@@ -176,7 +176,7 @@
                             <Input
                               v-model="question.options[optionIndex]"
                               :placeholder="`옵션 ${optionIndex + 1}`"
-                              class="flex-1 h-10 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400"
+                              class="flex-1 h-10 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400 placeholder:text-gray-400"
                             />
                             <Button
                               variant="ghost"
