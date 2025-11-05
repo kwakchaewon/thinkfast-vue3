@@ -479,7 +479,7 @@ colors: {
 - [x] Toast/Sonner 컴포넌트 (스낵바 대체)
 - [x] Label 컴포넌트
 - [x] Container/Layout 관련 컴포넌트
-- [ ] 기타 필요한 컴포넌트들
+- [x] 기타 필요한 컴포넌트들
 
 ### 4. 아이콘 시스템 마이그레이션
 - [ ] MDI 아이콘 대체 라이브러리 선택 (lucide-vue-next 등)
@@ -812,21 +812,33 @@ colors: {
     - `v-main` → `<main>` 태그 + Tailwind 클래스
   - 커스텀 레이아웃 컴포넌트는 필요시 생성
 
-**다음 작업 (작업 3-8): 기타 필요한 컴포넌트들**
+### 작업 3-8 완료 (기타 필요한 컴포넌트들)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- 모든 필수 컴포넌트 일괄 설치 완료 (69개 파일 생성)
+- 설치된 컴포넌트 목록:
+  1. **Textarea** - v-textarea 대체
+  2. **Select** (12개 파일) - v-select 대체
+  3. **Switch** - v-switch 대체
+  4. **RadioGroup** (2개 파일) - v-radio-group 대체
+  5. **Slider** - v-slider 대체
+  6. **Badge** - v-chip, v-badge 대체
+  7. **Avatar** (3개 파일) - v-avatar 대체
+  8. **Progress** - v-progress-linear 대체
+  9. **Dialog** (8개 파일) - v-dialog 대체
+  10. **Accordion** (4개 파일) - v-expansion-panels 대체
+  11. **Table** (9개 파일) - v-table 대체
+  12. **DropdownMenu** (13개 파일) - v-menu 대체
+- 필요한 의존성 자동 설치됨 (reka-ui 관련 패키지들)
+- 모든 컴포넌트는 src/components/ui/ 디렉토리에 설치됨
+- 마이그레이션에 필요한 주요 컴포넌트 모두 준비 완료
+
+**다음 작업 (작업 4): 아이콘 시스템 마이그레이션**
 - 필요 정보:
-  - 마이그레이션 계획에 따라 추가 컴포넌트 설치 필요:
-    - Select (v-select 대체)
-    - Switch (v-switch 대체)
-    - RadioGroup (v-radio-group 대체)
-    - Slider (v-slider 대체)
-    - Textarea (v-textarea 대체)
-    - Dialog (v-dialog 대체)
-    - Accordion (v-expansion-panels 대체)
-    - Table (v-table 대체)
-    - Badge (v-chip, v-badge 대체)
-    - Avatar (v-avatar 대체)
-    - Progress (v-progress-linear 대체)
-    - DropdownMenu (v-menu 대체)
+  - lucide-vue-next는 이미 설치되어 있음 (shadcn-vue 초기화 시 설치됨)
+  - 기존 MDI 아이콘 사용 위치 파악 필요
+  - MDI 아이콘 → lucide 아이콘 매핑 작업
+  - 주요 아이콘: mdi-account, mdi-lock, mdi-email, mdi-bell, mdi-menu 등
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
