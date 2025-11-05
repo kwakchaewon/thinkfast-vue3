@@ -34,49 +34,52 @@
                 />
               </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="relative">
-                  <CalendarIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <Input
-                    v-model="survey.endDate"
-                    type="date"
-                    :min="minDate"
-                    placeholder="응답 종료 날짜"
-                    class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400 placeholder:text-gray-400"
-                  />
-                </div>
-                <div class="flex items-center gap-2">
-                  <Select v-model="selectedHour">
-                    <SelectTrigger class="h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400">
-                      <SelectValue placeholder="시" />
-                    </SelectTrigger>
-                    <SelectContent class="bg-white">
-                      <SelectItem
-                        v-for="hour in hours"
-                        :key="hour"
-                        :value="hour"
-                        class="bg-white hover:bg-gray-50"
-                      >
-                        {{ hour }}
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <span class="text-gray-500">:</span>
-                  <Select v-model="selectedMinute">
-                    <SelectTrigger class="h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400">
-                      <SelectValue placeholder="분" />
-                    </SelectTrigger>
-                    <SelectContent class="bg-white">
-                      <SelectItem
-                        v-for="minute in minutes"
-                        :key="minute"
-                        :value="minute"
-                        class="bg-white hover:bg-gray-50"
-                      >
-                        {{ minute }}
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+              <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-800 block">응답 종료일</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="relative">
+                    <CalendarIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Input
+                      v-model="survey.endDate"
+                      type="date"
+                      :min="minDate"
+                      placeholder="날짜 선택"
+                      class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400 placeholder:text-gray-400"
+                    />
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <Select v-model="selectedHour">
+                      <SelectTrigger class="h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400">
+                        <SelectValue placeholder="시" />
+                      </SelectTrigger>
+                      <SelectContent class="bg-white">
+                        <SelectItem
+                          v-for="hour in hours"
+                          :key="hour"
+                          :value="hour"
+                          class="bg-white hover:bg-gray-50"
+                        >
+                          {{ hour }}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <span class="text-gray-500">:</span>
+                    <Select v-model="selectedMinute">
+                      <SelectTrigger class="h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400">
+                        <SelectValue placeholder="분" />
+                      </SelectTrigger>
+                      <SelectContent class="bg-white">
+                        <SelectItem
+                          v-for="minute in minutes"
+                          :key="minute"
+                          :value="minute"
+                          class="bg-white hover:bg-gray-50"
+                        >
+                          {{ minute }}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
             </CardContent>
