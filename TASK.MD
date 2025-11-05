@@ -472,7 +472,7 @@ colors: {
 - [x] shadcn-vue 설정 파일 생성 (components.json)
 
 ### 3. 필수 shadcn-vue 컴포넌트 설치
-- [ ] Button 컴포넌트
+- [x] Button 컴포넌트
 - [ ] Input 컴포넌트
 - [ ] Card 컴포넌트
 - [ ] Form 컴포넌트
@@ -721,17 +721,25 @@ colors: {
   - tailwindcss-animate (애니메이션)
 - Radix Vue 의존성: 컴포넌트 추가 시 자동 설치됨 (예: Button 추가 시 @radix-ui/react-slot 등)
 
-**다음 작업 (작업 3): 필수 shadcn-vue 컴포넌트 설치**
+### 작업 3-1 완료 (Button 컴포넌트 설치)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- Button 컴포넌트 설치 완료
+- 생성된 파일:
+  - src/components/ui/button/Button.vue
+  - src/components/ui/button/index.ts
+- 필요한 의존성 자동 설치됨 (reka-ui 패키지 포함)
+  - 참고: shadcn-vue는 Radix Vue 대신 reka-ui를 사용 (Vue 3 전용)
+- 사용 방법: `import { Button } from '@/components/ui/button'`
+- Variants 지원: default, destructive, outline, secondary, ghost, link
+- Sizes 지원: default, sm, lg, icon
+
+**다음 작업 (작업 3-2): Input 컴포넌트 설치**
 - 필요 정보:
-  - 명령어: `npx shadcn-vue@latest add [component-name]`
-  - 설치할 컴포넌트 목록 (우선순위 순):
-    1. Button (기본 컴포넌트, 다른 컴포넌트의 의존성)
-    2. Input (폼 입력)
-    3. Label (폼 레이블)
-    4. Card (카드 컨테이너)
-    5. Separator (구분선, Divider 대체)
-  - 각 컴포넌트 추가 시 Radix Vue 의존성 자동 설치됨
-  - 컴포넌트는 src/components/ui/ 디렉토리에 생성됨
+  - 명령어: `npx shadcn-vue@latest add input`
+  - Input 컴포넌트는 폼 입력 필드의 기본 컴포넌트
+  - Label 컴포넌트와 함께 사용 권장
+  - 설치 후 Input.vue 파일이 src/components/ui/input/ 디렉토리에 생성됨
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
