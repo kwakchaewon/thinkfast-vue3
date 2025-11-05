@@ -613,10 +613,9 @@ colors: {
   - [x] 터치 친화적 버튼 크기
   - [x] 명확한 에러 메시지 표시
   - [x] 반응형 로고 및 타이틀
-- [ ] Signup.vue
-  - [ ] 반응형 폼 레이아웃
-  - [ ] 단계별 입력 가이드 (선택사항)
-  - [ ] 실시간 유효성 검사 피드백
+- [x] Signup.vue
+  - [x] 반응형 폼 레이아웃
+  - [x] 실시간 유효성 검사 피드백
 
 ### 7. 설문조사 관련 뷰 마이그레이션
 - [ ] CreateSurvey.vue
@@ -1238,13 +1237,70 @@ import { User, Mail, Lock, Bell } from 'lucide-vue-next'
 - Login.vue도 마이그레이션했지만, 실제 로그인 페이지는 Home.vue입니다
 - Home.vue는 로고 이미지와 "AI 기반 실시간 설문조사 플랫폼" 텍스트가 포함된 로그인 페이지
 
-**다음 작업 (작업 6-2): Signup.vue 마이그레이션**
+### 작업 6-2 완료 (Signup.vue 마이그레이션)
+**완료 날짜:** 작업 완료  
+**결과:**
+- 모든 Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체:
+  - `v-container` → `min-h-screen flex items-center justify-center` (Tailwind 클래스)
+  - `v-row`, `v-col` → `flex items-center justify-center` (Tailwind 클래스)
+  - `v-card` → `Card`, `CardHeader`, `CardTitle`, `CardContent`
+  - `v-form` → `vee-validate`의 `useForm` + `handleSubmit`
+  - `v-text-field` → `Input` + `FormField`, `FormItem`, `FormControl`, `FormMessage`
+  - `v-btn` → `Button`
+  - `v-icon` → Lucide 아이콘
+  - `v-snackbar` → 제거 (useSnackbar composable 사용)
+- 모든 MDI 아이콘을 Lucide 아이콘으로 교체:
+  - `mdi-email` → `Mail`
+  - `mdi-lock` → `Lock`
+  - `mdi-lock-check` → `LockKeyhole`
+  - `mdi-account` → `User`
+  - `mdi-calendar` → `Calendar`
+  - `mdi-eye` / `mdi-eye-off` → `Eye` / `EyeOff`
+- 폼 필드:
+  - 이메일, 비밀번호, 비밀번호 확인, 이름, 생년월일 (YYMMDD)
+  - 비밀번호 및 비밀번호 확인 필드에 보기/숨기기 토글 버튼
+- 폼 유효성 검사: Vuetify rules → Zod 스키마 + vee-validate
+  - 이메일 형식 검증
+  - 비밀번호 최소 8자 검증
+  - 비밀번호 일치 검증 (refine 사용)
+  - 생년월일 YYMMDD 형식 및 날짜 유효성 검증
+- 깔끔한 UI 스타일 (Home.vue 기준):
+  - 흰색 배경 (`bg-white`)
+  - 미묘한 그림자 및 테두리 (`shadow-md border-gray-200`)
+  - 라벨 없이 플레이스홀더만 사용
+  - 입력 필드: `h-12`, `border-gray-300`, `rounded-lg`
+  - 아이콘: 왼쪽 배치 (`left-3`), `text-gray-400`, `h-5 w-5`
+  - 버튼: `bg-primary-400 hover:bg-primary-500`, `h-12`
+  - 에러 메시지: `text-red-500 text-xs`
+- 반응형 폼 레이아웃:
+  - 모바일: 전체 너비 (`w-full`), 패딩 `p-4`
+  - 데스크톱: 중앙 정렬, 최대 너비 제한 (`max-w-md`)
+  - 필드 간격: `space-y-5`
+- 로딩 상태 표시:
+  - `Loader2` 아이콘 + `animate-spin` 애니메이션
+  - 버튼 disabled 상태 관리
+
+**주요 변경사항:**
+- Options API → Composition API (`<script setup>`)로 변경
+- Vuetify form validation → vee-validate + Zod
+- 비밀번호 보기/숨기기 기능 유지 (두 개의 필드 모두)
+- 생년월일 유효성 검사 로직 유지 (YYMMDD 형식 및 날짜 검증)
+- 회원가입 로직 유지 (authApi, useDelayedRouter)
+
+**참고:**
+- vee-validate의 `Form` 컴포넌트 대신 일반 `form` 태그와 `handleSubmit` 사용
+- FormField의 `componentField`를 Input에 바인딩하여 양방향 바인딩 유지
+- 비밀번호 일치 검사는 Zod의 `refine`을 사용하여 객체 레벨에서 검증
+- 생년월일 검증은 `refine`을 사용하여 커스텀 로직 구현
+
+**다음 작업 (작업 7): 설문조사 관련 뷰 마이그레이션**
+- 첫 번째 작업: CreateSurvey.vue
 - 필요 정보:
-  - Login.vue와 유사한 구조
-  - 추가 필드: 비밀번호 확인, 이름, 생년월일 등
-  - 실시간 유효성 검사 피드백
+  - 반응형 2단 레이아웃 (데스크톱: 사이드바 + 메인, 모바일: 세로 스택)
+  - Accordion 컴포넌트로 질문 관리 UI
+  - 복잡한 폼 필드들 (질문 타입, 옵션 등)
   - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체
-  - Lucide 아이콘으로 교체
+  - 깔끔한 UI 스타일 적용 (흰색 배경, 파란색 계열 컴포넌트)
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
