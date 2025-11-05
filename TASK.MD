@@ -5,6 +5,7 @@
 - **대체 라이브러리**: shadcn-vue (Radix Vue + Tailwind CSS)
 - **프로젝트**: Vue 3 + TypeScript + Vite
 - **디자인 목표**: 반응형 웹, 사용자 친화적, 현대적이고 심플한 디자인
+- **UI 스타일**: 흰색 메인 배경에 파란색 계열 컴포넌트로 구성된 깔끔하고 미니멀한 디자인 (Home.vue 기준)
 
 ---
 
@@ -50,6 +51,109 @@
 - **간격 시스템**: Tailwind의 spacing scale (4px 단위)
 - **그림자**: 부드러운 그림자로 깊이감 표현 (shadow-sm, shadow-md)
 - **둥근 모서리**: 일관된 border-radius (rounded-md, rounded-lg)
+
+### 깔끔한 UI 디자인 가이드라인 (Home.vue 기준)
+**목표**: 흰색 메인 배경에 파란색 계열 컴포넌트로 구성된 깔끔하고 미니멀한 디자인
+
+**1. 배경 및 컨테이너**
+- 메인 배경: 순수 흰색 (`bg-white`)
+- 카드/컨테이너: 흰색 배경, 미묘한 그림자 (`shadow-md`), 연한 회색 테두리 (`border-gray-200`)
+- 그라데이션 배경 사용 금지 (깔끔한 흰색 배경 유지)
+
+**2. 색상 사용 규칙**
+- **텍스트 계층 구조**:
+  - 주요 제목: `text-gray-800` (진한 회색)
+  - 부제목/설명: `text-gray-500` (중간 회색)
+  - 플레이스홀더/보조 텍스트: `text-gray-400` (연한 회색)
+  - 일반 텍스트: `text-gray-600` (회색)
+  - 링크 텍스트: `text-gray-800` + `hover:text-primary-600` (호버 시 파란색)
+- **액센트 색상**:
+  - Primary 버튼: `bg-primary-400` + `hover:bg-primary-500` (부드러운 파란색)
+  - 포커스 상태: `focus:border-primary-400` + `focus:ring-primary-400`
+- **에러 메시지**: `text-red-500` (명확한 빨간색)
+
+**3. 입력 필드 스타일**
+- 라벨 제거, 플레이스홀더만 사용 (미니멀한 디자인)
+- 배경: 흰색 (`bg-white`)
+- 테두리: 연한 회색 (`border-gray-300`)
+- 높이: `h-12` (48px, 터치 친화적)
+- 둥근 모서리: `rounded-lg`
+- 아이콘: 왼쪽에 배치 (`left-3`), `text-gray-400`, 크기 `h-5 w-5`
+- 패딩: 아이콘을 위한 왼쪽 패딩 (`pl-10`)
+- 포커스: 파란색 테두리 및 링 (`focus:border-primary-400 focus:ring-primary-400`)
+
+**4. 버튼 스타일**
+- Primary 버튼:
+  - 배경: `bg-primary-400` (부드러운 파란색)
+  - 호버: `hover:bg-primary-500`
+  - 텍스트: `text-white`
+  - 높이: `h-12` (48px)
+  - 둥근 모서리: `rounded-lg`
+  - 그림자: `shadow-sm` (미묘한 그림자)
+  - 전환: `transition-colors`
+- 전체 너비: `w-full` (폼 내부 버튼)
+
+**5. 카드 스타일**
+- 배경: 흰색
+- 그림자: `shadow-md` (미묘한 그림자)
+- 테두리: `border border-gray-200`
+- 헤더: 중앙 정렬 (`text-center`), 패딩 `py-8 px-6`
+- 콘텐츠: 패딩 `px-6 pb-8`
+
+**6. 폼 레이아웃**
+- 필드 간격: `space-y-5` (충분한 여백)
+- 에러 메시지: `text-xs text-red-500 mt-1` (작은 크기, 빨간색, 상단 여백)
+
+**7. 아이콘 사용**
+- Lucide 아이콘 사용
+- 크기: `h-5 w-5` (입력 필드 내부), `h-4 w-4` (버튼 내부)
+- 색상: `text-gray-400` (입력 필드), `text-white` (버튼 내부)
+- 위치: 입력 필드 왼쪽, 절대 위치 (`absolute left-3`)
+
+**8. 반응형 고려사항**
+- 모바일: 전체 너비 (`w-full`), 패딩 `p-4`
+- 데스크톱: 최대 너비 제한 (`max-w-md`), 중앙 정렬
+- 카드: 반응형 너비 (`w-full`)
+
+**9. 애니메이션 및 전환**
+- 버튼 호버: `transition-colors` (색상 전환)
+- 아이콘 호버: `hover:text-gray-600` (색상 변경)
+- 부드러운 전환 효과 사용
+
+**10. 일반적인 금지 사항**
+- ❌ 그라데이션 배경 사용 금지
+- ❌ 과도한 그림자 사용 금지
+- ❌ 밝은 색상 배경 사용 금지 (흰색 배경 유지)
+- ❌ 복잡한 애니메이션 사용 금지
+- ❌ 라벨과 플레이스홀더 동시 사용 금지 (플레이스홀더만 사용)
+
+**적용 예시 (Home.vue):**
+```vue
+<!-- 배경: 흰색 -->
+<div class="min-h-screen flex items-center justify-center bg-white p-4">
+  <!-- 카드: 미묘한 그림자, 연한 테두리 -->
+  <Card class="w-full max-w-md shadow-md border border-gray-200">
+    <!-- 제목: 진한 회색 -->
+    <CardTitle class="text-3xl font-bold text-gray-800">ThinkFast</CardTitle>
+    <!-- 부제목: 중간 회색 -->
+    <p class="text-sm text-gray-500">AI 기반 실시간 설문조사 플랫폼</p>
+    
+    <!-- 입력 필드: 라벨 없이 플레이스홀더만, 아이콘 포함 -->
+    <Input
+      placeholder="이메일"
+      class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400"
+    />
+    
+    <!-- 버튼: 부드러운 파란색 -->
+    <Button class="w-full h-12 bg-primary-400 hover:bg-primary-500 text-white rounded-lg">
+      로그인
+    </Button>
+    
+    <!-- 에러 메시지: 빨간색 -->
+    <FormMessage class="text-xs text-red-500 mt-1" />
+  </Card>
+</div>
+```
 
 ---
 
@@ -503,18 +607,16 @@ colors: {
   - [x] 카드 레이아웃 반응형 조정
 
 ### 6. 인증 관련 뷰 마이그레이션
-- [ ] Login.vue (v-form, v-text-field, v-btn 등)
-  - [ ] 반응형 폼 레이아웃 (모바일: 전체 너비, 데스크톱: 중앙 정렬)
-  - [ ] 현대적인 카드 디자인 (그림자, 둥근 모서리)
-  - [ ] 터치 친화적 버튼 크기
-  - [ ] 명확한 에러 메시지 표시
+- [x] Home.vue (실제 로그인 페이지, v-form, v-text-field, v-btn 등)
+  - [x] 반응형 폼 레이아웃 (모바일: 전체 너비, 데스크톱: 중앙 정렬)
+  - [x] 현대적인 카드 디자인 (그림자, 둥근 모서리)
+  - [x] 터치 친화적 버튼 크기
+  - [x] 명확한 에러 메시지 표시
+  - [x] 반응형 로고 및 타이틀
 - [ ] Signup.vue
   - [ ] 반응형 폼 레이아웃
   - [ ] 단계별 입력 가이드 (선택사항)
   - [ ] 실시간 유효성 검사 피드백
-- [ ] Home.vue
-  - [ ] 반응형 로고 및 타이틀
-  - [ ] 모바일 최적화된 폼 레이아웃
 
 ### 7. 설문조사 관련 뷰 마이그레이션
 - [ ] CreateSurvey.vue
@@ -1076,10 +1178,71 @@ import { User, Mail, Lock, Bell } from 'lucide-vue-next'
 - 타임라인은 간단한 Tailwind CSS 구현으로 대체 (복잡한 타임라인 라이브러리 불필요)
 - 테이블은 모바일에서 가로 스크롤 가능하도록 처리
 
-**다음 작업 (작업 6): 인증 관련 뷰 마이그레이션**
+### 작업 6-1 완료 (Home.vue 마이그레이션 - 실제 로그인 페이지)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- 모든 Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체:
+  - `v-container` → `min-h-screen flex items-center justify-center` (Tailwind 클래스)
+  - `v-row`, `v-col` → `flex items-center justify-center` (Tailwind 클래스)
+  - `v-card` → `Card`, `CardHeader`, `CardTitle`, `CardContent`
+  - `v-img` → HTML `<img>` 태그 + Tailwind 클래스
+  - `v-form` → `vee-validate`의 `useForm` + `handleSubmit`
+  - `v-text-field` → `Input` + `FormField`, `FormItem`, `FormLabel`, `FormControl`, `FormMessage`
+  - `v-btn` → `Button`
+  - `v-icon` → Lucide 아이콘
+  - `v-snackbar` → 제거 (useSnackbar composable 사용, Toaster는 App.vue에 있음)
+- 모든 MDI 아이콘을 Lucide 아이콘으로 교체:
+  - `mdi-account` → `User`
+  - `mdi-lock` → `Lock`
+  - `mdi-eye` / `mdi-eye-off` → `Eye` / `EyeOff`
+- 폼 유효성 검사: Vuetify rules → Zod 스키마 + vee-validate
+- 반응형 폼 레이아웃:
+  - 모바일: 전체 너비 (`w-full`), 패딩 `p-4`
+  - 데스크톱: 중앙 정렬, 최대 너비 제한 (`max-w-md`)
+  - 카드 내부 패딩: `p-6`
+- 로고 및 브랜딩:
+  - 로고 이미지: `h-20 mx-auto mb-4` (반응형 크기)
+  - 타이틀: `text-3xl font-bold text-primary`
+  - 부제목: `text-sm text-muted-foreground`
+  - 카드 위치: `-translate-y-[5%]` (기존 스타일 유지)
+- 현대적인 카드 디자인:
+  - `shadow-xl` - 큰 그림자 효과
+  - 그라데이션 배경: `bg-gradient-to-br from-primary-50 to-primary-400`
+  - 카드 헤더: 중앙 정렬, 여백 `py-6`
+- 터치 친화적 버튼 크기:
+  - 버튼 높이: `h-12` (48px)
+  - 텍스트 크기: `text-base`
+  - 전체 너비: `w-full`
+- 명확한 에러 메시지 표시:
+  - `FormMessage` 컴포넌트로 에러 메시지 표시
+  - 에러 시 Input border 색상 변경 (`border-destructive`)
+  - 실시간 유효성 검사 피드백
+- 로딩 상태 표시:
+  - `Loader2` 아이콘 + `animate-spin` 애니메이션
+  - 버튼 disabled 상태 관리
+- 회원가입 링크:
+  - `router-link` 사용
+  - `text-primary hover:underline` 스타일
+
+**주요 변경사항:**
+- Options API → Composition API (`<script setup>`)로 변경
+- Vuetify form validation → vee-validate + Zod
+- 비밀번호 보기/숨기기 기능 유지
+- 로그인 로직 유지 (authApi, store dispatch)
+- 로고 이미지 및 브랜딩 텍스트 유지
+- v-snackbar 제거 (useSnackbar composable 사용)
+
+**참고:**
+- vee-validate의 `Form` 컴포넌트 대신 일반 `form` 태그와 `handleSubmit` 사용
+- FormField의 `componentField`를 Input에 바인딩하여 양방향 바인딩 유지
+- Login.vue도 마이그레이션했지만, 실제 로그인 페이지는 Home.vue입니다
+- Home.vue는 로고 이미지와 "AI 기반 실시간 설문조사 플랫폼" 텍스트가 포함된 로그인 페이지
+
+**다음 작업 (작업 6-2): Signup.vue 마이그레이션**
 - 필요 정보:
-  - Login.vue, Signup.vue, Home.vue 마이그레이션
-  - 반응형 폼 레이아웃 구현
+  - Login.vue와 유사한 구조
+  - 추가 필드: 비밀번호 확인, 이름, 생년월일 등
+  - 실시간 유효성 검사 피드백
   - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체
   - Lucide 아이콘으로 교체
 

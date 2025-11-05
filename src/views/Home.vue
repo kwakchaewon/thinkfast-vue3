@@ -1,190 +1,152 @@
 <template>
-  <v-container class="fill-height">
-    <v-row align="center" justify="center" class="fill-height">
-      <v-col cols="12" sm="8" md="6" lg="4">
-        <v-card class="elevation-12">
-          <v-card-title class="text-center">
-            <v-img
-              src="@/assets/thinkfast-logo.svg"
-              alt="ThinkFast"
-              max-height="80"
-              contain
-              class="mb-2"
-            ></v-img>
-            <h1 class="text-h4 font-weight-bold primary--text">ThinkFast</h1>
-            <p class="text-subtitle-1 grey--text">AI 기반 실시간 설문조사 플랫폼</p>
-          </v-card-title>
+  <div class="min-h-screen flex items-center justify-center bg-white p-4">
+    <Card class="w-full max-w-md shadow-md border border-gray-200">
+      <CardHeader class="text-center py-8 px-6">
+        <CardTitle class="text-3xl font-bold text-gray-800 mb-2">ThinkFast</CardTitle>
+        <p class="text-sm text-gray-500">AI 기반 실시간 설문조사 플랫폼</p>
+      </CardHeader>
 
-          <v-card-text>
-            <v-form ref="form" v-model="isFormValid" @submit.prevent="handleLogin">
-              <v-text-field
-                v-model="email"
-                label="이메일"
-                type="email"
-                prepend-icon="mdi-account"
-                :rules="emailRules"
-                outlined
-                dense
-                class="mb-2"
-              ></v-text-field>
+      <CardContent class="px-6 pb-8">
+        <form @submit.prevent="handleLogin" class="space-y-5">
+          <FormField v-slot="{ componentField, errorMessage }" name="email">
+            <FormItem>
+              <FormControl>
+                <div class="relative">
+                  <User class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Input
+                    v-bind="componentField"
+                    type="email"
+                    placeholder="이메일"
+                    class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400"
+                    :class="{ 'border-destructive': errorMessage }"
+                  />
+                </div>
+              </FormControl>
+              <FormMessage class="text-xs text-red-500 mt-1" />
+            </FormItem>
+          </FormField>
 
-              <v-text-field
-                v-model="password"
-                label="비밀번호"
-                :type="showPassword ? 'text' : 'password'"
-                prepend-icon="mdi-lock"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                @click:append="showPassword = !showPassword"
-                :rules="passwordRules"
-                outlined
-                dense
-                class="mb-4"
-              ></v-text-field>
+          <FormField v-slot="{ componentField, errorMessage }" name="password">
+            <FormItem>
+              <FormControl>
+                <div class="relative">
+                  <Lock class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Input
+                    v-bind="componentField"
+                    :type="showPassword ? 'text' : 'password'"
+                    placeholder="비밀번호"
+                    class="pl-10 pr-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400"
+                    :class="{ 'border-destructive': errorMessage }"
+                  />
+                  <button
+                    type="button"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    @click="showPassword = !showPassword"
+                  >
+                    <Eye v-if="showPassword" class="h-5 w-5" />
+                    <EyeOff v-else class="h-5 w-5" />
+                  </button>
+                </div>
+              </FormControl>
+              <FormMessage class="text-xs text-red-500 mt-1" />
+            </FormItem>
+          </FormField>
 
-              <v-btn
-                color="primary"
-                block
-                x-large
-                type="submit"
-                :loading="loading"
-                class="mb-4"
-                height="48"
-                :disabled="!isFormValid || loading"
-              >
-                로그인
-              </v-btn>
+          <Button
+            type="submit"
+            class="w-full h-12 text-base font-medium bg-primary-400 hover:bg-primary-500 text-white rounded-lg shadow-sm transition-colors"
+            :disabled="loading"
+          >
+            <span v-if="loading" class="flex items-center justify-center gap-2">
+              <Loader2 class="h-4 w-4 animate-spin" />
+              로그인 중...
+            </span>
+            <span v-else>로그인</span>
+          </Button>
 
-              <div class="text-center">
-                <span class="text-body-2 grey--text">계정이 없으신가요? </span>
-                <a 
-                  href="#" 
-                  class="text-body-2 primary--text text-decoration-none"
-                  @click.prevent="$router.push('/signup')"
-                >
-                  회원가입
-                </a>
-              </div>
-            </v-form>
-          </v-card-text>
-        </v-card>
-
-        <!-- 스낵바 -->
-        <v-snackbar
-          v-model="snackbar.show"
-          :color="snackbar.color"
-          :timeout="2000"
-        >
-          {{ snackbar.text }}
-        </v-snackbar>
-      </v-col>
-    </v-row>
-  </v-container>
+          <div class="text-center pt-2">
+            <span class="text-sm text-gray-600">계정이 없으신가요? </span>
+            <router-link
+              to="/signup"
+              class="text-sm text-gray-800 hover:text-primary-600 font-medium transition-colors"
+            >
+              회원가입
+            </router-link>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script lang="ts" setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import * as z from 'zod'
 import { authApi } from '@/apis/authApi'
-import store from "@/store";
-import {useSnackbar} from "@/composables/useSnackbar.ts";
+import store from '@/store'
+import { useSnackbar } from '@/composables/useSnackbar'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { User, Lock, Eye, EyeOff, Loader2 } from 'lucide-vue-next'
 
-export default defineComponent({
-  name: 'HomeView',
-  setup() {
-    const router = useRouter()
-    const form = ref<any>(null)
-    const isFormValid = ref(false)
-    const loading = ref(false)
-    const showPassword = ref(false)
-    const { showSuccess } = useSnackbar()
+const router = useRouter()
+const { showError, showSuccess } = useSnackbar()
 
-    // 폼 데이터
-    const email = ref('')
-    const password = ref('')
+const showPassword = ref(false)
+const loading = ref(false)
 
-    // 유효성 검사 규칙
-    const emailRules = [
-      (v: string) => !!v || '이메일을 입력해주세요.',
-      (v: string) => /.+@.+\..+/.test(v) || '올바른 이메일 형식이 아닙니다.'
-    ]
+// Zod 스키마 정의
+const schema = toTypedSchema(
+  z.object({
+    email: z
+      .string()
+      .min(1, '이메일을 입력해주세요.')
+      .email('올바른 이메일 형식이 아닙니다.'),
+    password: z
+      .string()
+      .min(1, '비밀번호를 입력해주세요.')
+      .min(8, '비밀번호는 최소 8자 이상이어야 합니다.'),
+  })
+)
 
-    const passwordRules = [
-      (v: string) => !!v || '비밀번호를 입력해주세요.',
-      (v: string) => v.length >= 8 || '비밀번호는 최소 8자 이상이어야 합니다.'
-    ]
+// Form 설정
+const { handleSubmit } = useForm({
+  validationSchema: schema,
+})
 
-    // 스낵바 상태
-    const snackbar = ref({
-      show: false,
-      text: '',
-      color: 'success'
+const handleLogin = handleSubmit(async (values: { email: string; password: string }) => {
+  loading.value = true
+  try {
+    const response = await authApi.login(values.email, values.password)
+
+    await store.dispatch('setUser', {
+      username: response.username,
+      accessToken: response.accessToken,
+      refreshToken: response.refreshToken,
+      role: response.role
     })
 
-    const showError = (message: string) => {
-      snackbar.value = {
-        show: true,
-        text: message,
-        color: 'error'
-      }
-    }
-
-    const handleLogin = async () => {
-      if (!form.value?.validate()) return
-      loading.value = true
-      try {
-        const response = await authApi.login(email.value, password.value)
-
-        await store.dispatch('setUser', {
-          username: response.username,
-          accessToken: response.accessToken,
-          refreshToken: response.refreshToken,
-          role: response.role
-        })
-
-        await router.push('/main')
-        showSuccess('로그인에 성공했습니다.')
-      } catch (error: any) {
-        showError(error.response?.data?.message || '로그인에 실패했습니다.')
-      } finally {
-        loading.value = false
-      }
-    }
-
-    return {
-      form,
-      isFormValid,
-      loading,
-      email,
-      password,
-      showPassword,
-      emailRules,
-      passwordRules,
-      snackbar,
-      handleLogin
-    }
+    await router.push('/main')
+    showSuccess('로그인에 성공했습니다.')
+  } catch (error: any) {
+    showError(error.response?.data?.message || '로그인에 실패했습니다.')
+  } finally {
+    loading.value = false
   }
 })
 </script>
 
 <style scoped>
-.v-card {
-  border-radius: 8px;
-  transform: translateY(-5%);
-}
-
-.v-card-title {
-  padding: 1.5rem 1rem;
-}
-
-.v-card-text {
-  padding: 1rem 2rem 2rem;
-}
-
-:deep(.v-application) {
-  background: linear-gradient(135deg, #E8EAF6 0%, #5C6BC0 100%);
-}
-
-a:hover {
-  text-decoration: underline !important;
-}
-</style> 
+/* 추가 스타일이 필요한 경우 */
+</style>
