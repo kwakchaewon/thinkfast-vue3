@@ -466,7 +466,7 @@ colors: {
 
 ### 2. shadcn-vue 환경 설정
 - [x] Tailwind CSS 설치 및 설정
-- [ ] shadcn-vue CLI 설치
+- [x] shadcn-vue CLI 설치
 - [ ] shadcn-vue 초기화 (`npx shadcn-vue@latest init`)
 - [ ] Radix Vue 의존성 확인
 - [ ] shadcn-vue 설정 파일 생성 (components.json)
@@ -694,13 +694,24 @@ colors: {
 - src/style.css에 Tailwind 디렉티브 추가 (@tailwind base/components/utilities)
 - 커스텀 폰트 설정 (Inter) 및 borderRadius 설정 완료
 
-**다음 작업 (작업 2-2): shadcn-vue CLI 설치**
+### 작업 2-2 완료 (shadcn-vue CLI 설치)
+**완료 날짜:** 작업 완료  
+**결과:** 
+- shadcn-vue CLI 패키지 설치 완료 (420개 패키지 추가)
+- devDependencies에 shadcn-vue 추가됨
+- 참고: Node.js 버전 경고 발생 (현재 v21.6.1, 권장 20 또는 >=22) - 기능 사용에는 문제 없음
+
+**다음 작업 (작업 2-3): shadcn-vue 초기화**
 - 필요 정보:
-  - shadcn-vue CLI 설치 (`npm install -D shadcn-vue`)
-  - shadcn-vue 초기화 (`npx shadcn-vue@latest init`)
-  - 초기화 시 components.json 파일 자동 생성됨
+  - 명령어: `npx shadcn-vue@latest init`
+  - 초기화 시 대화형 설정 화면 표시됨
+  - 설정 항목:
+    - Style: New York 또는 Default 선택
+    - Base color: Slate, Gray, Zinc, Neutral, Stone 중 선택 (또는 커스텀)
+    - CSS variables: Yes (Tailwind CSS와 호환)
+  - 초기화 완료 후 components.json 파일 자동 생성됨
   - Radix Vue 의존성 자동 설치 확인 필요
-  - components.json 설정 확인 및 필요시 수정
+  - components.json의 paths 설정 확인 (components, utils 등)
 
 **참고 링크:**
 - shadcn-vue: https://www.shadcn-vue.com/
