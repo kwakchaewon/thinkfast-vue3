@@ -726,7 +726,7 @@ colors: {
 ### 10. 테마 및 스타일링 설정
 - [x] Tailwind CSS 커스텀 테마 설정
 - [x] 기존 Vuetify 테마 색상 (primary, secondary 등) Tailwind로 변환
-- [ ] 다크모드 지원 여부 결정 및 설정 (권장: 라이트 모드 우선)
+- [x] 다크모드 지원 여부 결정 및 설정 (권장: 라이트 모드 우선)
 - [ ] 전역 스타일 정리 (style.css)
 - [ ] 반응형 breakpoint 커스터마이징 (tailwind.config.js)
 - [ ] 일관된 간격 시스템 설정 (spacing scale)
@@ -946,10 +946,19 @@ colors: {
   - 반응형 breakpoint 명시적 정의 (sm, md, lg, xl, 2xl)
   - 간격 시스템 확인 (4px 단위, Tailwind 기본값과 동일)
   - shadcn-vue 색상 시스템과 통합 유지
-- 다음 작업: **다크모드 지원 여부 결정 및 설정**
+- **다크모드 지원 여부 결정 및 설정 완료** ✅
+  - 결정: 라이트 모드를 기본 모드로 유지 (다크모드 비활성화)
+  - Tailwind CSS 다크모드 설정 확인: `darkMode: ['class']` (이미 설정됨)
+  - style.css에 `.dark` 클래스 스타일 정의 확인 (이미 정의됨)
+  - `useTheme` composable 생성 (src/composables/useTheme.ts) - 향후 필요 시 사용 가능
+  - 현재는 라이트 모드만 사용 (html에 dark 클래스 없음)
+  - 일부 컴포넌트에서 `dark:` 클래스 사용 중 (Sidebar.vue) - 다크모드 활성화 시 자동 적용
+  - 다크모드 토글 기능은 구현되어 있으나 현재 비활성화 상태
+- 다음 작업: **전역 스타일 정리 (style.css)**
 - 필요 정보:
-  - 다크모드 지원 여부 결정 (현재는 라이트 모드 우선)
-  - 필요 시 다크모드 설정 추가
+  - style.css 정리 및 불필요한 스타일 제거
+  - Vuetify 관련 스타일 주석 처리 또는 제거
+  - 일관된 스타일 구조 정리
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
