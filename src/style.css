@@ -200,6 +200,148 @@ body {
   .ma-6 { margin: 1.5rem; }
   .ma-8 { margin: 2rem; }
   .ma-auto { margin: auto; }
+
+  /* 공통 애니메이션 유틸리티 클래스 */
+  
+  /* 기본 전환 효과 */
+  .transition-smooth {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+
+  .transition-fast {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+
+  .transition-normal {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+
+  .transition-slow {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 500ms;
+  }
+
+  /* 호버 효과 전환 */
+  .transition-hover {
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+
+  /* 페이드 효과 */
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 200ms ease-in-out;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+
+  /* 슬라이드 효과 (위에서 아래로) */
+  .slide-y-enter-active,
+  .slide-y-leave-active {
+    transition: transform 300ms ease-out;
+  }
+
+  .slide-y-enter-from {
+    transform: translateY(-100%);
+  }
+
+  .slide-y-leave-to {
+    transform: translateY(-100%);
+  }
+
+  /* 슬라이드 효과 (아래에서 위로) */
+  .slide-y-up-enter-active,
+  .slide-y-up-leave-active {
+    transition: transform 300ms ease-out;
+  }
+
+  .slide-y-up-enter-from {
+    transform: translateY(100%);
+  }
+
+  .slide-y-up-leave-to {
+    transform: translateY(100%);
+  }
+
+  /* 슬라이드 효과 (왼쪽에서 오른쪽으로) */
+  .slide-x-enter-active,
+  .slide-x-leave-active {
+    transition: transform 300ms ease-out;
+  }
+
+  .slide-x-enter-from {
+    transform: translateX(-100%);
+  }
+
+  .slide-x-leave-to {
+    transform: translateX(-100%);
+  }
+
+  /* 슬라이드 효과 (오른쪽에서 왼쪽으로) */
+  .slide-x-right-enter-active,
+  .slide-x-right-leave-active {
+    transition: transform 300ms ease-out;
+  }
+
+  .slide-x-right-enter-from {
+    transform: translateX(100%);
+  }
+
+  .slide-x-right-leave-to {
+    transform: translateX(100%);
+  }
+
+  /* 스케일 효과 */
+  .scale-enter-active,
+  .scale-leave-active {
+    transition: transform 200ms ease-out;
+  }
+
+  .scale-enter-from,
+  .scale-leave-to {
+    transform: scale(0.95);
+  }
+
+  /* 페이드 + 스케일 효과 */
+  .fade-scale-enter-active,
+  .fade-scale-leave-active {
+    transition: opacity 200ms ease-out, transform 200ms ease-out;
+  }
+
+  .fade-scale-enter-from,
+  .fade-scale-leave-to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  /* 부드러운 확대 효과 (호버용) */
+  .hover-scale {
+    transition: transform 200ms ease-out;
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.05);
+  }
+
+  /* 부드러운 그림자 효과 (호버용) */
+  .hover-shadow {
+    transition: box-shadow 200ms ease-out;
+  }
+
+  .hover-shadow:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
 }
 
 /* vue-sonner toast 스타일 보장 */

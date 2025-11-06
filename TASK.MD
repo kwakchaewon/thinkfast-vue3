@@ -721,7 +721,7 @@ colors: {
 - [x] 스타일 유틸리티 클래스 변환
 - [x] 반응형 레이아웃 클래스 변환
 - [x] 반응형 헬퍼 유틸리티 함수 생성 (useBreakpoint, useResponsive 등)
-- [ ] 공통 애니메이션 유틸리티 구현
+- [x] 공통 애니메이션 유틸리티 구현
 
 ### 10. 테마 및 스타일링 설정
 - [ ] Tailwind CSS 커스텀 테마 설정
@@ -928,11 +928,19 @@ colors: {
   - Tailwind CSS breakpoint와 일치하도록 설정 (sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px)
   - JSDoc 주석 및 사용 예시 포함
   - 기존 코드에서 `window.innerWidth` 직접 사용하는 부분을 이 composable로 대체 가능
-- 다음 작업: **공통 애니메이션 유틸리티 구현**
+- **공통 애니메이션 유틸리티 구현 완료** ✅
+  - 기본 전환 효과: transition-smooth, transition-fast, transition-normal, transition-slow
+  - 호버 효과 전환: transition-hover (background-color, border-color, box-shadow 등)
+  - Vue Transition 클래스: fade, slide-y, slide-y-up, slide-x, slide-x-right, scale, fade-scale
+  - 호버 애니메이션: hover-scale, hover-shadow
+  - @layer utilities를 사용하여 Tailwind에 통합
+  - Vuetify의 v-slide-y-transition 등을 대체하는 Vue Transition 클래스 제공
+  - 일관된 애니메이션 타이밍 및 easing 함수 적용
+- 다음 작업: **Tailwind CSS 커스텀 테마 설정**
 - 필요 정보:
-  - 공통 애니메이션 유틸리티 클래스 또는 composable 생성
-  - 전환 효과, 페이드 인/아웃 등 재사용 가능한 애니메이션
-  - Tailwind CSS transition 클래스 활용
+  - Tailwind config에 커스텀 테마 설정 추가
+  - 기존 Vuetify 테마 색상을 Tailwind로 변환 확인
+  - tailwind.config.js 확인 및 업데이트
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
