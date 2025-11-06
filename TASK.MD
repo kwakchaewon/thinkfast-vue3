@@ -717,7 +717,7 @@ colors: {
 - [x] About.vue
 
 ### 9. 공통 컴포넌트 및 유틸리티 마이그레이션
-- [ ] useSnackbar composable 업데이트 (v-snackbar → Toast/Sonner)
+- [x] useSnackbar composable 업데이트 (v-snackbar → Toast/Sonner)
 - [ ] 스타일 유틸리티 클래스 변환
 - [ ] 반응형 레이아웃 클래스 변환
 - [ ] 반응형 헬퍼 유틸리티 함수 생성 (useBreakpoint, useResponsive 등)
@@ -896,11 +896,20 @@ colors: {
   - 기술 스택 Badge 표시
   - 메인으로 돌아가기 버튼 추가
   - MDI 아이콘을 Lucide 아이콘으로 마이그레이션 (Info, FileEdit, BarChart3, Users, QrCode, ArrowLeft)
-- 다음 작업: **useSnackbar composable 업데이트**
+- **useSnackbar composable 업데이트 완료** ✅
+  - 이미 Toast/Sonner 사용 중이었으나 추가 개선 완료
+  - showInfo, showWarning 편의 함수 추가
+  - ToastOptions 타입 확장 지원
+  - 타입 정의 개선 (SnackbarOptions extends ToastOptions)
+  - 기본 duration 상수화 (DEFAULT_DURATION = 3000)
+  - JSDoc 주석 추가
+  - 모든 함수에 추가 Toast 옵션 지원
+  - v-snackbar 완전히 제거됨 (모든 코드에서 useSnackbar 사용)
+- 다음 작업: **스타일 유틸리티 클래스 변환**
 - 필요 정보:
-  - v-snackbar → Toast/Sonner로 변경
-  - 기존 useSnackbar composable 확인 및 업데이트
-  - Toast/Sonner 설정 확인
+  - Vuetify 스타일 클래스를 Tailwind CSS로 변환
+  - 기존 스타일 유틸리티 확인
+  - 커스텀 유틸리티 클래스 생성 필요 여부 확인
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
