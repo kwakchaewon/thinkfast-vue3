@@ -709,9 +709,9 @@ colors: {
   - [x] 반응형 테이블 (모바일: 카드, 데스크톱: 테이블)
   - [x] 필터 및 검색 모바일 최적화
   - [x] 무한 스크롤 또는 페이지네이션
-- [ ] RecentSurveys.vue
-  - [ ] 반응형 그리드 레이아웃
-  - [ ] 카드 호버 효과
+- [x] RecentSurveys.vue
+  - [x] 반응형 그리드 레이아웃
+  - [x] 카드 호버 효과
 
 ### 8. 기타 뷰 마이그레이션
 - [ ] About.vue
@@ -877,10 +877,18 @@ colors: {
   - 로딩 상태 표시 (애니메이션 Progress 바)
   - 검색/필터/정렬 기능 유지
   - MDI 아이콘을 Lucide 아이콘으로 마이그레이션 (Search, Plus)
-- 다음 작업: **RecentSurveys.vue**
+- **RecentSurveys.vue 완료** ✅
+  - 반응형 그리드 레이아웃 구현 (모바일: grid-cols-1 sm:grid-cols-2 카드 그리드, 데스크톱: Table)
+  - 카드 호버 효과 (hover:shadow-lg, hover:border-primary-300, transition-all)
+  - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체 (Card, Button, Badge, Table)
+  - 깔끔한 UI 스타일 적용 (흰색 배경, 파란색 계열 컴포넌트)
+  - Sidebar → HeaderMenu로 변경 (다른 뷰와 일관성 유지)
+  - 반응형 감지 (window.innerWidth 기반, 768px breakpoint)
+  - 로딩 상태 표시 (애니메이션 Progress 바)
+  - 카드에 아이콘 추가 (MessageSquare, Calendar)
+  - MDI 아이콘을 Lucide 아이콘으로 마이그레이션 (Plus, MessageSquare, Calendar)
+- 다음 작업: **About.vue**
 - 필요 정보:
-  - 반응형 그리드 레이아웃
-  - 카드 호버 효과
   - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체
   - 깔끔한 UI 스타일 적용 (흰색 배경, 파란색 계열 컴포넌트)
 
