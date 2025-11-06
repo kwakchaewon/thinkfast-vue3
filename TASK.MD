@@ -729,7 +729,7 @@ colors: {
 - [x] 다크모드 지원 여부 결정 및 설정 (권장: 라이트 모드 우선)
 - [x] 전역 스타일 정리 (style.css)
 - [x] 반응형 breakpoint 커스터마이징 (tailwind.config.js)
-- [ ] 일관된 간격 시스템 설정 (spacing scale)
+- [x] 일관된 간격 시스템 설정 (spacing scale)
 - [ ] 타이포그래피 스케일 정의
 - [ ] 그림자 및 border-radius 시스템 설정
 - [ ] 접근성 개선 (색상 대비 비율 확인)
@@ -968,11 +968,18 @@ colors: {
   - 각 breakpoint에 대한 명확한 주석 추가 (디바이스 타입 및 전환 시점 설명)
   - useResponsive.ts composable과 일치하는지 확인 완료
   - 추가 커스터마이징 불필요 (현재 설정이 프로젝트 요구사항에 적합)
-- 다음 작업: **일관된 간격 시스템 설정 (spacing scale)**
+- **일관된 간격 시스템 설정 (spacing scale) 완료** ✅
+  - Tailwind CSS 기본 spacing scale 사용 (4px 단위)
+  - 프로젝트 디자인 원칙과 일치: "통일된 간격으로 일관성 있는 레이아웃 구성"
+  - 주요 spacing 값 문서화 (0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 8, 10, 12, 16, 20, 24 등)
+  - 사용 예시 추가 (padding, margin, gap)
+  - 커스텀 spacing 추가 방법 명시
+  - 현재 코드베이스에서 Tailwind spacing 클래스 사용 중 (p-4, m-2, gap-4 등) 확인
+- 다음 작업: **타이포그래피 스케일 정의**
 - 필요 정보:
-  - spacing scale 확인 및 필요 시 커스터마이징
-  - 현재는 Tailwind 기본값 사용 (4px 단위)
-  - 프로젝트 요구사항에 맞는 간격 시스템 확인 필요
+  - 타이포그래피 스케일 확인 및 필요 시 커스터마이징
+  - 현재 fontSize에 h1-h6 정의되어 있음
+  - 프로젝트 요구사항에 맞는 타이포그래피 시스템 확인 필요
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고

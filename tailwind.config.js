@@ -133,9 +133,39 @@ export default {
         'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
         'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
       },
-      // 간격 시스템 (4px 단위 유지, Tailwind 기본값과 동일)
+      // 간격 시스템 (spacing scale)
+      // Tailwind CSS 기본값 사용 (4px 단위)
+      // 디자인 원칙: 통일된 간격으로 일관성 있는 레이아웃 구성
+      // 
+      // 주요 spacing 값:
+      // - 0: 0px
+      // - 0.5: 2px (0.125rem)
+      // - 1: 4px (0.25rem)
+      // - 1.5: 6px (0.375rem)
+      // - 2: 8px (0.5rem)
+      // - 2.5: 10px (0.625rem)
+      // - 3: 12px (0.75rem)
+      // - 3.5: 14px (0.875rem)
+      // - 4: 16px (1rem)
+      // - 5: 20px (1.25rem)
+      // - 6: 24px (1.5rem)
+      // - 8: 32px (2rem)
+      // - 10: 40px (2.5rem)
+      // - 12: 48px (3rem)
+      // - 16: 64px (4rem)
+      // - 20: 80px (5rem)
+      // - 24: 96px (6rem)
+      // 
+      // 사용 예시:
+      // - padding: p-4 (16px), p-6 (24px)
+      // - margin: m-2 (8px), m-4 (16px)
+      // - gap: gap-4 (16px), gap-6 (24px)
+      // 
+      // 커스텀 spacing이 필요한 경우 여기에 추가 가능
       spacing: {
-        // 기본값 사용 (4px 단위)
+        // Tailwind 기본값 사용 (4px 단위)
+        // 필요 시 커스텀 spacing 값 추가 가능
+        // 예: '18': '4.5rem', '22': '5.5rem' 등
       },
       // 반응형 breakpoint 설정
       // 프로젝트 디자인 원칙에 따라 설정:
