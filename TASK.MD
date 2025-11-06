@@ -727,7 +727,7 @@ colors: {
 - [x] Tailwind CSS 커스텀 테마 설정
 - [x] 기존 Vuetify 테마 색상 (primary, secondary 등) Tailwind로 변환
 - [x] 다크모드 지원 여부 결정 및 설정 (권장: 라이트 모드 우선)
-- [ ] 전역 스타일 정리 (style.css)
+- [x] 전역 스타일 정리 (style.css)
 - [ ] 반응형 breakpoint 커스터마이징 (tailwind.config.js)
 - [ ] 일관된 간격 시스템 설정 (spacing scale)
 - [ ] 타이포그래피 스케일 정의
@@ -954,11 +954,18 @@ colors: {
   - 현재는 라이트 모드만 사용 (html에 dark 클래스 없음)
   - 일부 컴포넌트에서 `dark:` 클래스 사용 중 (Sidebar.vue) - 다크모드 활성화 시 자동 적용
   - 다크모드 토글 기능은 구현되어 있으나 현재 비활성화 상태
-- 다음 작업: **전역 스타일 정리 (style.css)**
+- **전역 스타일 정리 (style.css) 완료** ✅
+  - 불필요한 스타일 제거: :root의 기본 색상 설정 정리 (라이트 모드 기본값으로 통일)
+  - body의 불필요한 레이아웃 스타일 제거 (display: flex, place-items: center)
+  - @media (prefers-color-scheme: light) 섹션 제거 (불필요한 스타일 오버라이드 제거)
+  - 구조적 정리: 섹션별 주석 추가 (Tailwind directives → CSS 변수 → Base layer → Utilities layer → 외부 라이브러리)
+  - Vuetify 호환성 주석 명확화 및 유틸리티 클래스 그룹화
+  - 일관된 스타일 구조 적용 (계층적 구조 및 명확한 주석)
+- 다음 작업: **반응형 breakpoint 커스터마이징 (tailwind.config.js)**
 - 필요 정보:
-  - style.css 정리 및 불필요한 스타일 제거
-  - Vuetify 관련 스타일 주석 처리 또는 제거
-  - 일관된 스타일 구조 정리
+  - tailwind.config.js의 breakpoint 설정 확인 및 필요 시 커스터마이징
+  - 현재 이미 명시적으로 정의되어 있음 (sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px)
+  - 프로젝트 요구사항에 맞게 조정 필요한지 확인
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고

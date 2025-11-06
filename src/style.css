@@ -2,8 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Vuetify styles are imported in vuetify.ts */
-html, body {
+/* ============================================
+   전역 스타일 설정
+   ============================================ */
+
+/* 기본 HTML/Body 스타일 */
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -15,20 +20,26 @@ html, body {
   width: 100%;
 }
 
+/* ============================================
+   CSS 변수 정의 (shadcn-vue + 커스텀)
+   ============================================ */
+
 :root {
+  /* 폰트 설정 */
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  /* 기본 설정 */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Border Radius */
   --radius: 0.625rem;
+
+  /* 색상 변수 (라이트 모드 기본값) */
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
@@ -63,28 +74,7 @@ html, body {
   --sidebar-ring: oklch(0.704 0.04 256.788);
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-
+/* 다크모드 색상 변수 (현재 비활성화 상태) */
 .dark {
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
@@ -120,19 +110,28 @@ body {
   --sidebar-ring: oklch(0.446 0.043 257.281);
 }
 
+/* ============================================
+   Tailwind Base Layer
+   ============================================ */
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
-/* Vuetify 스타일 유틸리티 클래스 → Tailwind CSS 변환 */
-/* Typography 유틸리티 클래스 */
+/* ============================================
+   Tailwind Utilities Layer
+   ============================================ */
+
 @layer utilities {
-  /* Heading 클래스 */
+  /* ========== Typography 유틸리티 클래스 ========== */
+  /* Vuetify 호환성을 위한 Typography 클래스 */
+
   .text-h4 {
     @apply text-2xl font-semibold;
   }
@@ -145,7 +144,6 @@ body {
     @apply text-lg font-semibold;
   }
 
-  /* Body 텍스트 클래스 */
   .text-body-1 {
     @apply text-base;
   }
@@ -154,7 +152,6 @@ body {
     @apply text-sm;
   }
 
-  /* Subtitle 클래스 */
   .text-subtitle-1 {
     @apply text-lg;
   }
@@ -163,13 +160,13 @@ body {
     @apply text-base;
   }
 
-  /* Caption 클래스 */
   .text-caption {
     @apply text-xs;
   }
 
-  /* Flex 유틸리티 클래스 (Vuetify 호환성) - Tailwind 기본 클래스 사용 */
-  /* d-flex, align-center, justify-center 등은 Tailwind에 이미 존재하므로 별도 정의 불필요 */
+  /* ========== Flex 유틸리티 클래스 ========== */
+  /* Vuetify 호환성을 위한 Flex 클래스 */
+
   .d-flex {
     display: flex;
   }
@@ -178,8 +175,9 @@ body {
     align-items: center;
   }
 
-  /* Spacing 유틸리티 클래스 (Vuetify 호환성) - pa-*만 정의 */
-  /* px-*, py-*, mx-*, my-* 등은 Tailwind에 이미 존재하므로 별도 정의 불필요 */
+  /* ========== Spacing 유틸리티 클래스 ========== */
+  /* Vuetify 호환성을 위한 Spacing 클래스 */
+
   /* pa-* = padding all */
   .pa-0 { padding: 0; }
   .pa-1 { padding: 0.25rem; }
@@ -201,9 +199,8 @@ body {
   .ma-8 { margin: 2rem; }
   .ma-auto { margin: auto; }
 
-  /* 공통 애니메이션 유틸리티 클래스 */
-  
-  /* 기본 전환 효과 */
+  /* ========== 전환 효과 유틸리티 클래스 ========== */
+
   .transition-smooth {
     transition-property: all;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -228,12 +225,14 @@ body {
     transition-duration: 500ms;
   }
 
-  /* 호버 효과 전환 */
   .transition-hover {
     transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 200ms;
   }
+
+  /* ========== Vue Transition 클래스 ========== */
+  /* Vuetify의 v-slide-y-transition 등을 대체 */
 
   /* 페이드 효과 */
   .fade-enter-active,
@@ -325,7 +324,8 @@ body {
     transform: scale(0.95);
   }
 
-  /* 부드러운 확대 효과 (호버용) */
+  /* ========== 호버 애니메이션 ========== */
+
   .hover-scale {
     transition: transform 200ms ease-out;
   }
@@ -334,7 +334,6 @@ body {
     transform: scale(1.05);
   }
 
-  /* 부드러운 그림자 효과 (호버용) */
   .hover-shadow {
     transition: box-shadow 200ms ease-out;
   }
@@ -344,8 +343,12 @@ body {
   }
 }
 
+/* ============================================
+   외부 라이브러리 스타일 보정
+   ============================================ */
+
 /* vue-sonner toast 스타일 보장 */
 [data-sonner-toaster] {
   position: fixed !important;
   z-index: 9999 !important;
-} 
+}
