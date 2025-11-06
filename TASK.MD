@@ -714,7 +714,7 @@ colors: {
   - [x] 카드 호버 효과
 
 ### 8. 기타 뷰 마이그레이션
-- [ ] About.vue
+- [x] About.vue
 
 ### 9. 공통 컴포넌트 및 유틸리티 마이그레이션
 - [ ] useSnackbar composable 업데이트 (v-snackbar → Toast/Sonner)
@@ -887,10 +887,20 @@ colors: {
   - 로딩 상태 표시 (애니메이션 Progress 바)
   - 카드에 아이콘 추가 (MessageSquare, Calendar)
   - MDI 아이콘을 Lucide 아이콘으로 마이그레이션 (Plus, MessageSquare, Calendar)
-- 다음 작업: **About.vue**
+- **About.vue 완료** ✅
+  - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체 (Card, Button, Badge, Separator)
+  - Login.vue 스타일 참고하여 중앙 정렬 카드 디자인 적용
+  - 심플하고 현대적인 디자인 (흰색 배경, 파란색 계열 컴포넌트)
+  - 프로젝트 소개, 주요 기능, 기술 스택 섹션 추가
+  - 아이콘 기반 기능 카드 그리드 (FileEdit, BarChart3, Users, QrCode)
+  - 기술 스택 Badge 표시
+  - 메인으로 돌아가기 버튼 추가
+  - MDI 아이콘을 Lucide 아이콘으로 마이그레이션 (Info, FileEdit, BarChart3, Users, QrCode, ArrowLeft)
+- 다음 작업: **useSnackbar composable 업데이트**
 - 필요 정보:
-  - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체
-  - 깔끔한 UI 스타일 적용 (흰색 배경, 파란색 계열 컴포넌트)
+  - v-snackbar → Toast/Sonner로 변경
+  - 기존 useSnackbar composable 확인 및 업데이트
+  - Toast/Sonner 설정 확인
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
