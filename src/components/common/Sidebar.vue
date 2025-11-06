@@ -1,8 +1,8 @@
 <template>
   <!-- 데스크톱 고정 사이드바 -->
-  <aside class="fixed left-0 top-0 h-screen w-[280px] bg-slate-100 dark:bg-slate-900 border-r border-border flex flex-col z-40">
+  <aside class="fixed left-0 top-0 h-screen w-[280px] bg-white border-r border-gray-200 flex flex-col z-40 shadow-md">
     <!-- 프로필 섹션 -->
-    <div class="p-4 border-b border-border">
+    <div class="p-4 border-b border-gray-200">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3 flex-1 min-h-[72px]">
           <Avatar class="h-12 w-12">
@@ -10,8 +10,8 @@
             <AvatarFallback>AK</AvatarFallback>
           </Avatar>
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-medium truncate">{{ userName }}</p>
-            <p class="text-xs text-muted-foreground truncate">{{ userEmail }}</p>
+            <p class="text-sm font-medium text-gray-800 truncate">{{ userName }}</p>
+            <p class="text-xs text-gray-500 truncate">{{ userEmail }}</p>
           </div>
         </div>
         
@@ -29,11 +29,11 @@
               </Badge>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" class="w-[300px] sm:w-[400px]">
-            <div class="flex items-center justify-between px-2 py-2 bg-slate-50 dark:bg-slate-800 rounded-t-md">
-              <h3 class="text-lg font-semibold">알림</h3>
+          <DropdownMenuContent align="end" class="w-[300px] sm:w-[400px] bg-white border border-gray-200 shadow-md">
+            <div class="flex items-center justify-between px-2 py-2 bg-gray-50 rounded-t-md">
+              <h3 class="text-lg font-semibold text-gray-800">알림</h3>
               <div class="flex items-center gap-2">
-                <span class="text-xs text-muted-foreground hidden sm:inline">최신 30일 간 알림이 표시됩니다</span>
+                <span class="text-xs text-gray-500 hidden sm:inline">최신 30일 간 알림이 표시됩니다</span>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -51,7 +51,7 @@
               <Button
                 variant="ghost"
                 size="sm"
-                class="text-xs text-primary h-7 px-2"
+                class="text-xs text-primary-400 hover:text-primary-500 h-7 px-2"
                 @click="markAllAsRead"
               >
                 모두 읽음 처리
@@ -59,25 +59,25 @@
             </div>
             
             <!-- 알림 목록 -->
-            <div class="max-h-[400px] overflow-y-auto">
-              <div v-if="paginatedNotifications.length === 0" class="p-4 text-center text-sm text-muted-foreground">
+            <div class="max-h-[400px] overflow-y-auto bg-white">
+              <div v-if="paginatedNotifications.length === 0" class="p-4 text-center text-sm text-gray-500">
                 새로운 알림이 없습니다
               </div>
               <div
                 v-for="notification in paginatedNotifications"
                 :key="notification.id"
-                class="p-3 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors border-b border-border last:border-0"
+                class="p-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-200 last:border-0"
                 @click="handleNotificationClick(notification)"
               >
                 <div class="flex items-start gap-3">
-                  <Avatar :class="`h-9 w-9 bg-${notification.color === 'primary' ? 'primary' : 'muted'}`">
+                  <Avatar :class="`h-9 w-9 ${notification.color === 'primary' ? 'bg-primary-400' : 'bg-gray-300'}`">
                     <Bell class="h-5 w-5 text-white" />
                   </Avatar>
                   <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium mb-1 line-clamp-2 whitespace-pre-line">
+                    <p class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 whitespace-pre-line">
                       {{ notification.title }}
                     </p>
-                    <p class="text-xs text-muted-foreground">
+                    <p class="text-xs text-gray-500">
                       🕒 {{ notification.time }} • {{ notification.isRead ? '읽음' : '읽지 않음' }}
                     </p>
                   </div>
@@ -86,25 +86,25 @@
             </div>
             
             <!-- 페이지네이션 -->
-            <div v-if="notifications.length > 0" class="flex items-center justify-center gap-2 p-2 border-t border-border">
+            <div v-if="notifications.length > 0" class="flex items-center justify-center gap-2 p-2 border-t border-gray-200 bg-white">
               <Button
                 variant="ghost"
                 size="icon"
-                class="h-8 w-8"
+                class="h-8 w-8 hover:bg-gray-100"
                 :disabled="currentPage === 1"
                 @click="currentPage--"
               >
-                <ChevronLeft class="h-4 w-4" />
+                <ChevronLeft class="h-4 w-4 text-gray-600" />
               </Button>
-              <span class="text-xs text-muted-foreground">{{ currentPage }} / {{ totalPages }}</span>
+              <span class="text-xs text-gray-600">{{ currentPage }} / {{ totalPages }}</span>
               <Button
                 variant="ghost"
                 size="icon"
-                class="h-8 w-8"
+                class="h-8 w-8 hover:bg-gray-100"
                 :disabled="currentPage === totalPages"
                 @click="currentPage++"
               >
-                <ChevronRight class="h-4 w-4" />
+                <ChevronRight class="h-4 w-4 text-gray-600" />
               </Button>
             </div>
           </DropdownMenuContent>
@@ -119,8 +119,8 @@
           to="/"
           class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors"
           :class="$route.path === '/' 
-            ? 'bg-primary text-primary-foreground' 
-            : 'text-foreground hover:bg-slate-200 dark:hover:bg-slate-800'"
+            ? 'bg-primary-400 text-white' 
+            : 'text-gray-800 hover:bg-gray-50'"
         >
           <LayoutDashboard class="h-5 w-5" />
           대시보드
@@ -130,25 +130,25 @@
       <Separator class="my-2" />
 
       <div class="px-2">
-        <h3 class="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase">설문 관리</h3>
+        <h3 class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">설문 관리</h3>
         <div class="space-y-1">
           <router-link
             to="/create-survey"
-            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-slate-800"
+            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors text-gray-800 hover:bg-gray-50"
           >
             <Plus class="h-5 w-5" />
             새 설문 만들기
           </router-link>
           <a
             href="#"
-            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-slate-800 text-muted-foreground"
+            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50"
           >
             <BarChart3 class="h-5 w-5" />
             내 설문
           </a>
           <a
             href="#"
-            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-slate-800 text-muted-foreground"
+            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50"
           >
             <Vote class="h-5 w-5" />
             참여 가능한 설문
@@ -159,18 +159,18 @@
       <Separator class="my-2" />
 
       <div class="px-2">
-        <h3 class="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase">분석</h3>
+        <h3 class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">분석</h3>
         <div class="space-y-1">
           <a
             href="#"
-            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-slate-800 text-muted-foreground"
+            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50"
           >
             <BarChart3 class="h-5 w-5" />
             설문 결과
           </a>
           <a
             href="#"
-            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-slate-800 text-muted-foreground"
+            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50"
           >
             <TrendingUp class="h-5 w-5" />
             인사이트
@@ -183,7 +183,7 @@
       <div class="px-2">
         <button
           @click="handleLogout"
-          class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-slate-800 text-destructive w-full"
+          class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors text-red-500 hover:bg-red-50 hover:text-red-600 w-full"
         >
           <LogOut class="h-5 w-5" />
           로그아웃
@@ -192,8 +192,8 @@
     </nav>
 
     <!-- Copyright -->
-    <div class="p-4 border-t border-border">
-      <p class="text-xs text-muted-foreground text-center">
+    <div class="p-4 border-t border-gray-200">
+      <p class="text-xs text-gray-500 text-center">
         © 2024 Andrew Kwak. All rights reserved.
       </p>
     </div>
