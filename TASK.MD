@@ -720,7 +720,7 @@ colors: {
 - [x] useSnackbar composable 업데이트 (v-snackbar → Toast/Sonner)
 - [x] 스타일 유틸리티 클래스 변환
 - [x] 반응형 레이아웃 클래스 변환
-- [ ] 반응형 헬퍼 유틸리티 함수 생성 (useBreakpoint, useResponsive 등)
+- [x] 반응형 헬퍼 유틸리티 함수 생성 (useBreakpoint, useResponsive 등)
 - [ ] 공통 애니메이션 유틸리티 구현
 
 ### 10. 테마 및 스타일링 설정
@@ -920,11 +920,19 @@ colors: {
   - Breakpoint 매핑: Vuetify sm(600px) → Tailwind sm(640px), md(960px) → md(768px), lg(1264px) → lg(1024px)
   - 모든 레이아웃이 Tailwind Grid/Flexbox로 변환 완료
   - Vuetify 반응형 레이아웃 클래스(v-row, v-col) 더 이상 사용되지 않음
-- 다음 작업: **반응형 헬퍼 유틸리티 함수 생성**
+- **반응형 헬퍼 유틸리티 함수 생성 완료** ✅
+  - `useResponsive` composable 생성 (src/composables/useResponsive.ts)
+  - `useBreakpoint` composable 생성 (특정 breakpoint만 필요한 경우)
+  - VueUse의 `useBreakpoints` 활용
+  - 제공 기능: isMobile, isTablet, isDesktop, breakpoint, isSmAndUp, isMdAndUp 등
+  - Tailwind CSS breakpoint와 일치하도록 설정 (sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px)
+  - JSDoc 주석 및 사용 예시 포함
+  - 기존 코드에서 `window.innerWidth` 직접 사용하는 부분을 이 composable로 대체 가능
+- 다음 작업: **공통 애니메이션 유틸리티 구현**
 - 필요 정보:
-  - useBreakpoint, useResponsive 등의 composable 함수 생성
-  - VueUse의 useBreakpoints 활용 가능
-  - 기존 코드에서 반응형 감지 로직 확인
+  - 공통 애니메이션 유틸리티 클래스 또는 composable 생성
+  - 전환 효과, 페이드 인/아웃 등 재사용 가능한 애니메이션
+  - Tailwind CSS transition 클래스 활용
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
