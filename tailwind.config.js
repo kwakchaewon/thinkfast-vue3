@@ -111,6 +111,29 @@ export default {
           foreground: 'hsl(var(--card-foreground))',
         },
       },
+      // Border-radius 시스템
+      // 디자인 원칙: 일관된 둥근 모서리로 현대적이고 부드러운 디자인
+      // 
+      // 커스텀 border-radius 값:
+      // - rounded-sm: calc(var(--radius) - 4px) - 작은 요소 (버튼, 입력 필드)
+      // - rounded-md: calc(var(--radius) - 2px) - 중간 요소 (카드, 모달)
+      // - rounded-lg: 8px - 큰 요소 (컨테이너, 주요 카드)
+      // 
+      // Tailwind 기본 border-radius 클래스:
+      // - rounded-none: 0px - 모서리 없음
+      // - rounded-sm: 0.125rem (2px) - 매우 작은 모서리
+      // - rounded: 0.25rem (4px) - 기본 모서리
+      // - rounded-md: 0.375rem (6px) - 중간 모서리
+      // - rounded-lg: 0.5rem (8px) - 큰 모서리
+      // - rounded-xl: 0.75rem (12px) - 매우 큰 모서리
+      // - rounded-2xl: 1rem (16px) - 극대형 모서리
+      // - rounded-3xl: 1.5rem (24px) - 초대형 모서리
+      // - rounded-full: 9999px - 완전한 원형
+      // 
+      // 사용 예시:
+      // - 카드: <div class="rounded-lg">...</div>
+      // - 버튼: <button class="rounded-md">...</button>
+      // - 입력 필드: <input class="rounded-md">...</input>
       borderRadius: {
         lg: '8px',
         md: 'calc(var(--radius) - 2px)',
@@ -155,6 +178,28 @@ export default {
         'h6': ['1.125rem', { lineHeight: '1.5', fontWeight: '600' }],
       },
       // 그림자 시스템
+      // 디자인 원칙: 부드러운 그림자로 깊이감 표현
+      // 
+      // 커스텀 그림자:
+      // - shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)
+      //   → 카드 기본 그림자 (미묘한 깊이감)
+      // - shadow-card-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)
+      //   → 카드 호버 시 그림자 (상호작용 피드백)
+      // 
+      // Tailwind 기본 그림자 클래스:
+      // - shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05) - 작은 그림자 (버튼, 입력 필드)
+      // - shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) - 기본 그림자
+      // - shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) - 중간 그림자 (카드)
+      // - shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) - 큰 그림자
+      // - shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) - 매우 큰 그림자
+      // - shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25) - 극대형 그림자
+      // - shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06) - 내부 그림자
+      // - shadow-none: none - 그림자 없음
+      // 
+      // 사용 예시:
+      // - 카드: <div class="shadow-md">...</div>
+      // - 카드 호버: <div class="shadow-card hover:shadow-card-hover">...</div>
+      // - 버튼: <button class="shadow-sm">...</button>
       boxShadow: {
         'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
         'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',

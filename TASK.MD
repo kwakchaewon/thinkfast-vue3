@@ -731,7 +731,7 @@ colors: {
 - [x] 반응형 breakpoint 커스터마이징 (tailwind.config.js)
 - [x] 일관된 간격 시스템 설정 (spacing scale)
 - [x] 타이포그래피 스케일 정의
-- [ ] 그림자 및 border-radius 시스템 설정
+- [x] 그림자 및 border-radius 시스템 설정
 - [ ] 접근성 개선 (색상 대비 비율 확인)
 
 ### 11. Vite 설정 업데이트
@@ -988,13 +988,25 @@ colors: {
   - 사용 예시 추가
   - 디자인 원칙 반영: "명확한 시각적 계층으로 정보 전달"
   - 현재 코드베이스에서 Tailwind 타이포그래피 클래스 사용 중 (text-sm, text-base, text-xl, text-3xl 등) 확인
-- 다음 작업: **그림자 및 border-radius 시스템 설정**
+- **그림자 및 border-radius 시스템 설정 완료** ✅
+  - 그림자 시스템 문서화:
+    - 커스텀 그림자: shadow-card (카드 기본), shadow-card-hover (카드 호버)
+    - Tailwind 기본 그림자 클래스 (shadow-sm ~ shadow-2xl) 문서화
+    - 각 그림자의 용도 및 사용 예시 추가
+    - 디자인 원칙 반영: "부드러운 그림자로 깊이감 표현"
+  - Border-radius 시스템 문서화:
+    - 커스텀 border-radius: rounded-sm, rounded-md, rounded-lg
+    - Tailwind 기본 border-radius 클래스 (rounded-none ~ rounded-full) 문서화
+    - 각 border-radius의 용도 및 사용 예시 추가
+    - 디자인 원칙 반영: "일관된 둥근 모서리로 현대적이고 부드러운 디자인"
+  - 현재 코드베이스에서 그림자 및 border-radius 클래스 사용 중 (shadow-md, shadow-sm, shadow-lg, rounded-lg 등) 확인
+- 다음 작업: **접근성 개선 (색상 대비 비율 확인)**
 - 필요 정보:
-  - 그림자 시스템 확인 및 필요 시 커스터마이징
-  - border-radius 시스템 확인 및 필요 시 커스터마이징
-  - 현재 boxShadow에 card, card-hover 정의되어 있음
-  - 현재 borderRadius에 lg, md, sm 정의되어 있음
-  - 프로젝트 요구사항에 맞는 그림자 및 border-radius 시스템 확인 필요
+  - WCAG 2.1 AA 기준 준수 (색상 대비 비율 확인)
+  - 주요 색상 조합의 대비 비율 검증
+  - 텍스트와 배경 간 대비 비율 확인
+  - 에러 메시지, 링크, 버튼 등의 대비 비율 확인
+  - 필요 시 색상 조정
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
