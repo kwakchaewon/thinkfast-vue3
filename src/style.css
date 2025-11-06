@@ -129,6 +129,79 @@ body {
   }
 }
 
+/* Vuetify 스타일 유틸리티 클래스 → Tailwind CSS 변환 */
+/* Typography 유틸리티 클래스 */
+@layer utilities {
+  /* Heading 클래스 */
+  .text-h4 {
+    @apply text-2xl font-semibold;
+  }
+
+  .text-h5 {
+    @apply text-xl font-semibold;
+  }
+
+  .text-h6 {
+    @apply text-lg font-semibold;
+  }
+
+  /* Body 텍스트 클래스 */
+  .text-body-1 {
+    @apply text-base;
+  }
+
+  .text-body-2 {
+    @apply text-sm;
+  }
+
+  /* Subtitle 클래스 */
+  .text-subtitle-1 {
+    @apply text-lg;
+  }
+
+  .text-subtitle-2 {
+    @apply text-base;
+  }
+
+  /* Caption 클래스 */
+  .text-caption {
+    @apply text-xs;
+  }
+
+  /* Flex 유틸리티 클래스 (Vuetify 호환성) - Tailwind 기본 클래스 사용 */
+  /* d-flex, align-center, justify-center 등은 Tailwind에 이미 존재하므로 별도 정의 불필요 */
+  .d-flex {
+    display: flex;
+  }
+
+  .align-center {
+    align-items: center;
+  }
+
+  /* Spacing 유틸리티 클래스 (Vuetify 호환성) - pa-*만 정의 */
+  /* px-*, py-*, mx-*, my-* 등은 Tailwind에 이미 존재하므로 별도 정의 불필요 */
+  /* pa-* = padding all */
+  .pa-0 { padding: 0; }
+  .pa-1 { padding: 0.25rem; }
+  .pa-2 { padding: 0.5rem; }
+  .pa-3 { padding: 0.75rem; }
+  .pa-4 { padding: 1rem; }
+  .pa-5 { padding: 1.25rem; }
+  .pa-6 { padding: 1.5rem; }
+  .pa-8 { padding: 2rem; }
+
+  /* ma-* = margin all */
+  .ma-0 { margin: 0; }
+  .ma-1 { margin: 0.25rem; }
+  .ma-2 { margin: 0.5rem; }
+  .ma-3 { margin: 0.75rem; }
+  .ma-4 { margin: 1rem; }
+  .ma-5 { margin: 1.25rem; }
+  .ma-6 { margin: 1.5rem; }
+  .ma-8 { margin: 2rem; }
+  .ma-auto { margin: auto; }
+}
+
 /* vue-sonner toast 스타일 보장 */
 [data-sonner-toaster] {
   position: fixed !important;

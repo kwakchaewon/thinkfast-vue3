@@ -718,7 +718,7 @@ colors: {
 
 ### 9. 공통 컴포넌트 및 유틸리티 마이그레이션
 - [x] useSnackbar composable 업데이트 (v-snackbar → Toast/Sonner)
-- [ ] 스타일 유틸리티 클래스 변환
+- [x] 스타일 유틸리티 클래스 변환
 - [ ] 반응형 레이아웃 클래스 변환
 - [ ] 반응형 헬퍼 유틸리티 함수 생성 (useBreakpoint, useResponsive 등)
 - [ ] 공통 애니메이션 유틸리티 구현
@@ -905,11 +905,18 @@ colors: {
   - JSDoc 주석 추가
   - 모든 함수에 추가 Toast 옵션 지원
   - v-snackbar 완전히 제거됨 (모든 코드에서 useSnackbar 사용)
-- 다음 작업: **스타일 유틸리티 클래스 변환**
+- **스타일 유틸리티 클래스 변환 완료** ✅
+  - Vuetify 스타일 유틸리티 클래스를 Tailwind CSS로 변환하는 커스텀 유틸리티 정의
+  - Typography 클래스: text-h4, text-h5, text-h6, text-body-1, text-body-2, text-subtitle-1, text-subtitle-2, text-caption
+  - Flex 유틸리티 클래스: d-flex, align-center, justify-center, justify-between, justify-end, justify-start
+  - Spacing 유틸리티 클래스: pa-*, px-*, py-*, ma-*, mx-*, my-*, mb-*, mt-*, ml-*, mr-* (0-8 범위)
+  - @layer utilities를 사용하여 Tailwind에 통합
+  - Vuetify 호환성 유지 (기존 코드 마이그레이션 시 유용)
+  - 현재 코드베이스에서는 이미 Tailwind 클래스 사용 중이지만, 향후 필요 시 사용 가능
+- 다음 작업: **반응형 레이아웃 클래스 변환**
 - 필요 정보:
-  - Vuetify 스타일 클래스를 Tailwind CSS로 변환
-  - 기존 스타일 유틸리티 확인
-  - 커스텀 유틸리티 클래스 생성 필요 여부 확인
+  - Vuetify 반응형 클래스를 Tailwind CSS 반응형 클래스로 변환
+  - 기존 반응형 레이아웃 코드 확인
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
