@@ -730,7 +730,7 @@ colors: {
 - [x] 전역 스타일 정리 (style.css)
 - [x] 반응형 breakpoint 커스터마이징 (tailwind.config.js)
 - [x] 일관된 간격 시스템 설정 (spacing scale)
-- [ ] 타이포그래피 스케일 정의
+- [x] 타이포그래피 스케일 정의
 - [ ] 그림자 및 border-radius 시스템 설정
 - [ ] 접근성 개선 (색상 대비 비율 확인)
 
@@ -975,11 +975,26 @@ colors: {
   - 사용 예시 추가 (padding, margin, gap)
   - 커스텀 spacing 추가 방법 명시
   - 현재 코드베이스에서 Tailwind spacing 클래스 사용 중 (p-4, m-2, gap-4 등) 확인
-- 다음 작업: **타이포그래피 스케일 정의**
+- **타이포그래피 스케일 정의 완료** ✅
+  - 커스텀 헤딩 스케일 (h1-h6) 정의 및 문서화
+    - text-h1: 2.5rem (40px) - 주요 페이지 제목
+    - text-h2: 2rem (32px) - 섹션 제목
+    - text-h3: 1.75rem (28px) - 하위 섹션
+    - text-h4: 1.5rem (24px) - 카드 제목
+    - text-h5: 1.25rem (20px) - 소제목
+    - text-h6: 1.125rem (18px) - 최소 헤딩
+  - Tailwind 기본 타이포그래피 클래스 (text-xs ~ text-6xl) 문서화
+  - 각 스케일의 용도 및 lineHeight, fontWeight 명시
+  - 사용 예시 추가
+  - 디자인 원칙 반영: "명확한 시각적 계층으로 정보 전달"
+  - 현재 코드베이스에서 Tailwind 타이포그래피 클래스 사용 중 (text-sm, text-base, text-xl, text-3xl 등) 확인
+- 다음 작업: **그림자 및 border-radius 시스템 설정**
 - 필요 정보:
-  - 타이포그래피 스케일 확인 및 필요 시 커스터마이징
-  - 현재 fontSize에 h1-h6 정의되어 있음
-  - 프로젝트 요구사항에 맞는 타이포그래피 시스템 확인 필요
+  - 그림자 시스템 확인 및 필요 시 커스터마이징
+  - border-radius 시스템 확인 및 필요 시 커스터마이징
+  - 현재 boxShadow에 card, card-hover 정의되어 있음
+  - 현재 borderRadius에 lg, md, sm 정의되어 있음
+  - 프로젝트 요구사항에 맞는 그림자 및 border-radius 시스템 확인 필요
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고

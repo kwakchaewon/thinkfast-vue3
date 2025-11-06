@@ -120,6 +120,32 @@ export default {
         sans: ['Inter', 'system-ui', 'Avenir', 'Helvetica', 'Arial', 'sans-serif'],
       },
       // 타이포그래피 스케일
+      // 디자인 원칙: 명확한 시각적 계층으로 정보 전달
+      // 
+      // 커스텀 헤딩 스케일 (h1-h6):
+      // - text-h1: 2.5rem (40px) - lineHeight: 1.2, fontWeight: 700 (주요 페이지 제목)
+      // - text-h2: 2rem (32px) - lineHeight: 1.3, fontWeight: 600 (섹션 제목)
+      // - text-h3: 1.75rem (28px) - lineHeight: 1.4, fontWeight: 600 (하위 섹션)
+      // - text-h4: 1.5rem (24px) - lineHeight: 1.4, fontWeight: 600 (카드 제목)
+      // - text-h5: 1.25rem (20px) - lineHeight: 1.5, fontWeight: 600 (소제목)
+      // - text-h6: 1.125rem (18px) - lineHeight: 1.5, fontWeight: 600 (최소 헤딩)
+      // 
+      // Tailwind 기본 타이포그래피 클래스 (text-xs ~ text-6xl):
+      // - text-xs: 0.75rem (12px) - 작은 텍스트, 캡션
+      // - text-sm: 0.875rem (14px) - 보조 텍스트
+      // - text-base: 1rem (16px) - 기본 본문 텍스트
+      // - text-lg: 1.125rem (18px) - 강조 본문
+      // - text-xl: 1.25rem (20px) - 큰 본문
+      // - text-2xl: 1.5rem (24px) - 작은 헤딩
+      // - text-3xl: 1.875rem (30px) - 중간 헤딩
+      // - text-4xl: 2.25rem (36px) - 큰 헤딩
+      // - text-5xl: 3rem (48px) - 매우 큰 헤딩
+      // - text-6xl: 3.75rem (60px) - 극대형 헤딩
+      // 
+      // 사용 예시:
+      // - 헤딩: <h1 class="text-h1">제목</h1>
+      // - 본문: <p class="text-base">본문 텍스트</p>
+      // - 캡션: <span class="text-sm text-gray-500">설명</span>
       fontSize: {
         'h1': ['2.5rem', { lineHeight: '1.2', fontWeight: '700' }],
         'h2': ['2rem', { lineHeight: '1.3', fontWeight: '600' }],
