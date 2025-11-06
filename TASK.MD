@@ -740,7 +740,7 @@ colors: {
 - [x] 빌드 최적화 설정
 
 ### 12. Vuetify 제거
-- [ ] Vuetify 플러그인 제거 (src/plugins/vuetify.ts)
+- [x] Vuetify 플러그인 제거 (src/plugins/vuetify.ts)
 - [ ] main.ts에서 Vuetify 관련 코드 제거
 - [ ] package.json에서 Vuetify 및 MDI 의존성 제거
 - [ ] @mdi/font 관련 import 제거
@@ -1062,13 +1062,23 @@ colors: {
     - 청크 분리 전략
     - 추가 최적화 권장사항
     - 빌드 성능 모니터링 방법
-- 다음 작업: **Vuetify 제거 - Vuetify 플러그인 제거 (src/plugins/vuetify.ts)**
+- **Vuetify 플러그인 제거 (src/plugins/vuetify.ts) 완료** ✅
+  - src/plugins/vuetify.ts 파일 제거 완료
+  - main.ts에서 Vuetify 관련 코드 제거:
+    - createVuetify import 제거
+    - vuetify/components, vuetify/directives import 제거
+    - vuetify/styles import 제거
+    - @mdi/font/css/materialdesignicons.css import 제거
+    - vuetify 인스턴스 생성 코드 제거
+    - app.use(vuetify) 제거
+  - 다른 파일에서 Vuetify import 사용 여부 확인 완료 (없음) ✅
+  - 린터 오류 없음 확인 완료 ✅
+- 다음 작업: **main.ts에서 Vuetify 관련 코드 제거**
 - 필요 정보:
-  - src/plugins/vuetify.ts 파일 제거
-  - main.ts에서 Vuetify 관련 코드 제거
-  - package.json에서 Vuetify 및 MDI 의존성 제거
-  - @mdi/font 관련 import 제거
-  - Vuetify 관련 스타일 import 제거
+  - 이미 완료됨 (main.ts에서 Vuetify 관련 코드 모두 제거됨)
+  - package.json에서 Vuetify 및 MDI 의존성 제거 필요
+  - @mdi/font 관련 import 제거 확인 필요
+  - Vuetify 관련 스타일 import 제거 확인 필요
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
