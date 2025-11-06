@@ -137,13 +137,17 @@ export default {
       spacing: {
         // 기본값 사용 (4px 단위)
       },
-      // 반응형 breakpoint (Tailwind 기본값과 동일하지만 명시적으로 정의)
+      // 반응형 breakpoint 설정
+      // 프로젝트 디자인 원칙에 따라 설정:
+      // - Mobile: < 640px (sm 미만)
+      // - Tablet: 640px ~ 1024px (sm ~ lg 미만)
+      // - Desktop: >= 1024px (lg 이상)
       screens: {
-        'sm': '640px',   // Small devices
-        'md': '768px',   // Medium devices
-        'lg': '1024px',  // Large devices
-        'xl': '1280px',  // Extra large devices
-        '2xl': '1536px', // 2X Extra large devices
+        'sm': '640px',   // Small devices (landscape phones) - 모바일에서 태블릿으로 전환
+        'md': '768px',   // Medium devices (tablets) - 태블릿 표준 크기
+        'lg': '1024px',  // Large devices (desktops) - 태블릿에서 데스크톱으로 전환
+        'xl': '1280px',  // Extra large devices (large desktops) - 큰 데스크톱
+        '2xl': '1536px', // 2X Extra large devices (very large desktops) - 매우 큰 데스크톱
       },
     },
   },
