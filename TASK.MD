@@ -744,7 +744,7 @@ colors: {
 - [x] main.ts에서 Vuetify 관련 코드 제거
 - [x] package.json에서 Vuetify 및 MDI 의존성 제거
 - [x] @mdi/font 관련 import 제거
-- [ ] Vuetify 관련 스타일 import 제거
+- [x] Vuetify 관련 스타일 import 제거
 
 ### 13. 테스트 및 검증
 - [ ] 모든 페이지 레이아웃 검증
@@ -1089,11 +1089,18 @@ colors: {
   - @mdi/font 관련 import 없음 확인 (이미 이전 작업에서 제거됨) ✅
   - materialdesignicons.css 관련 import 없음 확인 ✅
   - src/components/common/Sidebar.vue에서 mdi-bell 문자열은 데이터 속성으로만 사용 (import 아님) ✅
-- 다음 작업: **Vuetify 관련 스타일 import 제거**
+- **Vuetify 관련 스타일 import 제거 완료** ✅
+  - 모든 소스 파일에서 vuetify/styles 관련 import 검색 완료
+  - vuetify/styles 관련 import 없음 확인 (이미 이전 작업에서 제거됨) ✅
+  - style.css에서 Vuetify 관련 실제 스타일 import 없음 확인 ✅
+  - style.css에 "Vuetify" 주석은 호환성 유틸리티 클래스 설명용 (유지 필요) ✅
+  - 다른 파일에서 Vuetify 관련 스타일 import 없음 확인 ✅
+  - Vuetify 스타일 제거 완료 ✅
+- 다음 작업: **테스트 및 검증 - 모든 페이지 레이아웃 검증**
 - 필요 정보:
-  - vuetify/styles 관련 import 확인 및 제거
-  - style.css에서 Vuetify 관련 스타일 확인
-  - 다른 파일에서 Vuetify 관련 스타일 import 확인
+  - 모든 페이지 레이아웃이 정상적으로 표시되는지 확인
+  - shadcn-vue 컴포넌트가 제대로 작동하는지 확인
+  - 스타일 누락이나 깨진 레이아웃 확인
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
