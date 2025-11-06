@@ -1,68 +1,78 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-400 p-4">
-    <Card class="w-full max-w-md shadow-xl">
-      <CardHeader class="bg-primary text-primary-foreground rounded-t-lg">
-        <CardTitle class="text-2xl text-center">로그인</CardTitle>
+  <div class="min-h-screen flex items-center justify-center bg-white p-4">
+    <Card class="w-full max-w-md shadow-md border border-gray-200">
+      <CardHeader class="text-center py-8 px-6">
+        <CardTitle class="text-3xl font-bold text-gray-800 mb-2">로그인</CardTitle>
+        <p class="text-sm text-gray-500">ThinkFast에 오신 것을 환영합니다</p>
       </CardHeader>
-      <CardContent class="p-6">
-        <form @submit.prevent="handleLogin" class="space-y-4">
+
+      <CardContent class="px-6 pb-8">
+        <form @submit.prevent="handleLogin" class="space-y-5">
           <FormField v-slot="{ componentField, errorMessage }" name="email">
             <FormItem>
-              <FormLabel>이메일</FormLabel>
               <FormControl>
                 <div class="relative">
-                  <Mail class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Mail class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <Input
                     v-bind="componentField"
                     type="email"
-                    placeholder="이메일을 입력하세요"
-                    class="pl-10"
+                    placeholder="이메일"
+                    class="pl-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400 placeholder:text-gray-400"
                     :class="{ 'border-destructive': errorMessage }"
                   />
                 </div>
               </FormControl>
-              <FormMessage />
+              <FormMessage class="text-xs text-red-500 mt-1" />
             </FormItem>
           </FormField>
 
           <FormField v-slot="{ componentField, errorMessage }" name="password">
             <FormItem>
-              <FormLabel>비밀번호</FormLabel>
               <FormControl>
                 <div class="relative">
-                  <Lock class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Lock class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <Input
                     v-bind="componentField"
                     :type="showPassword ? 'text' : 'password'"
-                    placeholder="비밀번호를 입력하세요"
-                    class="pl-10 pr-10"
+                    placeholder="비밀번호"
+                    class="pl-10 pr-10 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400 placeholder:text-gray-400"
                     :class="{ 'border-destructive': errorMessage }"
                   />
                   <button
                     type="button"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                     @click="showPassword = !showPassword"
                   >
-                    <Eye v-if="showPassword" class="h-4 w-4" />
-                    <EyeOff v-else class="h-4 w-4" />
+                    <Eye v-if="showPassword" class="h-5 w-5" />
+                    <EyeOff v-else class="h-5 w-5" />
                   </button>
                 </div>
               </FormControl>
-              <FormMessage />
+              <FormMessage class="text-xs text-red-500 mt-1" />
             </FormItem>
           </FormField>
 
           <Button
             type="submit"
-            class="w-full h-12 text-base"
+            class="w-full h-12 text-base font-medium bg-primary-400 hover:bg-primary-500 text-white rounded-lg shadow-sm transition-colors"
             :disabled="loading"
           >
-            <span v-if="loading" class="flex items-center gap-2">
+            <span v-if="loading" class="flex items-center justify-center gap-2">
               <Loader2 class="h-4 w-4 animate-spin" />
               로그인 중...
             </span>
             <span v-else>로그인</span>
           </Button>
+
+          <div class="text-center pt-2">
+            <span class="text-sm text-gray-600">계정이 없으신가요? </span>
+            <router-link
+              to="/signup"
+              class="text-sm text-gray-800 hover:text-primary-600 font-medium transition-colors"
+            >
+              회원가입
+            </router-link>
+          </div>
         </form>
       </CardContent>
     </Card>
@@ -85,7 +95,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-vue-next'

@@ -705,10 +705,10 @@ colors: {
 - [x] SurveyCompletion.vue
   - [x] 심플한 완료 화면
   - [x] 명확한 CTA 버튼
-- [ ] AllSurveys.vue
-  - [ ] 반응형 테이블 (모바일: 카드, 데스크톱: 테이블)
-  - [ ] 필터 및 검색 모바일 최적화
-  - [ ] 무한 스크롤 또는 페이지네이션
+- [x] AllSurveys.vue
+  - [x] 반응형 테이블 (모바일: 카드, 데스크톱: 테이블)
+  - [x] 필터 및 검색 모바일 최적화
+  - [x] 무한 스크롤 또는 페이지네이션
 - [ ] RecentSurveys.vue
   - [ ] 반응형 그리드 레이아웃
   - [ ] 카드 호버 효과
@@ -867,11 +867,20 @@ colors: {
   - 체크 아이콘 표시 (녹색 원형 배경, CheckCircle 아이콘)
   - 감사 메시지 카드 (Card 컴포넌트 사용)
   - MDI 아이콘을 Lucide 아이콘으로 마이그레이션 (CheckCircle)
-- 다음 작업: **AllSurveys.vue**
+- **AllSurveys.vue 완료** ✅
+  - 반응형 테이블 구현 (모바일: 카드 리스트, 데스크톱: Table 컴포넌트)
+  - 필터 및 검색 모바일 최적화 (grid-cols-1 md:grid-cols-3, 전체 너비 입력 필드)
+  - 커스텀 페이지네이션 구현 (이전/다음 버튼, 페이지 번호 표시)
+  - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체 (Card, Button, Input, Select, Badge, Table)
+  - 깔끔한 UI 스타일 적용 (흰색 배경, 파란색 계열 컴포넌트)
+  - 반응형 감지 (window.innerWidth 기반, 768px breakpoint)
+  - 로딩 상태 표시 (애니메이션 Progress 바)
+  - 검색/필터/정렬 기능 유지
+  - MDI 아이콘을 Lucide 아이콘으로 마이그레이션 (Search, Plus)
+- 다음 작업: **RecentSurveys.vue**
 - 필요 정보:
-  - 반응형 테이블 (모바일: 카드, 데스크톱: 테이블)
-  - 필터 및 검색 모바일 최적화
-  - 무한 스크롤 또는 페이지네이션
+  - 반응형 그리드 레이아웃
+  - 카드 호버 효과
   - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체
   - 깔끔한 UI 스타일 적용 (흰색 배경, 파란색 계열 컴포넌트)
 
