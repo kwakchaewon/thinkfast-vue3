@@ -689,10 +689,10 @@ colors: {
   - [x] 반응형 2단 레이아웃 (데스크톱: 사이드바 + 메인, 모바일: 세로 스택)
   - [x] Accordion 컴포넌트로 질문 관리 UI 개선
   - [ ] 드래그 앤 드롭으로 질문 순서 변경 (선택사항)
-- [ ] SurveyDetail.vue
-  - [ ] 반응형 카드 레이아웃
-  - [ ] QR 코드 모바일 최적화
-  - [ ] 터치 친화적 버튼 배치
+- [x] SurveyDetail.vue
+  - [x] 반응형 카드 레이아웃
+  - [x] QR 코드 모바일 최적화
+  - [x] 터치 친화적 버튼 배치
 - [ ] SurveyResponse.vue
   - [ ] 모바일 최적화된 폼 입력
   - [ ] 스크롤 가능한 질문 목록
@@ -835,11 +835,19 @@ colors: {
   - 현대적이고 심플한 UI 디자인 적용 (Home.vue, Signup.vue 기준)
   - 흰색 배경, 파란색 계열 컴포넌트, 깔끔한 스타일
   - 카드 헤더 배경 제거, 일관된 색상 시스템 적용
-- 다음 작업: **SurveyDetail.vue**
+- **SurveyDetail.vue 완료** ✅
+  - 반응형 카드 레이아웃 적용 (모바일: 세로 스택, 데스크톱: 그리드)
+  - QR 코드 모바일 최적화 (반응형 크기: 모바일 150px, 데스크톱 200px)
+  - 터치 친화적 버튼 배치 (h-12, 충분한 간격)
+  - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체 (Card, Badge, Button, Input, Dialog, Slider 등)
+  - 깔끔한 UI 스타일 적용 (흰색 배경, 파란색 계열 컴포넌트)
+  - MDI 아이콘을 Lucide 아이콘으로 마이그레이션 (Trash2, Copy, Share2, ListChecks, BarChart)
+- 다음 작업: **SurveyResponse.vue**
 - 필요 정보:
-  - 반응형 카드 레이아웃
-  - QR 코드 모바일 최적화
-  - 터치 친화적 버튼 배치
+  - 모바일 최적화된 폼 입력
+  - 스크롤 가능한 질문 목록
+  - 하단 고정 제출 버튼 (모바일)
+  - 진행 상황 표시 (선택사항)
   - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체
   - 깔끔한 UI 스타일 적용 (흰색 배경, 파란색 계열 컴포넌트)
 

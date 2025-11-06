@@ -1,6 +1,5 @@
 import { tbAxios } from '@/apis/axios'
 import { useSnackbar } from '@/composables/useSnackbar'
-import { useRouter } from 'vue-router'
 import {
   CreateSurveyRequest,
   GetRecentSurveysResponse,
