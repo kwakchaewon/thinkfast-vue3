@@ -736,7 +736,7 @@ colors: {
 
 ### 11. Vite 설정 업데이트
 - [x] Tailwind CSS 플러그인 설정 확인
-- [ ] 경로 별칭 설정 확인
+- [x] 경로 별칭 설정 확인
 - [ ] 빌드 최적화 설정
 
 ### 12. Vuetify 제거
@@ -1025,11 +1025,26 @@ colors: {
     - chunkSizeWarningLimit 설정 (500KB)
     - 소스맵 설정 (production: false)
   - 주석 추가 및 문서화 개선
-- 다음 작업: **경로 별칭 설정 확인**
+- **경로 별칭 설정 확인 완료** ✅
+  - 설정 파일별 경로 별칭 확인:
+    - vite.config.ts: `@` → `./src` ✅
+    - tsconfig.json: `@/*` → `src/*` ✅
+    - components.json: shadcn-vue 별칭 설정 확인됨 ✅
+  - 설정 간 일관성 검증:
+    - vite.config.ts와 tsconfig.json 간 일관성 확인 ✅
+    - components.json 별칭이 `@/` 접두사 사용 확인 ✅
+  - 실제 사용 확인:
+    - 코드베이스에서 `@/` 경로 별칭 사용 중 확인 ✅
+    - src/lib/utils.ts 파일 존재 확인 ✅
+  - 경로 별칭 가이드 문서 작성 (docs/PATH_ALIASES.md)
+    - 설정 파일별 별칭 설명
+    - 사용 예시 및 디렉토리 구조
+    - 문제 해결 가이드
+- 다음 작업: **빌드 최적화 설정**
 - 필요 정보:
-  - 모든 경로 별칭이 올바르게 동작하는지 확인
-  - tsconfig.json, vite.config.ts, components.json 간 일관성 확인
-  - 필요 시 추가 경로 별칭 설정
+  - vite.config.ts에 이미 빌드 최적화 설정 추가됨 (manualChunks, chunkSizeWarningLimit)
+  - 추가 최적화 옵션 확인 필요
+  - 빌드 성능 테스트 및 최적화 검증
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
