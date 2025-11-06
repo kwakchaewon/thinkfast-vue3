@@ -737,7 +737,7 @@ colors: {
 ### 11. Vite 설정 업데이트
 - [x] Tailwind CSS 플러그인 설정 확인
 - [x] 경로 별칭 설정 확인
-- [ ] 빌드 최적화 설정
+- [x] 빌드 최적화 설정
 
 ### 12. Vuetify 제거
 - [ ] Vuetify 플러그인 제거 (src/plugins/vuetify.ts)
@@ -1040,11 +1040,35 @@ colors: {
     - 설정 파일별 별칭 설명
     - 사용 예시 및 디렉토리 구조
     - 문제 해결 가이드
-- 다음 작업: **빌드 최적화 설정**
+- **빌드 최적화 설정 완료** ✅
+  - 빌드 최적화 설정 개선:
+    - target: 'es2020' 설정 (최신 브라우저 타겟)
+    - CSS 코드 분할 활성화 (cssCodeSplit: true)
+    - CSS 최소화 (minify: 'esbuild')
+    - 소스맵 비활성화 (프로덕션: false)
+  - 코드 스플리팅 개선:
+    - manualChunks 함수로 동적 청크 분리
+    - vue-vendor, ui-vendor, chart-vendor, utils-vendor, vendor로 분리
+    - Chart.js 라이브러리 별도 청크 분리 추가
+  - 파일명 포맷 설정:
+    - JS: assets/js/[name]-[hash].js
+    - CSS: assets/css/[name]-[hash][extname]
+    - 이미지: assets/images/[name]-[hash][extname]
+    - 폰트: assets/fonts/[name]-[hash][extname]
+  - 개발 서버 최적화:
+    - HMR 오버레이 활성화
+  - 빌드 최적화 가이드 문서 작성 (docs/BUILD_OPTIMIZATION.md)
+    - 최적화 설정 설명
+    - 청크 분리 전략
+    - 추가 최적화 권장사항
+    - 빌드 성능 모니터링 방법
+- 다음 작업: **Vuetify 제거 - Vuetify 플러그인 제거 (src/plugins/vuetify.ts)**
 - 필요 정보:
-  - vite.config.ts에 이미 빌드 최적화 설정 추가됨 (manualChunks, chunkSizeWarningLimit)
-  - 추가 최적화 옵션 확인 필요
-  - 빌드 성능 테스트 및 최적화 검증
+  - src/plugins/vuetify.ts 파일 제거
+  - main.ts에서 Vuetify 관련 코드 제거
+  - package.json에서 Vuetify 및 MDI 의존성 제거
+  - @mdi/font 관련 import 제거
+  - Vuetify 관련 스타일 import 제거
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
