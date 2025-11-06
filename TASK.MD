@@ -741,7 +741,7 @@ colors: {
 
 ### 12. Vuetify 제거
 - [x] Vuetify 플러그인 제거 (src/plugins/vuetify.ts)
-- [ ] main.ts에서 Vuetify 관련 코드 제거
+- [x] main.ts에서 Vuetify 관련 코드 제거
 - [ ] package.json에서 Vuetify 및 MDI 의존성 제거
 - [ ] @mdi/font 관련 import 제거
 - [ ] Vuetify 관련 스타일 import 제거
@@ -1073,12 +1073,18 @@ colors: {
     - app.use(vuetify) 제거
   - 다른 파일에서 Vuetify import 사용 여부 확인 완료 (없음) ✅
   - 린터 오류 없음 확인 완료 ✅
-- 다음 작업: **main.ts에서 Vuetify 관련 코드 제거**
+- **main.ts에서 Vuetify 관련 코드 제거 완료** ✅
+  - main.ts 파일 확인: Vuetify 관련 코드 모두 제거됨 확인 ✅
+  - createVuetify, vuetify/components, vuetify/directives import 없음 ✅
+  - vuetify/styles, @mdi/font import 없음 ✅
+  - vuetify 인스턴스 생성 및 app.use(vuetify) 코드 없음 ✅
+  - 현재 main.ts는 깔끔하게 정리됨 ✅
+- 다음 작업: **package.json에서 Vuetify 및 MDI 의존성 제거**
 - 필요 정보:
-  - 이미 완료됨 (main.ts에서 Vuetify 관련 코드 모두 제거됨)
-  - package.json에서 Vuetify 및 MDI 의존성 제거 필요
-  - @mdi/font 관련 import 제거 확인 필요
-  - Vuetify 관련 스타일 import 제거 확인 필요
+  - package.json에서 vuetify 의존성 제거
+  - package.json에서 @mdi/font 의존성 제거
+  - npm install 실행하여 node_modules 업데이트 필요
+  - 다른 파일에서 @mdi/font 관련 import 제거 확인 필요
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
