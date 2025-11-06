@@ -743,7 +743,7 @@ colors: {
 - [x] Vuetify 플러그인 제거 (src/plugins/vuetify.ts)
 - [x] main.ts에서 Vuetify 관련 코드 제거
 - [x] package.json에서 Vuetify 및 MDI 의존성 제거
-- [ ] @mdi/font 관련 import 제거
+- [x] @mdi/font 관련 import 제거
 - [ ] Vuetify 관련 스타일 import 제거
 
 ### 13. 테스트 및 검증
@@ -1084,11 +1084,16 @@ colors: {
   - package.json에서 `@mdi/font` 의존성 제거 완료 ✅
   - 의존성 목록 정리 완료 ✅
   - 참고: Sidebar.vue에서 `mdi-bell` 문자열이 데이터 속성으로 사용 중 (아이콘 렌더링과는 별개, 나중에 수정 가능)
-- 다음 작업: **@mdi/font 관련 import 제거**
+- **@mdi/font 관련 import 제거 완료** ✅
+  - 모든 소스 파일에서 @mdi/font 관련 import 검색 완료
+  - @mdi/font 관련 import 없음 확인 (이미 이전 작업에서 제거됨) ✅
+  - materialdesignicons.css 관련 import 없음 확인 ✅
+  - src/components/common/Sidebar.vue에서 mdi-bell 문자열은 데이터 속성으로만 사용 (import 아님) ✅
+- 다음 작업: **Vuetify 관련 스타일 import 제거**
 - 필요 정보:
-  - 다른 파일에서 @mdi/font 관련 import 확인 및 제거
-  - src/components/common/Sidebar.vue에서 mdi-bell 문자열 사용 확인 (데이터 속성, import 아님)
-  - npm install 실행하여 node_modules 업데이트 권장
+  - vuetify/styles 관련 import 확인 및 제거
+  - style.css에서 Vuetify 관련 스타일 확인
+  - 다른 파일에서 Vuetify 관련 스타일 import 확인
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
