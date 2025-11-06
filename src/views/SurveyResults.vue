@@ -1,7 +1,7 @@
 <template>
   <HeaderMenu>
     <div class="min-h-screen bg-white">
-      <div class="container mx-auto px-4 py-8 max-w-7xl pb-16">
+      <div class="px-6 py-8 pb-16">
         <!-- 설문 정보 헤더 -->
         <Card class="mb-4 shadow-md border border-gray-200 bg-white">
           <CardHeader class="px-6 py-4">

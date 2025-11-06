@@ -1,7 +1,7 @@
 <template>
   <HeaderMenu>
     <div class="min-h-screen bg-white">
-      <div class="container mx-auto px-4 py-8 max-w-7xl">
+      <div class="px-6 py-8">
         <!-- 상단 통계 카드 -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card class="shadow-md border border-gray-200 bg-white">

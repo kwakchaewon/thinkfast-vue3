@@ -1,7 +1,7 @@
 <template>
   <HeaderMenu>
     <div class="min-h-screen bg-white w-full">
-      <div class="container mx-auto px-4 py-8 max-w-7xl">
+      <div class="px-6 py-8">
         <Card class="shadow-md border border-gray-200 bg-white">
           <CardHeader class="border-b border-gray-200 px-6 py-4">
             <div class="flex items-center justify-between">

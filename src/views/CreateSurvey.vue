@@ -1,7 +1,7 @@
 <template>
   <HeaderMenu>
     <div class="min-h-screen bg-white">
-      <div class="container mx-auto px-4 py-8 max-w-7xl">
+      <div class="px-6 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <!-- 메인 컨텐츠 영역 (데스크톱: 8/12, 모바일: 전체) -->
           <div class="lg:col-span-8 space-y-6">
