@@ -719,7 +719,7 @@ colors: {
 ### 9. 공통 컴포넌트 및 유틸리티 마이그레이션
 - [x] useSnackbar composable 업데이트 (v-snackbar → Toast/Sonner)
 - [x] 스타일 유틸리티 클래스 변환
-- [ ] 반응형 레이아웃 클래스 변환
+- [x] 반응형 레이아웃 클래스 변환
 - [ ] 반응형 헬퍼 유틸리티 함수 생성 (useBreakpoint, useResponsive 등)
 - [ ] 공통 애니메이션 유틸리티 구현
 
@@ -908,15 +908,23 @@ colors: {
 - **스타일 유틸리티 클래스 변환 완료** ✅
   - Vuetify 스타일 유틸리티 클래스를 Tailwind CSS로 변환하는 커스텀 유틸리티 정의
   - Typography 클래스: text-h4, text-h5, text-h6, text-body-1, text-body-2, text-subtitle-1, text-subtitle-2, text-caption
-  - Flex 유틸리티 클래스: d-flex, align-center, justify-center, justify-between, justify-end, justify-start
-  - Spacing 유틸리티 클래스: pa-*, px-*, py-*, ma-*, mx-*, my-*, mb-*, mt-*, ml-*, mr-* (0-8 범위)
+  - Flex 유틸리티 클래스: d-flex, align-center (justify-center 등은 Tailwind 기본 클래스 사용)
+  - Spacing 유틸리티 클래스: pa-*, ma-* (px-*, py-*, mx-*, my-* 등은 Tailwind 기본 클래스 사용)
   - @layer utilities를 사용하여 Tailwind에 통합
   - Vuetify 호환성 유지 (기존 코드 마이그레이션 시 유용)
   - 현재 코드베이스에서는 이미 Tailwind 클래스 사용 중이지만, 향후 필요 시 사용 가능
-- 다음 작업: **반응형 레이아웃 클래스 변환**
+- **반응형 레이아웃 클래스 변환 완료** ✅
+  - 모든 뷰에서 이미 Tailwind CSS 반응형 클래스 사용 중 (v-row, v-col 완전 제거)
+  - 반응형 Grid 시스템: grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 등
+  - 반응형 Flex 시스템: flex-col sm:flex-row 등
+  - Breakpoint 매핑: Vuetify sm(600px) → Tailwind sm(640px), md(960px) → md(768px), lg(1264px) → lg(1024px)
+  - 모든 레이아웃이 Tailwind Grid/Flexbox로 변환 완료
+  - Vuetify 반응형 레이아웃 클래스(v-row, v-col) 더 이상 사용되지 않음
+- 다음 작업: **반응형 헬퍼 유틸리티 함수 생성**
 - 필요 정보:
-  - Vuetify 반응형 클래스를 Tailwind CSS 반응형 클래스로 변환
-  - 기존 반응형 레이아웃 코드 확인
+  - useBreakpoint, useResponsive 등의 composable 함수 생성
+  - VueUse의 useBreakpoints 활용 가능
+  - 기존 코드에서 반응형 감지 로직 확인
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
