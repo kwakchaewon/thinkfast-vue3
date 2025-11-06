@@ -698,10 +698,10 @@ colors: {
   - [x] 스크롤 가능한 질문 목록
   - [x] 하단 고정 제출 버튼 (모바일)
   - [ ] 진행 상황 표시 (선택사항)
-- [ ] SurveyResults.vue
-  - [ ] 반응형 차트 (모바일: 세로 스택, 데스크톱: 가로 배치)
-  - [ ] 워드클라우드 모바일 최적화
-  - [ ] 테이블 모바일 대응 (가로 스크롤 또는 카드 변환)
+- [x] SurveyResults.vue
+  - [x] 반응형 차트 (모바일: 세로 스택, 데스크톱: 가로 배치)
+  - [x] 워드클라우드 모바일 최적화
+  - [x] 테이블 모바일 대응 (가로 스크롤 또는 카드 변환)
 - [ ] SurveyCompletion.vue
   - [ ] 심플한 완료 화면
   - [ ] 명확한 CTA 버튼
@@ -851,11 +851,18 @@ colors: {
   - 폼 유효성 검사 구현 (필수 항목 검증, 에러 메시지 표시)
   - 객관식/주관식/척도형 질문 타입 지원
   - MDI 아이콘을 Lucide 아이콘으로 마이그레이션 (Clock, Loader2)
-- 다음 작업: **SurveyResults.vue**
+- **SurveyResults.vue 완료** ✅
+  - 반응형 차트 레이아웃 (모바일: 세로 스택, 데스크톱: 가로 배치 - grid-cols-1 md:grid-cols-2)
+  - 워드클라우드 모바일 최적화 (모바일에서 최소 높이 250px, 패딩 조정)
+  - Chart.js Doughnut 차트 통합 (반응형 유지)
+  - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체 (Card, Badge, Button, Dialog, Separator)
+  - 깔끔한 UI 스타일 적용 (흰색 배경, 파란색 계열 컴포넌트)
+  - 전체 응답 보기 모달 구현 (Dialog 컴포넌트 사용)
+  - MDI 아이콘을 Lucide 아이콘으로 마이그레이션 (Eye, X)
+- 다음 작업: **SurveyCompletion.vue**
 - 필요 정보:
-  - 반응형 차트 (모바일: 세로 스택, 데스크톱: 가로 배치)
-  - 워드클라우드 모바일 최적화
-  - 테이블 모바일 대응 (가로 스크롤 또는 카드 변환)
+  - 심플한 완료 화면
+  - 명확한 CTA 버튼
   - Vuetify 컴포넌트를 shadcn-vue/Tailwind로 대체
   - 깔끔한 UI 스타일 적용 (흰색 배경, 파란색 계열 컴포넌트)
 
