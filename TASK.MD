@@ -724,8 +724,8 @@ colors: {
 - [x] 공통 애니메이션 유틸리티 구현
 
 ### 10. 테마 및 스타일링 설정
-- [ ] Tailwind CSS 커스텀 테마 설정
-- [ ] 기존 Vuetify 테마 색상 (primary, secondary 등) Tailwind로 변환
+- [x] Tailwind CSS 커스텀 테마 설정
+- [x] 기존 Vuetify 테마 색상 (primary, secondary 등) Tailwind로 변환
 - [ ] 다크모드 지원 여부 결정 및 설정 (권장: 라이트 모드 우선)
 - [ ] 전역 스타일 정리 (style.css)
 - [ ] 반응형 breakpoint 커스터마이징 (tailwind.config.js)
@@ -936,11 +936,20 @@ colors: {
   - @layer utilities를 사용하여 Tailwind에 통합
   - Vuetify의 v-slide-y-transition 등을 대체하는 Vue Transition 클래스 제공
   - 일관된 애니메이션 타이밍 및 easing 함수 적용
-- 다음 작업: **Tailwind CSS 커스텀 테마 설정**
+- **Tailwind CSS 커스텀 테마 설정 완료** ✅
+  - Vuetify 테마 색상을 Tailwind로 완전 변환
+  - Primary 색상: 인디고 계열 팔레트 (50-900) 완전 정의
+  - Secondary, Accent 색상 변환 완료
+  - Error, Info, Success, Warning 색상 팔레트 추가 (50-900)
+  - 타이포그래피 스케일 정의: h1-h6 (fontSize, lineHeight, fontWeight)
+  - 그림자 시스템 정의: card, card-hover
+  - 반응형 breakpoint 명시적 정의 (sm, md, lg, xl, 2xl)
+  - 간격 시스템 확인 (4px 단위, Tailwind 기본값과 동일)
+  - shadcn-vue 색상 시스템과 통합 유지
+- 다음 작업: **다크모드 지원 여부 결정 및 설정**
 - 필요 정보:
-  - Tailwind config에 커스텀 테마 설정 추가
-  - 기존 Vuetify 테마 색상을 Tailwind로 변환 확인
-  - tailwind.config.js 확인 및 업데이트
+  - 다크모드 지원 여부 결정 (현재는 라이트 모드 우선)
+  - 필요 시 다크모드 설정 추가
 
 **참고:**
 - 상세 작업 기록은 `MIGRATION_HISTORY.md` 참고
