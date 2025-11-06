@@ -1,0 +1,63 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 빌드 산출물
+dist/
+build/
+*.tsbuildinfo
+
+# 개발 환경 파일
+.env.local
+.env.*.local
+.env.development
+.env.test
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 문서 및 기타
+*.md
+!README.md
+docs/
+MIGRATION_HISTORY.md
+TASK.MD
+
+# 테스트
+coverage/
+.nyc_output/
+
+# 로그
+logs/
+*.log
+
+# 임시 파일
+*.tmp
+*.temp
+.cache/
+
+# Docker
+Dockerfile*
+.dockerignore
+docker-compose*.yml
+
+# 기타
+.cursor/
+cursor-rules.json
+
