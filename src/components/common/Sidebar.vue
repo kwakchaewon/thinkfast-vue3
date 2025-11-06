@@ -6,8 +6,10 @@
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3 flex-1 min-h-[72px]">
           <Avatar class="h-12 w-12">
-            <AvatarImage src="https://randomuser.me/api/portraits/men/85.jpg" alt="Profile" />
-            <AvatarFallback>AK</AvatarFallback>
+            <AvatarImage :src="avatarUrl" alt="Profile" />
+            <AvatarFallback class="bg-gradient-to-br from-primary-400 to-primary-600 text-white font-semibold text-base">
+              {{ userInitials }}
+            </AvatarFallback>
           </Avatar>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium text-gray-800 truncate">{{ userName }}</p>
@@ -260,6 +262,23 @@ const notifications = ref<Notification[]>([])
 const ws = ref<WebSocket | null>(null)
 const currentPage = ref(1)
 const itemsPerPage = 5
+
+// 현대적인 랜덤 프로필 이미지 생성 (DiceBear API - personas 스타일)
+const avatarUrl = computed(() => {
+  const seed = userName.value || userEmail.value || 'user'
+  // personas: 현대적이고 사람 같은 일러스트 스타일 아바타
+  return `https://api.dicebear.com/7.x/personas/svg?seed=${encodeURIComponent(seed)}&backgroundColor=b6e3f4,c7d2fe,ffd5dc,ffdfbf,ddd6fe&flip=false`
+})
+
+// 사용자 이니셜 추출
+const userInitials = computed(() => {
+  if (!userName.value) return 'U'
+  const names = userName.value.trim().split(' ')
+  if (names.length >= 2) {
+    return (names[0][0] + names[names.length - 1][0]).toUpperCase()
+  }
+  return userName.value.substring(0, 2).toUpperCase()
+})
 
 const totalPages = computed(() => {
   return Math.ceil(notifications.value.length / itemsPerPage)
