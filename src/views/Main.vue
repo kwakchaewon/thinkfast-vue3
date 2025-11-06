@@ -1,146 +1,149 @@
 <template>
   <HeaderMenu>
-    <div class="container mx-auto px-4 pb-16">
-      <!-- 상단 통계 카드 -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card class="stat-card">
-          <CardHeader>
-            <CardTitle class="text-sm font-medium text-muted-foreground mb-2">
-              진행중 설문
-            </CardTitle>
-            <div class="flex items-center">
-              <span class="text-3xl font-semibold">{{ activeSurveysCount }}</span>
-              <TrendingUp class="ml-3 h-6 w-6 text-green-500" />
-            </div>
-          </CardHeader>
-        </Card>
-
-        <Card class="stat-card">
-          <CardHeader>
-            <CardTitle class="text-sm font-medium text-muted-foreground mb-2">
-              총 응답수
-            </CardTitle>
-            <div class="flex items-center">
-              <span class="text-3xl font-semibold">{{ totalResponses }}</span>
-              <Reply class="ml-3 h-6 w-6 text-primary" />
-            </div>
-          </CardHeader>
-        </Card>
-
-        <Card class="stat-card">
-          <CardHeader>
-            <CardTitle class="text-sm font-medium text-muted-foreground mb-2">
-              최근 7일 응답
-            </CardTitle>
-            <div class="flex items-center">
-              <span class="text-3xl font-semibold">{{ recentResponses }}</span>
-              <Badge variant="secondary" class="ml-3">
-                +{{ recentResponseIncrease }}%
-              </Badge>
-            </div>
-          </CardHeader>
-        </Card>
-
-        <Card class="stat-card">
-          <CardHeader>
-            <CardTitle class="text-sm font-medium text-muted-foreground mb-2">
-              평균 응답 시간
-            </CardTitle>
-            <div class="flex items-center">
-              <span class="text-3xl font-semibold">{{ avgResponseTime }}분</span>
-              <Clock class="ml-3 h-6 w-6 text-blue-500" />
-            </div>
-          </CardHeader>
-        </Card>
-      </div>
-
-      <!-- 최근 설문 & 활동 -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        <div class="md:col-span-2">
-          <Card class="content-card">
-            <CardHeader class="flex flex-row items-center justify-between px-4 py-3 bg-slate-100 border-b">
-              <CardTitle class="text-lg font-semibold">최근 설문</CardTitle>
-              <Button variant="ghost" size="sm" as-child>
-                <router-link to="/all-surveys" class="flex items-center gap-1">
-                  전체보기
-                  <ChevronRight class="h-4 w-4" />
-                </router-link>
-              </Button>
-            </CardHeader>
-            <CardContent class="p-4">
-              <div class="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>설문 제목</TableHead>
-                      <TableHead class="w-[100px]">상태</TableHead>
-                      <TableHead class="w-[100px]">응답수</TableHead>
-                      <TableHead class="w-[120px]">생성일</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow
-                      v-for="survey in recentSurveys"
-                      :key="survey.id"
-                      class="survey-row cursor-pointer hover:bg-slate-50"
-                      @click="goToSurveyDetail(survey.id)"
-                    >
-                      <TableCell class="font-medium">{{ survey.title }}</TableCell>
-                      <TableCell>
-                        <Badge
-                          :variant="survey.isActive === true ? 'default' : 'destructive'"
-                        >
-                          {{ survey.isActive === true ? '진행중' : '종료' }}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{{ survey.responseCount }}개</TableCell>
-                      <TableCell>{{ survey.createdAt }}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+    <div class="min-h-screen bg-white">
+      <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <!-- 상단 통계 카드 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card class="shadow-md border border-gray-200 bg-white">
+            <CardHeader class="p-6">
+              <CardTitle class="text-sm font-medium text-gray-500 mb-2">
+                진행중 설문
+              </CardTitle>
+              <div class="flex items-center">
+                <span class="text-3xl font-semibold text-gray-800">{{ activeSurveysCount }}</span>
+                <TrendingUp class="ml-3 h-6 w-6 text-green-500" />
               </div>
-            </CardContent>
+            </CardHeader>
+          </Card>
+
+          <Card class="shadow-md border border-gray-200 bg-white">
+            <CardHeader class="p-6">
+              <CardTitle class="text-sm font-medium text-gray-500 mb-2">
+                총 응답수
+              </CardTitle>
+              <div class="flex items-center">
+                <span class="text-3xl font-semibold text-gray-800">{{ totalResponses }}</span>
+                <Reply class="ml-3 h-6 w-6 text-primary-400" />
+              </div>
+            </CardHeader>
+          </Card>
+
+          <Card class="shadow-md border border-gray-200 bg-white">
+            <CardHeader class="p-6">
+              <CardTitle class="text-sm font-medium text-gray-500 mb-2">
+                최근 7일 응답
+              </CardTitle>
+              <div class="flex items-center">
+                <span class="text-3xl font-semibold text-gray-800">{{ recentResponses }}</span>
+                <Badge variant="secondary" class="ml-3 bg-green-100 text-green-700">
+                  +{{ recentResponseIncrease }}%
+                </Badge>
+              </div>
+            </CardHeader>
+          </Card>
+
+          <Card class="shadow-md border border-gray-200 bg-white">
+            <CardHeader class="p-6">
+              <CardTitle class="text-sm font-medium text-gray-500 mb-2">
+                평균 응답 시간
+              </CardTitle>
+              <div class="flex items-center">
+                <span class="text-3xl font-semibold text-gray-800">{{ avgResponseTime }}분</span>
+                <Clock class="ml-3 h-6 w-6 text-primary-400" />
+              </div>
+            </CardHeader>
           </Card>
         </div>
 
-        <div class="md:col-span-1">
-          <Card class="content-card">
-            <CardHeader class="flex flex-row items-center justify-between px-4 py-3 bg-slate-100 border-b">
-              <CardTitle class="text-lg font-semibold">최근 활동</CardTitle>
-              <Button variant="ghost" size="sm" class="flex items-center gap-1">
-                더보기
-                <ChevronRight class="h-4 w-4" />
-              </Button>
-            </CardHeader>
-            <CardContent class="p-4">
-              <div class="space-y-4 mt-2">
-                <div
-                  v-for="(activity, index) in recentActivities"
-                  :key="activity.id"
-                  class="relative flex gap-4 pb-4 last:pb-0"
-                  :class="{ 'border-l-2 border-slate-200 pl-4': index < recentActivities.length - 1 }"
-                >
+        <!-- 최근 설문 & 활동 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          <div class="md:col-span-2">
+            <Card class="shadow-md border border-gray-200 bg-white">
+              <CardHeader class="flex flex-row items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+                <CardTitle class="text-lg font-semibold text-gray-800">최근 설문</CardTitle>
+                <Button variant="ghost" size="sm" as-child class="text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                  <router-link to="/all-surveys" class="flex items-center gap-1">
+                    전체보기
+                    <ChevronRight class="h-4 w-4" />
+                  </router-link>
+                </Button>
+              </CardHeader>
+              <CardContent class="p-6">
+                <div class="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow class="hover:bg-transparent">
+                        <TableHead class="text-gray-600 font-medium">설문 제목</TableHead>
+                        <TableHead class="w-[100px] text-gray-600 font-medium">상태</TableHead>
+                        <TableHead class="w-[100px] text-gray-600 font-medium">응답수</TableHead>
+                        <TableHead class="w-[120px] text-gray-600 font-medium">생성일</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow
+                        v-for="survey in recentSurveys"
+                        :key="survey.id"
+                        class="cursor-pointer hover:bg-gray-50 transition-colors"
+                        @click="goToSurveyDetail(survey.id)"
+                      >
+                        <TableCell class="font-medium text-gray-800">{{ survey.title }}</TableCell>
+                        <TableCell>
+                          <Badge
+                            :variant="survey.isActive === true ? 'default' : 'destructive'"
+                            :class="survey.isActive === true ? 'bg-primary-400 text-white' : ''"
+                          >
+                            {{ survey.isActive === true ? '진행중' : '종료' }}
+                          </Badge>
+                        </TableCell>
+                        <TableCell class="text-gray-600">{{ survey.responseCount }}개</TableCell>
+                        <TableCell class="text-gray-600">{{ survey.createdAt }}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div class="md:col-span-1">
+            <Card class="shadow-md border border-gray-200 bg-white">
+              <CardHeader class="flex flex-row items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+                <CardTitle class="text-lg font-semibold text-gray-800">최근 활동</CardTitle>
+                <Button variant="ghost" size="sm" class="flex items-center gap-1 text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                  더보기
+                  <ChevronRight class="h-4 w-4" />
+                </Button>
+              </CardHeader>
+              <CardContent class="p-6">
+                <div class="space-y-4">
                   <div
-                    class="flex-shrink-0 w-2 h-2 rounded-full mt-2"
-                    :class="{
-                      'bg-green-500': activity.color === 'success',
-                      'bg-blue-500': activity.color === 'info',
-                      'bg-yellow-500': activity.color === 'warning',
-                      'bg-red-500': activity.color === 'error',
-                    }"
-                  ></div>
-                  <div class="flex-1 min-w-0">
-                    <div class="text-sm font-medium mb-1">
-                      {{ activity.title }}
-                    </div>
-                    <div class="text-xs text-muted-foreground">
-                      {{ activity.time }}
+                    v-for="(activity, index) in recentActivities"
+                    :key="activity.id"
+                    class="relative flex gap-4 pb-4 last:pb-0"
+                    :class="{ 'border-l-2 border-gray-200 pl-4': index < recentActivities.length - 1 }"
+                  >
+                    <div
+                      class="flex-shrink-0 w-2 h-2 rounded-full mt-2"
+                      :class="{
+                        'bg-green-500': activity.color === 'success',
+                        'bg-primary-400': activity.color === 'info',
+                        'bg-yellow-500': activity.color === 'warning',
+                        'bg-red-500': activity.color === 'error',
+                      }"
+                    ></div>
+                    <div class="flex-1 min-w-0">
+                      <div class="text-sm font-medium text-gray-800 mb-1">
+                        {{ activity.title }}
+                      </div>
+                      <div class="text-xs text-gray-500">
+                        {{ activity.time }}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
@@ -272,11 +275,5 @@ const avgResponseTime = computed(() => {
 </script>
 
 <style scoped>
-.stat-card {
-  min-height: 100px;
-}
-
-.content-card {
-  min-height: 100%;
-}
+/* 추가 스타일이 필요한 경우 */
 </style>
