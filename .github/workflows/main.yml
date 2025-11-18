@@ -1,0 +1,40 @@
+name: Generate Docker image and Trigger Jenkins
+
+on:
+  # push:
+  #   branches:
+  #     - master  # 트리거할 브랜치
+  workflow_dispatch:
+
+jobs:
+  build-and-trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 1️⃣ Docker Hub 로그인
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+      # 2️⃣ Docker 이미지 빌드 및 푸시
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/thinkfast_frontend:latest
+          
+          # 필요 시 버전 태그 추가 예시:
+          # tags: ${{ secrets.DOCKERHUB_USERNAME }}/thinkfast_frontend:latest,${{ secrets.DOCKERHUB_USERNAME }}/thinkfast_frontend:${{ github.run_number }}
+
+      # 3️⃣ Jenkins 빌드 트리거
+      - name: Trigger Jenkins build
+        run: |
+          curl -X POST \
+            "${{ secrets.THINKFAST_JENKINS_SERVER }}:9090/job/thinkfast-frontend-prod-deploy/build" \
+            --user "${{ secrets.THINKFAST_JENKINS_USERID }}:${{ secrets.THINKFAST_JENKINS_TOKEN }}"
