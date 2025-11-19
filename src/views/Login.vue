@@ -82,6 +82,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+// @ts-ignore - vuex 타입 선언 문제
 import { useStore } from 'vuex'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'

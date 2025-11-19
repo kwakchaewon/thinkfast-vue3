@@ -183,27 +183,7 @@ const loading = ref(false)
 const dateInputRef = ref<HTMLInputElement | null>(null)
 const flatpickrInstance = ref<flatpickr.Instance | null>(null)
 
-// 생년월일 유효성 검사 함수
-const validateBirthDate = (value: string): boolean => {
-  const pattern = /^([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/
-  if (!pattern.test(value)) {
-    return false
-  }
-  
-  // 날짜 유효성 검사
-  const year = parseInt(value.substring(0, 2))
-  const month = parseInt(value.substring(2, 4))
-  const day = parseInt(value.substring(4, 6))
-  
-  const date = new Date(2000 + year, month - 1, day)
-  if (date.getFullYear() !== 2000 + year || 
-      date.getMonth() !== month - 1 || 
-      date.getDate() !== day) {
-    return false
-  }
-  
-  return true
-}
+// 생년월일 유효성 검사는 Zod 스키마의 refine에서 처리
 
 // Zod 스키마 정의
 const schema = toTypedSchema(
@@ -261,7 +241,13 @@ const formatBirthDate = (date: Date | undefined): string => {
 }
 
 // Form 설정
-const { handleSubmit, setValue } = useForm({
+const { handleSubmit, setFieldValue } = useForm<{
+  email: string
+  password: string
+  confirmPassword: string
+  name: string
+  birthDate: string
+}>({
   validationSchema: schema,
 })
 
@@ -286,7 +272,7 @@ onMounted(() => {
         dateFormat: 'Y-m-d', // 내부적으로는 Y-m-d 형식 사용
         maxDate: new Date(), // 오늘 이후 날짜 선택 불가
         defaultDate: undefined,
-        onChange: (selectedDates, dateStr) => {
+        onChange: (selectedDates) => {
           if (selectedDates.length > 0) {
             const date = selectedDates[0]
             const formatted = formatBirthDate(date)
@@ -297,16 +283,16 @@ onMounted(() => {
               dateInputRef.value.dispatchEvent(new Event('input', { bubbles: true }))
             }
             // form 값 업데이트
-            setValue('birthDate', formatted)
+            setFieldValue('birthDate', formatted)
           }
         },
-        onReady: (selectedDates, dateStr, instance) => {
+        onReady: (selectedDates) => {
           // 초기화 시 기존 값이 있으면 YYMMDD 형식으로 표시
           if (selectedDates.length > 0 && dateInputRef.value) {
             dateInputRef.value.value = formatBirthDate(selectedDates[0])
           }
         },
-        onValueUpdate: (selectedDates, dateStr, instance) => {
+        onValueUpdate: (selectedDates) => {
           // 값이 업데이트될 때 YYMMDD 형식으로 표시
           if (selectedDates.length > 0 && dateInputRef.value) {
             dateInputRef.value.value = formatBirthDate(selectedDates[0])

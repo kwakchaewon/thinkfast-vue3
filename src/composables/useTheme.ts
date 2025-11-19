@@ -1,5 +1,5 @@
 import { ref, watch, onMounted } from 'vue'
-import { usePreferredDark } from '@vueuse/core'
+// import { usePreferredDark } from '@vueuse/core' // 시스템 다크 모드 감지 (현재 미사용)
 
 /**
  * 테마 관리 composable
@@ -16,7 +16,7 @@ import { usePreferredDark } from '@vueuse/core'
  * ```
  */
 export const useTheme = () => {
-  const prefersDark = usePreferredDark()
+  // const prefersDark = usePreferredDark() // 시스템 다크 모드 감지 (현재 미사용)
   const isDark = ref(false) // 기본값: 라이트 모드
 
   // 로컬 스토리지에서 테마 설정 불러오기

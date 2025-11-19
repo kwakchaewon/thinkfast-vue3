@@ -142,7 +142,7 @@ interface Question {
   content: string
   type: string
   required: boolean
-  options?: any[]
+  options?: Array<{ id: number; content: string }>
 }
 
 const { showSuccess, showError } = useSnackbar()
@@ -167,7 +167,14 @@ const fetchSurveyData = async () => {
   try {
     const surveyId = Number(route.params.id)
     const response = await surveyApi.getSurveyDetail(surveyId)
-    const questions = await surveyApi.getQuestionsBySurveyId(surveyId)
+    const questionsData = await surveyApi.getQuestionsBySurveyId(surveyId)
+    
+    // required를 boolean으로 변환 (undefined인 경우 false)
+    const questions: Question[] = questionsData.map((q) => ({
+      ...q,
+      required: q.required ?? false
+    }))
+    
     survey.value = {
       id: surveyId,
       title: response.title,
@@ -238,7 +245,17 @@ const submitResponse = async () => {
 
   isSubmitting.value = true
   try {
+    // 디바이스 ID 생성 (로컬 스토리지에 저장하여 일관성 유지)
+    let deviceId = localStorage.getItem('deviceId')
+    if (!deviceId) {
+      deviceId = `device-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      localStorage.setItem('deviceId', deviceId)
+    }
+
     const payload: CreateAnswerRequest = {
+      clientInfo: {
+        deviceId: deviceId
+      },
       answers: survey.value.questions.map((question: Question) => {
         const answer = answers.value[question.id]
         if (question.type === 'MULTIPLE_CHOICE') {

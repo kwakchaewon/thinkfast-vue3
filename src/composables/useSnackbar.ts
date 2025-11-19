@@ -1,7 +1,7 @@
 import { toast } from 'vue-sonner'
-import type { ToastOptions } from 'vue-sonner'
+import type { ExternalToast } from 'vue-sonner'
 
-interface SnackbarOptions extends Omit<ToastOptions, 'duration'> {
+interface SnackbarOptions extends Omit<ExternalToast, 'duration'> {
   message: string
   color?: 'success' | 'error' | 'info' | 'warning'
   timeout?: number
@@ -25,7 +25,7 @@ export const useSnackbar = () => {
     ...restOptions 
   }: SnackbarOptions) => {
     const duration = timeout || DEFAULT_DURATION
-    const toastOptions: ToastOptions = {
+    const toastOptions: ExternalToast = {
       duration,
       ...restOptions
     }
@@ -53,7 +53,7 @@ export const useSnackbar = () => {
    * @param message - 에러 메시지
    * @param options - 추가 Toast 옵션
    */
-  const showError = (message: string, options?: Omit<ToastOptions, 'duration'>) => {
+  const showError = (message: string, options?: Omit<ExternalToast, 'duration'>) => {
     toast.error(message, {
       duration: DEFAULT_DURATION,
       ...options
@@ -65,7 +65,7 @@ export const useSnackbar = () => {
    * @param message - 성공 메시지
    * @param options - 추가 Toast 옵션
    */
-  const showSuccess = (message: string, options?: Omit<ToastOptions, 'duration'>) => {
+  const showSuccess = (message: string, options?: Omit<ExternalToast, 'duration'>) => {
     toast.success(message, {
       duration: DEFAULT_DURATION,
       ...options
@@ -77,7 +77,7 @@ export const useSnackbar = () => {
    * @param message - 정보 메시지
    * @param options - 추가 Toast 옵션
    */
-  const showInfo = (message: string, options?: Omit<ToastOptions, 'duration'>) => {
+  const showInfo = (message: string, options?: Omit<ExternalToast, 'duration'>) => {
     toast.info(message, {
       duration: DEFAULT_DURATION,
       ...options
@@ -89,7 +89,7 @@ export const useSnackbar = () => {
    * @param message - 경고 메시지
    * @param options - 추가 Toast 옵션
    */
-  const showWarning = (message: string, options?: Omit<ToastOptions, 'duration'>) => {
+  const showWarning = (message: string, options?: Omit<ExternalToast, 'duration'>) => {
     toast.warning(message, {
       duration: DEFAULT_DURATION,
       ...options

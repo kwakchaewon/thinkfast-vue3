@@ -171,11 +171,11 @@
                       </div>
 
                       <!-- 객관식 질문 옵션 -->
-                      <div v-if="question.type === QuestionType.MULTIPLE_CHOICE" class="mt-4 p-4 border border-gray-200 rounded-lg bg-white">
+                      <div v-if="question.type === QuestionType.MULTIPLE_CHOICE && question.options" class="mt-4 p-4 border border-gray-200 rounded-lg bg-white">
                         <div class="text-sm font-medium text-gray-800 mb-3">선택 옵션</div>
                         <div class="space-y-2">
                           <div
-                            v-for="(option, optionIndex) in question.options"
+                            v-for="(_option, optionIndex) in question.options"
                             :key="optionIndex"
                             class="flex items-center gap-2"
                           >
@@ -296,7 +296,7 @@
 import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSnackbar } from '@/composables/useSnackbar'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex' // 현재 미사용
 import { surveyApi } from '@/apis/surveyApi'
 import { QuestionType, CreateSurveyRequest } from '@/interfaces/surveyInterface'
 import HeaderMenu from '@/components/mobile/HeaderMenu.vue'
@@ -333,7 +333,7 @@ import {
 } from 'lucide-vue-next'
 
 const router = useRouter()
-const store = useStore()
+// const store = useStore() // 현재 미사용
 const { showSuccess, showError } = useSnackbar()
 
 const minDate = computed(() => {
