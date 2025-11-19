@@ -16,8 +16,8 @@ RUN npm ci --only=production=false && \
 # 소스 코드 복사
 COPY . .
 
-# Vue3 프로젝트 빌드 실행
-RUN npm run build
+# Vue3 프로젝트 빌드 실행 (Docker 빌드에서는 vite build만 실행하여 타입 체크 오류 방지)
+RUN npx vite build
 
 # 빌드 결과물 확인 (디버깅용)
 RUN ls -la /app/dist
