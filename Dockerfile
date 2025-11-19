@@ -33,11 +33,8 @@ FROM nginx:alpine
 # 빌드 스테이지에서 생성된 Vue3 빌드 산출물(dist) 복사
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# nginx 설정 파일 복사
+# nginx 설정 파일을 템플릿으로 복사 (nginx:alpine이 자동으로 환경 변수 치환 처리)
 COPY nginx.conf /etc/nginx/templates/default.conf.template
-
-# envsubst 설치 (환경 변수 치환용)
-RUN apk add --no-cache gettext
 
 # 환경 변수 기본값 설정 (컨테이너 실행 시 오버라이드 가능)
 ENV BACKEND_URL=http://localhost:8080
@@ -47,6 +44,5 @@ ENV NGINX_PORT=80
 # 포트 노출
 EXPOSE 80
 
-# nginx 설정 파일에 환경 변수 적용 후 nginx 실행
-CMD envsubst '$$BACKEND_URL $$NGINX_HOST $$NGINX_PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && \
-    nginx -g 'daemon off;'
+# envsubst는 nginx:alpine의 entrypoint가 자동으로 처리하므로 CMD만 명시
+CMD ["nginx", "-g", "daemon off;"]
