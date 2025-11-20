@@ -1,9 +1,9 @@
 name: Generate Docker image and Trigger Jenkins
 
 on:
-  # push:
-  #   branches:
-  #     - master  # 트리거할 브랜치
+  push:
+    branches:
+      - master  # 트리거할 브랜치
   workflow_dispatch:
 
 jobs:
@@ -33,8 +33,8 @@ jobs:
           # tags: ${{ secrets.DOCKERHUB_USERNAME }}/thinkfast_frontend:latest,${{ secrets.DOCKERHUB_USERNAME }}/thinkfast_frontend:${{ github.run_number }}
 
       # 3️⃣ Jenkins 빌드 트리거
-      #- name: Trigger Jenkins build
-      #  run: |
-      #    curl -X POST \
-      #      "${{ secrets.THINKFAST_JENKINS_SERVER }}:9090/job/thinkfast-frontend-prod-deploy/build" \
-      #      --user "${{ secrets.THINKFAST_JENKINS_USERID }}:${{ secrets.THINKFAST_JENKINS_TOKEN }}"
+      - name: Trigger Jenkins build
+        run: |
+          curl -X POST \
+            "${{ secrets.THINKFAST_JENKINS_SERVER }}:9090/job/thinkfast-frontend-prod-deploy/build" \
+            --user "${{ secrets.THINKFAST_JENKINS_USERID }}:${{ secrets.THINKFAST_JENKINS_TOKEN }}"
