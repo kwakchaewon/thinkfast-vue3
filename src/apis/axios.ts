@@ -3,10 +3,10 @@ import router from "@/router";
 import store from "@/store";
 
 // 환경에 따라 동적으로 API URL 설정
-// 프로덕션: 상대 경로 사용 (nginx가 /api로 프록시)
+// 프로덕션: /api 경로 사용 (nginx가 /api로 프록시)
 // 개발 환경: localhost 사용
 const BASE_URL = import.meta.env.PROD 
-  ? ''  // 프로덕션: 상대 경로 (nginx 프록시 사용)
+  ? '/api'  // 프로덕션: /api 경로 (nginx 프록시 사용)
   : 'http://localhost:8080';  // 개발 환경
 
 export const tbAxios = axios.create({
