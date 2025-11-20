@@ -33,27 +33,16 @@ export default defineConfig({
     // 빌드 산출물 최적화
     rollupOptions: {
       output: {
-        // 청크 파일명 설정
+        // 청크 파일명 설정 (순환 참조 방지를 위해 간단하게)
         manualChunks: (id) => {
-          // node_modules에서 라이브러리 분리
+          // node_modules에서 라이브러리만 분리 (Vue는 자동 분리에 맡김)
           if (id.includes('node_modules')) {
-            // Vue 관련 라이브러리
-            if (id.includes('vue') || id.includes('vue-router') || id.includes('pinia')) {
-              return 'vue-vendor'
-            }
-            // UI 라이브러리
-            if (id.includes('reka-ui') || id.includes('lucide-vue-next')) {
-              return 'ui-vendor'
-            }
-            // Chart 라이브러리
-            if (id.includes('chart.js') || id.includes('vue-chartjs')) {
+            // 큰 라이브러리만 분리하여 초기화 순서 문제 방지
+            // Vue 관련은 자동으로 함께 묶이도록 함
+            if (id.includes('chart.js')) {
               return 'chart-vendor'
             }
-            // 유틸리티 라이브러리
-            if (id.includes('axios') || id.includes('@vueuse/core')) {
-              return 'utils-vendor'
-            }
-            // 기타 vendor 라이브러리
+            // 기타 모든 vendor는 하나로 (순환 참조 방지)
             return 'vendor'
           }
         },
