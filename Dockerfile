@@ -20,7 +20,10 @@ COPY . .
 RUN npx vite build
 
 # 빌드 결과물 확인 (디버깅용)
-RUN ls -la /app/dist
+RUN ls -la /app/dist && \
+    ls -la /app/dist/assets 2>/dev/null || echo "No assets directory found" && \
+    echo "=== index.html ===" && \
+    head -20 /app/dist/index.html
 
 # ========================================
 # Stage 2: nginx 프로덕션 스테이지

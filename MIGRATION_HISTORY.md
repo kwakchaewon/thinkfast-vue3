@@ -438,3 +438,5 @@ import { User, Mail, Lock, Bell } from 'lucide-vue-next'
 
 이 히스토리 파일은 완료된 작업의 상세 기록을 보관합니다. 현재 진행 상황과 다음 작업은 `TASK.MD`를 참고하세요.
 
+
+

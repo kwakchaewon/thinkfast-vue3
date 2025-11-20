@@ -4,6 +4,9 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // base 경로 명시적 설정 (프로덕션 빌드 시 정적 파일 경로 보정)
+  base: '/',
+  
   plugins: [
     // Vue 플러그인
     vue(),
