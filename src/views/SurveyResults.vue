@@ -77,10 +77,16 @@
             <CardTitle class="text-xl font-semibold text-gray-800">응답 결과</CardTitle>
           </CardHeader>
           <CardContent class="p-6">
-            <div class="space-y-6">
+            <div v-if="isLoadingQuestions" class="flex items-center justify-center py-8">
+              <div class="text-sm text-gray-500">질문 목록을 불러오는 중...</div>
+            </div>
+            <div v-else-if="questions.length === 0" class="text-sm text-gray-500 text-center py-8">
+              질문이 없습니다.
+            </div>
+            <div v-else class="space-y-6">
               <Card
                 v-for="(question, index) in questions"
-                :key="index"
+                :key="question.id || index"
                 class="shadow-sm border border-gray-200 bg-white"
               >
                 <!-- 헤더 -->
@@ -139,15 +145,19 @@
                   </div>
 
                   <!-- 주관식 워드클라우드 -->
-                  <div v-else-if="question.type === '주관식'" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                  <div v-else-if="question.type === '주관식' && question.id" class="space-y-4">
+                    <div v-if="isLoadingWordCloud(question.id)" class="flex items-center justify-center py-8">
+                      <div class="text-sm text-gray-500">워드클라우드를 불러오는 중...</div>
+                    </div>
+                    <template v-else-if="question.id">
+                      <div v-if="wordCloudDataMap.get(question.id)?.wordCloud && (wordCloudDataMap.get(question.id)?.wordCloud?.length || 0) > 0" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                       <!-- 워드클라우드 -->
                       <div class="wordcloud-visual">
                         <span
-                          v-for="(item, i) in wordCloudData"
+                          v-for="(item, i) in wordCloudDataMap.get(question.id)?.wordCloud || []"
                           :key="item.word"
                           class="wordcloud-key"
-                          :style="getWordCloudStyle(item, i)"
+                          :style="getWordCloudStyle(item, i, question.id)"
                         >
                           {{ item.word }}
                           <span class="wordcloud-count">{{ item.count }}</span>
@@ -156,10 +166,17 @@
                       <!-- 인사이트 텍스트 -->
                       <div class="flex items-center">
                         <div class="text-base text-gray-600 leading-relaxed">
-                          응답자들은 '매칭 시스템'에 대한 개선 요청이 가장 많았으며, <br>그 뒤를 '클라이언트 안정성'과 '버그 수정'에 대한 의견이 차지했습니다.
+                          <template v-if="wordCloudDataMap.get(question.id)?.wordCloud?.[0]">
+                            응답자들은 '{{ wordCloudDataMap.get(question.id)?.wordCloud[0]?.word || '' }}'에 대한 의견이 가장 많았으며,<br>
+                          </template>
+                          총 {{ wordCloudDataMap.get(question.id)?.totalResponses || 0 }}개의 응답이 수집되었습니다.
                         </div>
                       </div>
-                    </div>
+                      </div>
+                      <div v-else class="text-sm text-gray-500 text-center py-8">
+                        워드클라우드 데이터가 없습니다.
+                      </div>
+                    </template>
                   </div>
                 </CardContent>
               </Card>
@@ -264,19 +281,16 @@ const summary = ref<{
 
 const isLoadingSummary = ref(false)
 
-const questions = [
-  {
-    content: '당신이 가장 자주 플레이하는 포지션은 무엇인가요?',
-    type: '객관식',
-    required: true,
-    options: ['탑', '정글', '미드', '원딜', '서포터']
-  },
-  {
-    content: '리그 오브 레전드에서 개선되었으면 하는 점이나 바라는 점이 있다면 자유롭게 작성해주세요.',
-    type: '주관식',
-    required: true
-  }
-]
+interface QuestionItem {
+  id?: number
+  content: string
+  type: string
+  required: boolean
+  options?: Array<{ id: number; content: string }> | string[]
+}
+
+const questions = ref<QuestionItem[]>([])
+const isLoadingQuestions = ref(false)
 
 const positionResults = [
   { name: '정글', percent: 28.5 },
@@ -313,23 +327,33 @@ const chartOptions = {
   }
 }
 
-const wordCloudData = [
-  { word: '매칭', count: 12 },
-  { word: '클라이언트', count: 8 },
-  { word: '버그', count: 7 },
-  { word: '최적화', count: 6 },
-  { word: 'AFK', count: 5 }
-]
+// 질문별 워드클라우드 데이터를 Map으로 관리
+const wordCloudDataMap = ref<Map<number, { wordCloud: Array<{ word: string; count: number }>; totalResponses: number }>>(new Map())
+const loadingWordCloud = ref<Set<number>>(new Set())
 
-function getWordCloudStyle(item: { word: string; count: number }, i: number) {
+// 특정 질문의 워드클라우드 로딩 상태 확인
+function isLoadingWordCloud(questionId: number): boolean {
+  return loadingWordCloud.value.has(questionId)
+}
+
+function getWordCloudStyle(item: { word: string; count: number }, i: number, questionId: number | undefined) {
+  if (!questionId) {
+    return { display: 'none' }
+  }
+  
+  const wordCloudData = wordCloudDataMap.value.get(questionId)?.wordCloud || []
+  if (wordCloudData.length === 0) {
+    return { display: 'none' }
+  }
+  
   const minFont = 16
   const maxFont = 36
-  const minCount = Math.min(...wordCloudData.map(w => w.count))
-  const maxCount = Math.max(...wordCloudData.map(w => w.count))
+  const minCount = Math.min(...wordCloudData.map((w: { word: string; count: number }) => w.count))
+  const maxCount = Math.max(...wordCloudData.map((w: { word: string; count: number }) => w.count))
   const size = minFont + ((item.count - minCount) / (maxCount - minCount || 1)) * (maxFont - minFont)
   
   // 원형 레이아웃을 위한 각도 계산
-  const angle = (i / wordCloudData.length) * 2 * Math.PI
+  const angle = (i / (wordCloudData.length || 1)) * 2 * Math.PI
   const radius = 35 // 중심으로부터의 거리 (%)
   
   // 원형 레이아웃에 약간의 랜덤성 추가
@@ -444,9 +468,74 @@ const fetchSurveySummary = async () => {
   }
 }
 
+// 특정 질문의 워드클라우드 데이터 가져오기
+const fetchWordCloud = async (questionId: number) => {
+  // 이미 로딩 중이거나 이미 데이터가 있으면 스킵
+  if (loadingWordCloud.value.has(questionId) || wordCloudDataMap.value.has(questionId)) {
+    return
+  }
+
+  try {
+    loadingWordCloud.value.add(questionId)
+    const wordCloudData = await surveyApi.getWordCloud(surveyId.value, questionId)
+    wordCloudDataMap.value.set(questionId, {
+      wordCloud: wordCloudData.wordCloud || [],
+      totalResponses: wordCloudData.totalResponses || 0
+    })
+  } catch (error: any) {
+    // 403 권한 없음 에러인 경우 워드클라우드를 표시하지 않음
+    if (error.response?.status === 403) {
+      console.warn(`질문 ${questionId}의 워드클라우드에 접근할 권한이 없습니다.`)
+    } else {
+      console.error(`질문 ${questionId}의 워드클라우드 로딩 실패:`, error)
+    }
+    // 에러 발생 시 빈 데이터 설정
+    wordCloudDataMap.value.set(questionId, {
+      wordCloud: [],
+      totalResponses: 0
+    })
+  } finally {
+    loadingWordCloud.value.delete(questionId)
+  }
+}
+
+// 질문 목록을 가져오고 주관식 질문의 워드클라우드 로드
+const fetchQuestions = async () => {
+  try {
+    isLoadingQuestions.value = true
+    const questionsData = await surveyApi.getQuestionsBySurveyId(surveyId.value)
+    // 질문 타입 매핑 (서버: MULTIPLE_CHOICE, SUBJECTIVE -> 화면: 객관식, 주관식)
+    const typeMapping: Record<string, string> = {
+      'MULTIPLE_CHOICE': '객관식',
+      'SUBJECTIVE': '주관식',
+      'SCALE': '척도형'
+    }
+    
+    questions.value = questionsData.map(q => ({
+      id: q.id,
+      content: q.content,
+      type: typeMapping[q.type] || q.type,
+      required: q.required ?? false,
+      options: q.options || []
+    }))
+
+    // 주관식 질문의 워드클라우드 가져오기
+    for (const question of questions.value) {
+      if (question.type === '주관식' && question.id) {
+        await fetchWordCloud(question.id)
+      }
+    }
+  } catch (error) {
+    console.error('질문 목록을 불러오는데 실패했습니다:', error)
+  } finally {
+    isLoadingQuestions.value = false
+  }
+}
+
 onMounted(() => {
   fetchSurveyDetail()
   fetchSurveySummary()
+  fetchQuestions()
 })
 </script>
 

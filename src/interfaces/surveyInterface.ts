@@ -95,3 +95,15 @@ export interface SurveySummary {
   mainPositionPercent: number;
   improvements: string[];
 }
+
+// 워드클라우드 데이터 타입 정의
+export interface WordCloudItem {
+  word: string;
+  count: number;
+}
+
+export interface WordCloudResponse {
+  questionId: number;
+  wordCloud: WordCloudItem[];
+  totalResponses: number;
+}
