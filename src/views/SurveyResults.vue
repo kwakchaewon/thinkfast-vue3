@@ -494,6 +494,11 @@ const fetchSurveyDetail = async () => {
       endTime: surveyDetail.endTime,
       responseCount: surveyDetail.responseCount
     }
+    
+    // 동적 제목 설정
+    if (survey.value.title) {
+      document.title = `${survey.value.title} 결과 :: ThinkFast`
+    }
   } catch (error) {
     showError('설문 정보를 불러오는데 실패했습니다.')
     router.push('/')

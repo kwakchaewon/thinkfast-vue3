@@ -327,6 +327,11 @@ const fetchSurveyDetail = async () => {
         options: question.options || []
       }))
     }
+    
+    // 동적 제목 설정
+    if (survey.value.title) {
+      document.title = `${survey.value.title} :: ThinkFast`
+    }
   } catch (error) {
     router.push('/')
   } finally {

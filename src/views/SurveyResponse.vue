@@ -185,6 +185,11 @@ const fetchSurveyData = async () => {
       questions: questions
     }
 
+    // 동적 제목 설정
+    if (survey.value.title) {
+      document.title = `${survey.value.title} 응답하기 :: ThinkFast`
+    }
+
     // 초기값 설정 (척도형 질문은 3으로 초기화)
     questions.forEach((question: Question) => {
       if (question.type === 'SCALE') {
