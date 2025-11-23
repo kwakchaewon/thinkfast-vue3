@@ -349,7 +349,7 @@ const formatNotificationTitle = (notification: RawNotification) => {
 const fetchInitialNotifications = async () => {
   try {
     console.log('Fetching initial notifications...')
-    const response = await tbAxios.get('http://localhost:8080/notification')
+    const response = await tbAxios.get('/notification')
     
     if (response.data.data && Array.isArray(response.data.data)) {
       const processedNotifications = response.data.data.map((notification: any) => {
@@ -381,7 +381,17 @@ const fetchInitialNotifications = async () => {
 
 const connectWebSocket = () => {
   const username = localStorage.getItem('username') || 'user'
-  const wsUrl = `ws://localhost:8080/alarm/${username}`
+  // 환경에 따라 WebSocket URL 동적 생성
+  let wsUrl: string
+  if (import.meta.env.PROD) {
+    // 프로덕션: 현재 호스트의 프로토콜에 따라 ws/wss 사용
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+    const host = window.location.host
+    wsUrl = `${protocol}//${host}/api/alarm/${username}`
+  } else {
+    // 개발 환경
+    wsUrl = `ws://localhost:8080/alarm/${username}`
+  }
   console.log('Connecting to WebSocket:', wsUrl)
   
   ws.value = new WebSocket(wsUrl)
@@ -460,7 +470,7 @@ const markAllAsRead = async () => {
     
     if (unreadSurveyIds.length > 0) {
       console.log('Marking notifications as read for surveyIds:', unreadSurveyIds)
-      await tbAxios.post('http://localhost:8080/notification/read', unreadSurveyIds)
+      await tbAxios.post('/notification/read', unreadSurveyIds)
       
       await fetchInitialNotifications()
       showSuccess('모든 알림을 읽음 처리했습니다.')
@@ -485,7 +495,7 @@ const handleLogout = async () => {
 const handleNotificationClick = async (notification: Notification) => {
   if (notification.type === 'SURVEY_RESPONSE' || notification.type === 'SURVEY_EXPIRED') {
     try {
-      await tbAxios.post('http://localhost:8080/notification/read', [notification.surveyId])
+      await tbAxios.post('/notification/read', [notification.surveyId])
       await fetchInitialNotifications()
       await router.replace(`/survey/${notification.surveyId}`)
     } catch (error) {
