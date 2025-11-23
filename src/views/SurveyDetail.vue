@@ -297,9 +297,40 @@ const confirmDelete = async () => {
   }
 }
 
-const copyShareUrl = () => {
-  navigator.clipboard.writeText(shareUrl.value)
-  showSuccess('URL이 복사되었습니다.')
+const copyShareUrl = async () => {
+  try {
+    // 최신 클립보드 API 사용
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(shareUrl.value)
+      showSuccess('URL이 복사되었습니다.')
+    } else {
+      // Fallback: 구형 브라우저나 HTTP 환경을 위한 방법
+      const textArea = document.createElement('textarea')
+      textArea.value = shareUrl.value
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-999999px'
+      textArea.style.top = '-999999px'
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      
+      try {
+        const successful = document.execCommand('copy')
+        if (successful) {
+          showSuccess('URL이 복사되었습니다.')
+        } else {
+          throw new Error('복사 실패')
+        }
+      } catch (err) {
+        showError('URL 복사에 실패했습니다.')
+      } finally {
+        document.body.removeChild(textArea)
+      }
+    }
+  } catch (error) {
+    console.error('클립보드 복사 실패:', error)
+    showError('URL 복사에 실패했습니다.')
+  }
 }
 
 const questionTypeLabels: Record<string, string> = {
