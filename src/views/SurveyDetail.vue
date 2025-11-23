@@ -268,7 +268,10 @@ const survey = ref<GetSurveyDetailResponse>({
   questions: []
 })
 
-const shareUrl = computed(() => `http://localhost:5173/survey/${route.params.id}/create-response`)
+const shareUrl = computed(() => {
+  const origin = typeof window !== 'undefined' ? window.location.origin : ''
+  return `${origin}/survey/${route.params.id}/create-response`
+})
 
 // 반응형 QR 코드 크기
 const qrcodeSize = computed(() => {
