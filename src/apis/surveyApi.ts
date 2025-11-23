@@ -7,7 +7,8 @@ import {
   Question, GetSurveyDetailResponse,
   CreateAnswerRequest,
   SurveySummary,
-  WordCloudResponse
+  WordCloudResponse,
+  QuestionStatisticsResponse
 } from '@/interfaces/surveyInterface'
 
 const { showError } = useSnackbar()
@@ -244,6 +245,27 @@ export const surveyApi = {
         showError('질문을 찾을 수 없습니다.')
       } else {
         showError(error.response?.data?.message || '인사이트를 불러오는데 실패했습니다.')
+      }
+      throw error
+    }
+  },
+
+  // 질문별 통계 조회
+  async getQuestionStatistics(surveyId: number, questionId: number): Promise<QuestionStatisticsResponse> {
+    try {
+      const response = await tbAxios.get(`/survey/${surveyId}/questions/${questionId}/statistics`)
+      if (!response.data.success) {
+        showError(response.data.message || '질문 통계를 불러오는데 실패했습니다.')
+        throw new Error(response.data.message || '질문 통계를 불러오는데 실패했습니다.')
+      }
+      return response.data.data
+    } catch (error: any) {
+      if (error.response?.status === 403) {
+        showError('질문 통계에 접근할 권한이 없습니다.')
+      } else if (error.response?.status === 404) {
+        showError('질문을 찾을 수 없습니다.')
+      } else {
+        showError(error.response?.data?.message || '질문 통계를 불러오는데 실패했습니다.')
       }
       throw error
     }

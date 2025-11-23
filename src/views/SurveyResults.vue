@@ -127,11 +127,14 @@
                   
                   <!-- 객관식 차트 -->
                   <div v-if="question.type === '객관식'" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div v-if="isLoadingStatistics(question.id)" class="flex items-center justify-center py-8">
+                      <div class="text-sm text-gray-500">통계 데이터를 불러오는 중...</div>
+                    </div>
+                    <div v-else-if="question.id && statisticsMap.get(question.id)" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                       <!-- 차트 -->
                       <div class="flex justify-center">
                         <div class="w-full max-w-sm">
-                          <Doughnut :data="chartData" :options="chartOptions" />
+                          <Doughnut :data="getChartData(question.id)" :options="chartOptions" />
                         </div>
                       </div>
                       <!-- 인사이트 텍스트 -->
@@ -146,6 +149,9 @@
                           인사이트 데이터가 없습니다.
                         </div>
                       </div>
+                    </div>
+                    <div v-else class="text-sm text-gray-500 text-center py-8">
+                      통계 데이터가 없습니다.
                     </div>
                   </div>
 
@@ -250,6 +256,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Eye, X } from 'lucide-vue-next'
+import type { QuestionStatisticsOption } from '@/interfaces/surveyInterface'
 
 Chart.register(ArcElement, Tooltip, Legend)
 
@@ -300,29 +307,28 @@ interface QuestionItem {
 const questions = ref<QuestionItem[]>([])
 const isLoadingQuestions = ref(false)
 
-const positionResults = [
-  { name: '정글', percent: 28.5 },
-  { name: '미드', percent: 28.5 },
-  { name: '원딜', percent: 14.2 },
-  { name: '탑', percent: 14.2 },
-  { name: '서포터', percent: 14.2 }
-]
+// 질문별 통계 데이터를 Map으로 관리
+const statisticsMap = ref<Map<number, import('@/interfaces/surveyInterface').QuestionStatisticsResponse>>(new Map())
+const loadingStatistics = ref<Set<number>>(new Set())
 
-const chartData = {
-  labels: positionResults.map(r => r.name),
-  datasets: [
-    {
-      data: positionResults.map(r => r.percent),
-      backgroundColor: [
-        '#4caf50', // 정글
-        '#2196f3', // 미드
-        '#ff9800', // 원딜
-        '#9c27b0', // 탑
-        '#ffc107'  // 서포터
-      ]
-    }
-  ]
-}
+// 색상 팔레트 (옵션 개수에 따라 동적으로 사용)
+const colorPalette = [
+  '#4caf50', // 초록
+  '#2196f3', // 파랑
+  '#ff9800', // 주황
+  '#9c27b0', // 보라
+  '#ffc107', // 노랑
+  '#e91e63', // 분홍
+  '#00bcd4', // 청록
+  '#795548', // 갈색
+  '#607d8b', // 청회색
+  '#f44336', // 빨강
+  '#8bc34a', // 연두
+  '#3f51b5', // 남색
+  '#ff5722', // 진주황
+  '#009688', // 청록2
+  '#cddc39'  // 라임
+]
 
 const chartOptions = {
   responsive: true,
@@ -332,6 +338,39 @@ const chartOptions = {
     legend: {
       position: 'bottom' as const,
     },
+  }
+}
+
+// 특정 질문의 통계 로딩 상태 확인
+function isLoadingStatistics(questionId: number | undefined): boolean {
+  if (!questionId) return false
+  return loadingStatistics.value.has(questionId)
+}
+
+// 질문별 차트 데이터 생성
+function getChartData(questionId: number | undefined) {
+  if (!questionId) {
+    return { labels: [], datasets: [] }
+  }
+  
+  const statistics = statisticsMap.value.get(questionId)
+  if (!statistics || !statistics.statistics.options || statistics.statistics.options.length === 0) {
+    return { labels: [], datasets: [] }
+  }
+
+  const options = statistics.statistics.options
+  const labels = options.map((opt: QuestionStatisticsOption) => opt.optionContent)
+  const data = options.map((opt: QuestionStatisticsOption) => opt.percent)
+  const backgroundColor = options.map((_: QuestionStatisticsOption, index: number) => colorPalette[index % colorPalette.length])
+
+  return {
+    labels,
+    datasets: [
+      {
+        data,
+        backgroundColor
+      }
+    ]
   }
 }
 
@@ -542,6 +581,38 @@ const fetchQuestionInsight = async (questionId: number) => {
   }
 }
 
+// 특정 질문의 통계 데이터 가져오기
+const fetchQuestionStatistics = async (questionId: number) => {
+  // 이미 로딩 중이거나 이미 데이터가 있으면 스킵
+  if (loadingStatistics.value.has(questionId) || statisticsMap.value.has(questionId)) {
+    return
+  }
+
+  try {
+    loadingStatistics.value.add(questionId)
+    const statisticsData = await surveyApi.getQuestionStatistics(surveyId.value, questionId)
+    statisticsMap.value.set(questionId, statisticsData)
+  } catch (error: any) {
+    // 403 권한 없음 에러인 경우 통계를 표시하지 않음
+    if (error.response?.status === 403) {
+      console.warn(`질문 ${questionId}의 통계에 접근할 권한이 없습니다.`)
+    } else {
+      console.error(`질문 ${questionId}의 통계 로딩 실패:`, error)
+    }
+    // 에러 발생 시 빈 데이터 설정
+    statisticsMap.value.set(questionId, {
+      questionId,
+      type: 'MULTIPLE_CHOICE',
+      statistics: {
+        options: [],
+        totalResponses: 0
+      }
+    })
+  } finally {
+    loadingStatistics.value.delete(questionId)
+  }
+}
+
 // 질문 목록을 가져오고 주관식 질문의 워드클라우드 및 모든 질문의 인사이트 로드
 const fetchQuestions = async () => {
   try {
@@ -562,7 +633,7 @@ const fetchQuestions = async () => {
       options: q.options || []
     }))
 
-    // 모든 질문의 인사이트 및 주관식 질문의 워드클라우드 가져오기
+    // 모든 질문의 인사이트 및 주관식 질문의 워드클라우드, 객관식 질문의 통계 가져오기
     const promises: Promise<void>[] = []
     for (const question of questions.value) {
       if (question.id) {
@@ -572,6 +643,11 @@ const fetchQuestions = async () => {
         // 주관식 질문의 워드클라우드 가져오기
         if (question.type === '주관식') {
           promises.push(fetchWordCloud(question.id))
+        }
+        
+        // 객관식 질문의 통계 가져오기
+        if (question.type === '객관식') {
+          promises.push(fetchQuestionStatistics(question.id))
         }
       }
     }

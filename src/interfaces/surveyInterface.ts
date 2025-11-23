@@ -107,3 +107,23 @@ export interface WordCloudResponse {
   wordCloud: WordCloudItem[];
   totalResponses: number;
 }
+
+// 질문별 통계 데이터 타입 정의
+export interface QuestionStatisticsOption {
+  optionId: number;
+  optionContent: string;
+  count: number;
+  percent: number;
+}
+
+export interface QuestionStatistics {
+  options: QuestionStatisticsOption[];
+  totalResponses: number;
+}
+
+export interface QuestionStatisticsResponse {
+  questionId: number;
+  type: string;
+  statistics: QuestionStatistics;
+  insight?: string;
+}
