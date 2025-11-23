@@ -255,8 +255,21 @@ interface RawNotification {
 
 const router = useRouter()
 const { showSuccess, showError } = useSnackbar()
-const userName = ref('Andrew Kwak')
-const userEmail = ref('andrew@example.com')
+
+// 사용자 이메일을 localStorage에서 동적으로 가져오기
+const userEmail = computed(() => {
+  return localStorage.getItem('username') || ''
+})
+
+// 사용자 이름을 이메일 주소의 @ 앞 부분에서 추출 (첫 글자 대문자)
+const userName = computed(() => {
+  const email = userEmail.value
+  if (!email) return 'User'
+  const emailPrefix = email.split('@')[0]
+  // 첫 글자를 대문자로 변환
+  return emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1)
+})
+
 const showNotifications = ref(false)
 const notifications = ref<Notification[]>([])
 const ws = ref<WebSocket | null>(null)
