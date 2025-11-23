@@ -5,20 +5,24 @@
         <!-- 설문 정보 헤더 -->
         <Card class="mb-4 shadow-md border border-gray-200 bg-white">
           <CardHeader class="px-6 py-4">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div v-if="isLoading" class="flex items-center justify-center py-8">
+              <div class="text-sm text-gray-500">설문 정보를 불러오는 중...</div>
+            </div>
+            <div v-else class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div class="flex-1">
                 <Badge
+                  v-if="survey.id"
                   :variant="survey.isActive === true ? 'default' : 'destructive'"
                   class="mb-3"
                 >
                   {{ survey.isActive === true ? '진행중' : '종료' }}
                 </Badge>
-                <h1 class="text-2xl font-semibold text-gray-800 mb-2">{{ survey.title }}</h1>
-                <p class="text-base text-gray-600">{{ survey.description }}</p>
+                <h1 class="text-2xl font-semibold text-gray-800 mb-2">{{ survey.title || '-' }}</h1>
+                <p class="text-base text-gray-600">{{ survey.description || '-' }}</p>
               </div>
-              <div class="text-right sm:text-left sm:ml-auto">
+              <div v-if="survey.endTime" class="text-right sm:text-left sm:ml-auto">
                 <div class="text-xs text-gray-500 mb-1">마감일</div>
-                <div class="text-sm text-gray-800">{{ survey.endTime }}</div>
+                <div class="text-sm text-gray-800">{{ formatEndTime(survey.endTime) }}</div>
               </div>
             </div>
           </CardHeader>
@@ -33,16 +37,21 @@
             </div>
           </CardHeader>
           <CardContent class="p-6">
-            <div class="space-y-6">
+            <div v-if="isLoadingSummary" class="flex items-center justify-center py-8">
+              <div class="text-sm text-gray-500">요약 리포트를 불러오는 중...</div>
+            </div>
+            <div v-else class="space-y-6">
               <!-- 주요 포지션 -->
-              <div>
+              <div v-if="summary.mainPosition">
                 <div class="text-base font-semibold text-gray-800 mb-3">주요 포지션</div>
                 <div class="text-base text-gray-700">{{ summary.mainPosition }}</div>
-                <div class="text-xs text-gray-500 mt-1">전체 응답자의 45%가 선택</div>
+                <div v-if="summary.mainPositionPercent !== undefined" class="text-xs text-gray-500 mt-1">
+                  전체 응답자의 {{ summary.mainPositionPercent.toFixed(1) }}%가 선택
+                </div>
               </div>
 
               <!-- 개선 사항 -->
-              <div>
+              <div v-if="summary.improvements && summary.improvements.length > 0">
                 <div class="text-base font-semibold text-gray-800 mb-3">개선 사항</div>
                 <div class="space-y-2">
                   <div
@@ -54,6 +63,9 @@
                     <span class="text-base text-gray-700">{{ item }}</span>
                   </div>
                 </div>
+              </div>
+              <div v-if="!summary.mainPosition && (!summary.improvements || summary.improvements.length === 0)" class="text-sm text-gray-500">
+                요약 리포트 데이터가 없습니다.
               </div>
             </div>
           </CardContent>
@@ -240,14 +252,17 @@ const survey = ref<Survey>({
   responseCount: 0
 })
 
-const summary = ref({
-  mainPosition: '정글',
-  improvements: [
-    '매칭 시스템의 실력 차이 완화 필요',
-    '초반 AFK 플레이어 패널티 강화',
-    '클라이언트 성능 최적화 필요'
-  ]
+const summary = ref<{
+  mainPosition: string
+  mainPositionPercent?: number
+  improvements: string[]
+}>({
+  mainPosition: '',
+  mainPositionPercent: undefined,
+  improvements: []
 })
+
+const isLoadingSummary = ref(false)
 
 const questions = [
   {
@@ -371,6 +386,21 @@ function viewAllResponses(index: number) {
   showResponsesModal.value = true
 }
 
+// endTime 포맷팅 함수 (예: "2024-01-15 14:30:00" -> "2024-01-15 14:30")
+function formatEndTime(endTime: string): string {
+  if (!endTime) return '-'
+  
+  // "YYYY-MM-DD HH:mm:ss" 형식 또는 "YYYY-MM-DD HH:mm" 형식 처리
+  const parts = endTime.trim().split(' ')
+  if (parts.length >= 2) {
+    const date = parts[0]
+    const time = parts[1].substring(0, 5) // HH:mm까지만 표시
+    return `${date} ${time}`
+  }
+  
+  return endTime
+}
+
 const fetchSurveyDetail = async () => {
   try {
     isLoading.value = true
@@ -391,8 +421,32 @@ const fetchSurveyDetail = async () => {
   }
 }
 
+const fetchSurveySummary = async () => {
+  try {
+    isLoadingSummary.value = true
+    const summaryData = await surveyApi.getSurveySummary(surveyId.value)
+    summary.value = {
+      mainPosition: summaryData.mainPosition || '',
+      mainPositionPercent: summaryData.mainPositionPercent,
+      improvements: summaryData.improvements || []
+    }
+  } catch (error: any) {
+    // 403 권한 없음 에러인 경우 요약 리포트 섹션을 숨기거나 기본값 유지
+    if (error.response?.status === 403) {
+      // 권한이 없는 경우 빈 상태로 유지하거나 메시지 표시 가능
+      console.warn('설문 요약 리포트에 접근할 권한이 없습니다.')
+    } else {
+      // 기타 에러는 이미 surveyApi에서 에러 메시지 표시됨
+      console.error('설문 요약 리포트 로딩 실패:', error)
+    }
+  } finally {
+    isLoadingSummary.value = false
+  }
+}
+
 onMounted(() => {
   fetchSurveyDetail()
+  fetchSurveySummary()
 })
 </script>
 

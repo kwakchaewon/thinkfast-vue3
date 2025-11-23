@@ -88,3 +88,10 @@ export interface Survey {
   responseCount: number;
   questions: Question[];
 }
+
+// 설문 요약 리포트 타입 정의
+export interface SurveySummary {
+  mainPosition: string;
+  mainPositionPercent: number;
+  improvements: string[];
+}

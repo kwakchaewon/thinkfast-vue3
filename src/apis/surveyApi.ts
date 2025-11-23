@@ -5,7 +5,8 @@ import {
   GetRecentSurveysResponse,
   Survey,
   Question, GetSurveyDetailResponse,
-  CreateAnswerRequest
+  CreateAnswerRequest,
+  SurveySummary
 } from '@/interfaces/surveyInterface'
 
 const { showError } = useSnackbar()
@@ -180,6 +181,27 @@ export const surveyApi = {
       return response.data
     } catch (error) {
       showError('설문 인사이트를 불러오는데 실패했습니다.')
+      throw error
+    }
+  },
+
+  // 설문 요약 리포트 조회
+  async getSurveySummary(surveyId: number): Promise<SurveySummary> {
+    try {
+      const response = await tbAxios.get(`/survey/${surveyId}/summary`)
+      if (!response.data.success) {
+        showError(response.data.message || '설문 요약 리포트를 불러오는데 실패했습니다.')
+        throw new Error(response.data.message || '설문 요약 리포트를 불러오는데 실패했습니다.')
+      }
+      return response.data.data
+    } catch (error: any) {
+      if (error.response?.status === 403) {
+        showError('설문 요약 리포트에 접근할 권한이 없습니다.')
+      } else if (error.response?.status === 404) {
+        showError('설문을 찾을 수 없습니다.')
+      } else {
+        showError(error.response?.data?.message || '설문 요약 리포트를 불러오는데 실패했습니다.')
+      }
       throw error
     }
   }
