@@ -226,5 +226,26 @@ export const surveyApi = {
       }
       throw error
     }
+  },
+
+  // 질문별 인사이트 텍스트 조회
+  async getQuestionInsight(surveyId: number, questionId: number): Promise<string> {
+    try {
+      const response = await tbAxios.get(`/survey/${surveyId}/questions/${questionId}/insight`)
+      if (!response.data.success) {
+        showError(response.data.message || '인사이트를 불러오는데 실패했습니다.')
+        throw new Error(response.data.message || '인사이트를 불러오는데 실패했습니다.')
+      }
+      return response.data.data
+    } catch (error: any) {
+      if (error.response?.status === 403) {
+        showError('인사이트에 접근할 권한이 없습니다.')
+      } else if (error.response?.status === 404) {
+        showError('질문을 찾을 수 없습니다.')
+      } else {
+        showError(error.response?.data?.message || '인사이트를 불러오는데 실패했습니다.')
+      }
+      throw error
+    }
   }
 } 

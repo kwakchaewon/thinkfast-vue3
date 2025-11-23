@@ -136,9 +136,14 @@
                       </div>
                       <!-- 인사이트 텍스트 -->
                       <div class="flex items-center">
-                        <div class="text-base text-gray-600 leading-relaxed">
-                          정글과 미드가 응답자의 절반 이상을 차지하며,<br>
-                          원딜, 탑, 서포터는 동일한 비율로 나타났습니다.
+                        <div v-if="question.id && isLoadingInsight(question.id)" class="text-sm text-gray-500">
+                          인사이트를 불러오는 중...
+                        </div>
+                        <div v-else-if="question.id && insightMap.get(question.id)" class="text-base text-gray-600 leading-relaxed">
+                          {{ insightMap.get(question.id) }}
+                        </div>
+                        <div v-else class="text-sm text-gray-500">
+                          인사이트 데이터가 없습니다.
                         </div>
                       </div>
                     </div>
@@ -165,11 +170,14 @@
                       </div>
                       <!-- 인사이트 텍스트 -->
                       <div class="flex items-center">
-                        <div class="text-base text-gray-600 leading-relaxed">
-                          <template v-if="wordCloudDataMap.get(question.id)?.wordCloud?.[0]">
-                            응답자들은 '{{ wordCloudDataMap.get(question.id)?.wordCloud[0]?.word || '' }}'에 대한 의견이 가장 많았으며,<br>
-                          </template>
-                          총 {{ wordCloudDataMap.get(question.id)?.totalResponses || 0 }}개의 응답이 수집되었습니다.
+                        <div v-if="question.id && isLoadingInsight(question.id)" class="text-sm text-gray-500">
+                          인사이트를 불러오는 중...
+                        </div>
+                        <div v-else-if="question.id && insightMap.get(question.id)" class="text-base text-gray-600 leading-relaxed">
+                          {{ insightMap.get(question.id) }}
+                        </div>
+                        <div v-else class="text-sm text-gray-500">
+                          인사이트 데이터가 없습니다.
                         </div>
                       </div>
                       </div>
@@ -331,9 +339,19 @@ const chartOptions = {
 const wordCloudDataMap = ref<Map<number, { wordCloud: Array<{ word: string; count: number }>; totalResponses: number }>>(new Map())
 const loadingWordCloud = ref<Set<number>>(new Set())
 
+// 질문별 인사이트 텍스트를 Map으로 관리
+const insightMap = ref<Map<number, string>>(new Map())
+const loadingInsight = ref<Set<number>>(new Set())
+
 // 특정 질문의 워드클라우드 로딩 상태 확인
 function isLoadingWordCloud(questionId: number): boolean {
   return loadingWordCloud.value.has(questionId)
+}
+
+// 특정 질문의 인사이트 로딩 상태 확인
+function isLoadingInsight(questionId: number | undefined): boolean {
+  if (!questionId) return false
+  return loadingInsight.value.has(questionId)
 }
 
 function getWordCloudStyle(item: { word: string; count: number }, i: number, questionId: number | undefined) {
@@ -499,7 +517,32 @@ const fetchWordCloud = async (questionId: number) => {
   }
 }
 
-// 질문 목록을 가져오고 주관식 질문의 워드클라우드 로드
+// 특정 질문의 인사이트 텍스트 가져오기
+const fetchQuestionInsight = async (questionId: number) => {
+  // 이미 로딩 중이거나 이미 데이터가 있으면 스킵
+  if (loadingInsight.value.has(questionId) || insightMap.value.has(questionId)) {
+    return
+  }
+
+  try {
+    loadingInsight.value.add(questionId)
+    const insightText = await surveyApi.getQuestionInsight(surveyId.value, questionId)
+    insightMap.value.set(questionId, insightText)
+  } catch (error: any) {
+    // 403 권한 없음 에러인 경우 인사이트를 표시하지 않음
+    if (error.response?.status === 403) {
+      console.warn(`질문 ${questionId}의 인사이트에 접근할 권한이 없습니다.`)
+    } else {
+      console.error(`질문 ${questionId}의 인사이트 로딩 실패:`, error)
+    }
+    // 에러 발생 시 빈 문자열 설정
+    insightMap.value.set(questionId, '')
+  } finally {
+    loadingInsight.value.delete(questionId)
+  }
+}
+
+// 질문 목록을 가져오고 주관식 질문의 워드클라우드 및 모든 질문의 인사이트 로드
 const fetchQuestions = async () => {
   try {
     isLoadingQuestions.value = true
@@ -519,12 +562,22 @@ const fetchQuestions = async () => {
       options: q.options || []
     }))
 
-    // 주관식 질문의 워드클라우드 가져오기
+    // 모든 질문의 인사이트 및 주관식 질문의 워드클라우드 가져오기
+    const promises: Promise<void>[] = []
     for (const question of questions.value) {
-      if (question.type === '주관식' && question.id) {
-        await fetchWordCloud(question.id)
+      if (question.id) {
+        // 모든 질문의 인사이트 가져오기
+        promises.push(fetchQuestionInsight(question.id))
+        
+        // 주관식 질문의 워드클라우드 가져오기
+        if (question.type === '주관식') {
+          promises.push(fetchWordCloud(question.id))
+        }
       }
     }
+    
+    // 병렬로 로드
+    await Promise.all(promises)
   } catch (error) {
     console.error('질문 목록을 불러오는데 실패했습니다:', error)
   } finally {
