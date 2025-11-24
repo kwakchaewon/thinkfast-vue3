@@ -109,7 +109,6 @@
           <CardHeader class="border-b border-gray-200 px-6 py-4">
             <div class="flex items-center justify-between">
               <CardTitle class="text-xl font-semibold text-gray-800">설문 요약 리포트</CardTitle>
-              <span class="text-sm text-gray-500">총 {{ survey.responseCount }}명 참여</span>
             </div>
           </CardHeader>
           <CardContent class="p-6">
