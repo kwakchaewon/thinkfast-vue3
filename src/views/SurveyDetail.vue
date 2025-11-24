@@ -156,7 +156,7 @@
                         v-for="option in question.options"
                         :key="option.id"
                         variant="secondary"
-                        class="text-sm"
+                        class="text-sm text-white bg-primary-400"
                       >
                         {{ option.content }}
                       </Badge>
