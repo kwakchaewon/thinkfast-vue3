@@ -71,8 +71,8 @@
                 </div>
               </div>
               <!-- 공유 URL 및 응답 현황 (모바일: 전체, 데스크톱: 8/12) -->
-              <div class="md:col-span-8 flex flex-col h-full">
-                <div class="mb-4">
+              <div class="md:col-span-8 flex flex-col h-full justify-center">
+                <div>
                   <div class="text-sm font-medium text-gray-800 mb-2">공유 URL</div>
                   <div class="flex gap-2">
                     <Input
@@ -93,12 +93,12 @@
                     URL을 복사하여 설문을 공유하세요
                   </div>
                 </div>
-                <div class="mt-auto">
-                  <div class="text-sm font-medium text-gray-800 mb-2">응답 현황</div>
-                  <div class="text-lg font-semibold text-gray-800">
-                    {{ survey.responseCount }}개
-                  </div>
-                </div>
+<!--                <div class="mt-auto">-->
+<!--                  <div class="text-sm font-medium text-gray-800 mb-2">응답 현황</div>-->
+<!--                  <div class="text-lg font-semibold text-gray-800">-->
+<!--                    {{ survey.responseCount }}개-->
+<!--                  </div>-->
+<!--                </div>-->
               </div>
             </div>
           </CardContent>
@@ -109,6 +109,7 @@
           <CardHeader class="border-b border-gray-200 px-6 py-4">
             <div class="flex items-center justify-between">
               <CardTitle class="text-xl font-semibold text-gray-800">설문 요약 리포트</CardTitle>
+              <span class="text-sm text-gray-500">총 {{ survey.responseCount }}명 참여</span>
             </div>
           </CardHeader>
           <CardContent class="p-6">
