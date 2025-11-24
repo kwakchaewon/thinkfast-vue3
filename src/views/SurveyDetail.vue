@@ -18,7 +18,7 @@
               </div>
               <div class="text-right sm:text-left sm:ml-auto">
                 <div class="text-xs text-gray-500 mb-1">마감일</div>
-                <div class="text-sm text-gray-800 mb-4">{{ survey.endTime }}</div>
+                <div class="text-sm text-gray-800 mb-4">{{ formatEndTime(survey.endTime) }}</div>
                 <Button
                   variant="outline"
                   size="sm"
@@ -375,6 +375,31 @@ const fetchSurveyDetail = async () => {
 
 const goToResults = () => {
   router.push(`/survey/${surveyId.value}/results`)
+}
+
+// endTime 포맷팅 함수 (예: "2025-11-23T20:00:00" -> "2025-11-23 20:00")
+function formatEndTime(endTime: string): string {
+  if (!endTime) return '-'
+  
+  // ISO 형식 처리 (예: "2025-11-23T20:00:00")
+  if (endTime.includes('T')) {
+    const [date, time] = endTime.split('T')
+    if (time) {
+      const timeWithoutSeconds = time.substring(0, 5) // HH:mm까지만 표시
+      return `${date} ${timeWithoutSeconds}`
+    }
+    return date
+  }
+  
+  // 공백으로 구분된 형식 처리 (예: "2024-01-15 14:30:00" -> "2024-01-15 14:30")
+  const parts = endTime.trim().split(' ')
+  if (parts.length >= 2) {
+    const date = parts[0]
+    const time = parts[1].substring(0, 5) // HH:mm까지만 표시
+    return `${date} ${time}`
+  }
+  
+  return endTime
 }
 
 // 라우트 파라미터 변경 감지

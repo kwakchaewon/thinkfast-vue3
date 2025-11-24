@@ -175,13 +175,30 @@ const fetchSurveyData = async () => {
       required: q.required ?? false
     }))
     
+    // endTime 포맷팅 (ISO 형식 또는 공백 구분 형식 처리)
+    let endDate = ''
+    let endTime = ''
+    if (response.endTime) {
+      if (response.endTime.includes('T')) {
+        // ISO 형식 처리 (예: "2025-11-23T20:00:00")
+        const [date, time] = response.endTime.split('T')
+        endDate = date
+        endTime = time ? time.substring(0, 5) : '' // HH:mm까지만 표시
+      } else {
+        // 공백으로 구분된 형식 처리
+        const parts = response.endTime.split(' ')
+        endDate = parts[0] || ''
+        endTime = parts[1] ? parts[1].substring(0, 5) : '' // HH:mm까지만 표시
+      }
+    }
+    
     survey.value = {
       id: surveyId,
       title: response.title,
       description: response.description,
       status: response.isActive ? 'active' : 'inactive',
-      endDate: response.endTime ? response.endTime.split(' ')[0] : '',
-      endTime: response.endTime ? response.endTime.split(' ')[1] || '' : '',
+      endDate: endDate,
+      endTime: endTime,
       questions: questions
     }
 

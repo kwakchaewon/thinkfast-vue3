@@ -467,11 +467,21 @@ function viewAllResponses(index: number) {
   showResponsesModal.value = true
 }
 
-// endTime 포맷팅 함수 (예: "2024-01-15 14:30:00" -> "2024-01-15 14:30")
+// endTime 포맷팅 함수 (예: "2025-11-23T20:00:00" -> "2025-11-23 20:00")
 function formatEndTime(endTime: string): string {
   if (!endTime) return '-'
   
-  // "YYYY-MM-DD HH:mm:ss" 형식 또는 "YYYY-MM-DD HH:mm" 형식 처리
+  // ISO 형식 처리 (예: "2025-11-23T20:00:00")
+  if (endTime.includes('T')) {
+    const [date, time] = endTime.split('T')
+    if (time) {
+      const timeWithoutSeconds = time.substring(0, 5) // HH:mm까지만 표시
+      return `${date} ${timeWithoutSeconds}`
+    }
+    return date
+  }
+  
+  // 공백으로 구분된 형식 처리 (예: "2024-01-15 14:30:00" -> "2024-01-15 14:30")
   const parts = endTime.trim().split(' ')
   if (parts.length >= 2) {
     const date = parts[0]
