@@ -109,7 +109,7 @@
           <CardHeader class="border-b border-gray-200 px-6 py-4">
             <div class="flex items-center justify-between">
               <CardTitle class="text-xl font-semibold text-gray-800">설문 요약 리포트</CardTitle>
-              <span class="text-sm text-gray-500">총 {{ survey.responseCount }}명 참여</span>
+              <span class="text-sm text-gray-500">총 {{ actualResponseCount }}명 참여</span>
             </div>
           </CardHeader>
           <CardContent class="p-6">
@@ -533,6 +533,26 @@ const allResponses = [
   ['정글', '미드', '정글', '원딜', '탑', '서포터', '정글'],
   ['매칭 시스템이 너무 불공정해요.', '클라이언트가 자주 튕깁니다.', '버그가 많아요.', 'AFK 유저가 많아요.']
 ]
+
+// 실제 응답 데이터를 기반으로 총 참여자 수 계산
+const actualResponseCount = computed(() => {
+  // 통계 데이터에서 totalResponses 찾기
+  for (const [, statistics] of statisticsMap.value) {
+    if (statistics?.statistics?.totalResponses) {
+      return statistics.statistics.totalResponses
+    }
+  }
+  
+  // 워드클라우드 데이터에서 totalResponses 찾기
+  for (const [, wordCloudData] of wordCloudDataMap.value) {
+    if (wordCloudData?.totalResponses) {
+      return wordCloudData.totalResponses
+    }
+  }
+  
+  // 데이터가 없으면 API에서 받은 기본값 사용
+  return survey.value.responseCount || 0
+})
 
 const survey = ref<GetSurveyDetailResponse>({
   id: 0,
