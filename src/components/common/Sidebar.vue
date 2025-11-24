@@ -53,7 +53,7 @@
               <Button
                 variant="ghost"
                 size="sm"
-                class="text-xs text-primary-400 hover:text-primary-500 h-7 px-2"
+                class="text-xs text-primary-400 hover:bg-primary-400 hover:text-white h-7 px-2"
                 @click="markAllAsRead"
               >
                 모두 읽음 처리

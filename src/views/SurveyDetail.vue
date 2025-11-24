@@ -44,7 +44,7 @@
               <Button
                 variant="ghost"
                 size="sm"
-                class="text-primary-400 hover:text-primary-500"
+                class="text-primary-400 hover:bg-primary-400 hover:text-white"
                 @click="copyShareUrl"
               >
                 <Copy class="h-4 w-4 mr-2" />
@@ -83,7 +83,7 @@
                     <Button
                       variant="outline"
                       size="sm"
-                      class="h-12 px-4"
+                      class="h-12 px-4 hover:bg-primary-400 hover:text-white hover:border-primary-400"
                       @click="copyShareUrl"
                     >
                       <Copy class="h-4 w-4" />
@@ -265,7 +265,7 @@
                     <Button
                       variant="ghost"
                       size="sm"
-                      class="text-primary-400 hover:text-primary-500"
+                      class="text-primary-400 hover:bg-primary-400 hover:text-white"
                       @click="viewAllResponses(index)"
                     >
                       <Eye class="h-4 w-4 mr-2" />

@@ -9,7 +9,7 @@
               <Button
                 variant="ghost"
                 size="sm"
-                class="text-primary-400 hover:text-primary-500"
+                class="text-primary-400 hover:bg-primary-400 hover:text-white"
                 as-child
               >
                 <router-link to="/create-survey" class="flex items-center gap-2">

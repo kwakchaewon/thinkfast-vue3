@@ -197,7 +197,7 @@
                         </div>
                         <Button
                           variant="outline"
-                          class="mt-3 text-primary-400 border-primary-400 hover:bg-primary-50 hover:text-primary-500"
+                          class="mt-3 text-primary-400 border-primary-400 hover:bg-primary-400 hover:text-white"
                           @click="addOption(index)"
                         >
                           <Plus class="h-4 w-4 mr-2" />
