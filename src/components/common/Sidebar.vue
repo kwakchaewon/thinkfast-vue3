@@ -20,7 +20,7 @@
         <!-- 알림 버튼 -->
         <DropdownMenu v-model:open="showNotifications">
           <DropdownMenuTrigger as-child>
-            <Button variant="ghost" size="icon" class="relative">
+            <Button variant="ghost" size="icon" class="relative text-primary-400 hover:bg-primary-400 hover:text-white">
               <Bell class="h-5 w-5" />
               <Badge
                 v-if="unreadCount > 0"
