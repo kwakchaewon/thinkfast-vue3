@@ -5,7 +5,6 @@ import Main from '@/views/Main.vue'
 import CreateSurvey from '@/views/CreateSurvey.vue'
 import SurveyDetail from '@/views/SurveyDetail.vue'
 import AllSurveys from '@/views/AllSurveys.vue'
-import SurveyResults from '@/views/SurveyResults.vue'
 
 const { showError } = useSnackbar()
 
@@ -125,24 +124,6 @@ const router = createRouter({
       component: AllSurveys,
       meta: {
         title: '전체 설문 :: ThinkFast'
-      },
-      beforeEnter: (_to, _from, next) => {
-        if (!store.getters.isAuthenticated) {
-          showError('로그인이 필요합니다.')
-          next('/')
-        } else {
-          next()
-        }
-      }
-    },
-    {
-      path: '/survey/:id/results',
-      name: 'survey-results',
-      component: SurveyResults,
-      props: true,
-      meta: {
-        title: '설문 결과 :: ThinkFast',
-        dynamicTitle: true
       },
       beforeEnter: (_to, _from, next) => {
         if (!store.getters.isAuthenticated) {
