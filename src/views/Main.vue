@@ -61,15 +61,21 @@
             <Card class="shadow-md border border-gray-200 bg-white">
               <CardHeader class="flex flex-row items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
                 <CardTitle class="text-lg font-semibold text-gray-800">최근 설문</CardTitle>
-                <Button variant="ghost" size="sm" as-child class="text-gray-600 hover:text-gray-800 hover:bg-gray-50">
+                <Button 
+                  v-if="recentSurveys.length > 0"
+                  variant="ghost" 
+                  size="sm" 
+                  as-child 
+                  class="text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                >
                   <router-link to="/all-surveys" class="flex items-center gap-1">
                     전체보기
                     <ChevronRight class="h-4 w-4" />
                   </router-link>
                 </Button>
               </CardHeader>
-              <CardContent class="p-6">
-                <div class="overflow-x-auto">
+              <CardContent class="p-6 min-h-[400px] flex flex-col">
+                <div v-if="recentSurveys.length > 0" class="overflow-x-auto flex-1">
                   <Table>
                     <TableHeader>
                       <TableRow class="hover:bg-transparent">
@@ -100,6 +106,18 @@
                       </TableRow>
                     </TableBody>
                   </Table>
+                </div>
+                <div v-else class="flex-1 flex flex-col items-center justify-center py-12">
+                  <p class="text-gray-500 text-lg mb-4">등록된 설문이 없습니다.</p>
+                  <Button
+                    class="bg-primary-400 hover:bg-primary-500 text-white"
+                    as-child
+                  >
+                    <router-link to="/create-survey" class="flex items-center gap-2">
+                      새 설문 만들기
+                      <Plus class="h-4 w-4" />
+                    </router-link>
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -173,6 +191,7 @@ import {
   Reply,
   Clock,
   ChevronRight,
+  Plus,
 } from 'lucide-vue-next'
 
 const router = useRouter()
