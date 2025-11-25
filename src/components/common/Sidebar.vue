@@ -1,6 +1,25 @@
 <template>
   <!-- 데스크톱 고정 사이드바 -->
   <aside class="fixed left-0 top-0 h-screen w-[280px] bg-white border-r border-gray-200 flex flex-col z-40 shadow-md">
+    <div class="p-4 border-b border-gray-200">
+      <router-link to="/" class="flex items-center gap-3">
+        <img
+          :src="thinkfastLogoSrc"
+          alt="ThinkFast 로고"
+          class="h-10 w-10 rounded-2xl shadow-sm"
+          decoding="async"
+          loading="lazy"
+        />
+        <div class="leading-tight">
+          <p class="text-lg font-bold text-gray-900 tracking-tight">ThinkFast</p>
+          <p class="text-xs text-gray-500">
+            <span class="font-medium text-gray-400">AI 인사이트 설문 플랫폼</span>
+<!--            <span class="mx-1 text-gray-400">·</span>-->
+<!--            설문 플랫폼-->
+          </p>
+        </div>
+      </router-link>
+    </div>
     <!-- 프로필 섹션 -->
     <div class="p-4 border-b border-gray-200">
       <div class="flex items-center justify-between">
@@ -211,6 +230,7 @@ import tbAxios from "@/apis/axios.ts"
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import thinkfastLogo from '@/assets/thinkfast-logo.svg'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -255,6 +275,7 @@ interface RawNotification {
 
 const router = useRouter()
 const { showSuccess, showError } = useSnackbar()
+const thinkfastLogoSrc = thinkfastLogo
 
 // 사용자 이메일을 localStorage에서 동적으로 가져오기
 const userEmail = computed(() => {

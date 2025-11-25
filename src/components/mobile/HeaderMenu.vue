@@ -17,7 +17,16 @@
           >
             <Menu class="h-5 w-5" />
           </Button>
-          <span class="ml-4 text-xl font-bold">ThinkFast</span>
+          <div class="ml-4 flex items-center gap-3">
+            <img
+              :src="thinkfastLogo"
+              alt="ThinkFast 로고"
+              class="h-8 w-8 rounded-xl shadow-sm"
+              decoding="async"
+              loading="lazy"
+            />
+            <span class="text-xl font-bold text-slate-900 tracking-tight">ThinkFast</span>
+          </div>
         </div>
       </header>
 
@@ -126,6 +135,7 @@ import { useBreakpoints } from '@vueuse/core'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'
 import Sidebar from '@/components/common/Sidebar.vue'
+import thinkfastLogo from '@/assets/thinkfast-logo.svg'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import {

@@ -1,0 +1,25 @@
+<svg
+  width="64"
+  height="64"
+  viewBox="0 0 64 64"
+  role="img"
+  aria-label="ThinkFast favicon"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <rect width="64" height="64" rx="18" fill="#F8FAFC" />
+  <rect x="6" y="6" width="52" height="52" rx="14" fill="#E2E8F0" />
+  <rect x="12" y="12" width="40" height="40" rx="12" fill="#FFFFFF" />
+  <path
+    d="M20 23c0-1.657 1.343-3 3-3h28c1.657 0 3 1.343 3 3v2c0 1.657-1.343 3-3 3H31v19c0 1.657-1.343 3-3 3h-2c-1.657 0-3-1.343-3-3V28H23c-1.657 0-3-1.343-3-3v-2Z"
+    fill="#0F172A"
+  />
+  <path
+    d="M20 33h14c1.657 0 3 1.343 3 3v2c0 1.657-1.343 3-3 3H20v-8Z"
+    fill="#A5F3FC"
+  />
+  <path
+    d="M31 23h18c1.657 0 3 1.343 3 3v2c0 1.657-1.343 3-3 3H31v-8Z"
+    fill="#0EA5E9"
+  />
+</svg>
+

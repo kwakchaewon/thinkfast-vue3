@@ -1,9 +1,30 @@
-<svg width="200" height="50" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .text { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; }
-    .primary { fill: #1976D2; }
-    .secondary { fill: #424242; }
-  </style>
-  <text x="10" y="35" class="text primary">Think</text>
-  <text x="90" y="35" class="text secondary">Fast</text>
-</svg> 
+<svg
+  width="64"
+  height="64"
+  viewBox="0 0 64 64"
+  role="img"
+  aria-labelledby="thinkfast-logo-title thinkfast-logo-desc"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <title id="thinkfast-logo-title">ThinkFast mark</title>
+  <desc id="thinkfast-logo-desc">
+    Geometric TF monogram inside a rounded square for ThinkFast
+  </desc>
+
+  <rect width="64" height="64" rx="18" fill="#F8FAFC" />
+  <rect x="3" y="3" width="58" height="58" rx="16" fill="#E2E8F0" />
+  <rect x="8" y="8" width="48" height="48" rx="14" fill="#FFFFFF" />
+
+  <path
+    d="M18 22.5c0-1.657 1.343-3 3-3h32c1.657 0 3 1.343 3 3v2.2c0 1.657-1.343 3-3 3H33v21.8c0 1.657-1.343 3-3 3h-2.2c-1.657 0-3-1.343-3-3V27.7H21c-1.657 0-3-1.343-3-3v-2.2Z"
+    fill="#0F172A"
+  />
+  <path
+    d="M18 34h16c1.657 0 3 1.343 3 3v2c0 1.657-1.343 3-3 3H18v-8Z"
+    fill="#A5F3FC"
+  />
+  <path
+    d="M33 23h20c1.657 0 3 1.343 3 3v2c0 1.657-1.343 3-3 3H33v-8Z"
+    fill="#0EA5E9"
+  />
+</svg>
