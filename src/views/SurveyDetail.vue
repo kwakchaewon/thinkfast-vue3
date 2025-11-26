@@ -356,22 +356,14 @@
 
   <!-- 전체 응답 모달 -->
   <Dialog v-model:open="showResponsesModal">
-    <DialogContent class="max-w-md max-h-[80vh] overflow-y-auto">
+    <DialogContent class="max-w-xl max-h-[80vh] overflow-y-auto bg-white border-gray-200">
       <DialogHeader>
-        <DialogTitle class="text-xl font-semibold text-gray-800 flex items-center justify-between">
+        <DialogTitle class="text-xl font-semibold text-gray-900">
           전체 응답 보기
-          <Button
-            variant="ghost"
-            size="sm"
-            class="h-8 w-8 p-0"
-            @click="showResponsesModal = false"
-          >
-            <X class="h-4 w-4" />
-          </Button>
         </DialogTitle>
       </DialogHeader>
       <div v-if="selectedQuestionIndex !== null" class="py-4">
-        <div class="mb-4 text-sm font-medium text-gray-800">
+        <div class="mb-4 text-sm font-medium text-gray-900">
           질문: {{ resultQuestions[selectedQuestionIndex]?.content }}
         </div>
         <Separator class="mb-4" />
@@ -379,12 +371,12 @@
           <div
             v-for="(resp, i) in allResponses[selectedQuestionIndex]"
             :key="i"
-            class="p-3 rounded-lg border border-gray-200 bg-white text-sm text-gray-700"
+            class="p-3 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-900 hover:bg-gray-100 transition-colors"
           >
             {{ resp }}
           </div>
         </div>
-        <div v-else class="text-sm text-gray-500">응답이 없습니다.</div>
+        <div v-else class="text-sm text-gray-600 text-center py-4">응답이 없습니다.</div>
       </div>
     </DialogContent>
   </Dialog>
