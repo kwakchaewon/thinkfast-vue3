@@ -124,33 +124,32 @@
             </FormItem>
           </FormField>
 
-          <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 space-y-1">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <p class="text-sm font-medium text-gray-800">이용 약관 동의</p>
-                <p class="text-xs text-gray-500">모달에서 약관을 확인하고 동의해야 회원가입이 가능합니다.</p>
+          <div class="rounded-2xl border border-slate-200 bg-white/90 px-6 py-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur ring-1 ring-slate-900/5">
+            <div class="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center border border-slate-100 rounded-2xl px-4 py-3 bg-white/60">
+              <div class="flex items-center gap-3">
+                <div
+                  class="h-10 w-10 rounded-full flex items-center justify-center"
+                  :class="termsAccepted ? 'bg-emerald-50 text-emerald-600' : 'bg-primary-50 text-primary-500'"
+                >
+                  <CheckCircle2 v-if="termsAccepted" class="h-5 w-5" />
+                  <FileText v-else class="h-5 w-5" />
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-slate-900">이용 약관 확인</p>
+                  <p class="text-xs text-slate-500">
+                    {{ termsAccepted ? '이용 약관 동의가 완료됐습니다.' : '동의 후 회원가입이 가능합니다.' }}
+                  </p>
+                </div>
               </div>
               <Button
                 type="button"
                 variant="outline"
-                class="h-9 text-sm hover:bg-primary-400 hover:text-white hover:border-primary-400"
+                class="h-10 w-full text-sm border-slate-200 text-slate-700 hover:bg-slate-900 hover:text-white sm:w-auto"
                 @click="openTermsModal"
               >
                 약관 보기
               </Button>
             </div>
-            <p
-              v-if="termsAccepted"
-              class="text-xs font-medium text-green-600 flex items-center gap-1"
-            >
-              이미 약관에 동의했습니다.
-            </p>
-            <p
-              v-else
-              class="text-xs text-red-500 flex items-center gap-1"
-            >
-              약관 동의가 필요합니다.
-            </p>
           </div>
 
           <Button
@@ -281,7 +280,7 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form'
-import { Mail, Lock, LockKeyhole, User, Calendar as CalendarIcon, Eye, EyeOff, Loader2 } from 'lucide-vue-next'
+import { Mail, Lock, LockKeyhole, User, Calendar as CalendarIcon, Eye, EyeOff, Loader2, FileText, CheckCircle2 } from 'lucide-vue-next'
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
 
