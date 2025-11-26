@@ -127,3 +127,24 @@ export interface QuestionStatisticsResponse {
   statistics: QuestionStatistics;
   insight?: string;
 }
+
+// 질문별 응답 조회 타입 정의
+export interface QuestionResponseItem {
+  id: number;
+  content: string;
+  createdAt: string;
+}
+
+export interface QuestionResponsesPagination {
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+  totalCount: number;
+}
+
+export interface QuestionResponsesResponse {
+  questionId: number;
+  type: string;
+  responses: QuestionResponseItem[];
+  pagination: QuestionResponsesPagination;
+}

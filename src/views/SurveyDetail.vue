@@ -367,16 +367,19 @@
           질문: {{ resultQuestions[selectedQuestionIndex]?.content }}
         </div>
         <Separator class="mb-4 flex-shrink-0" />
-        <div v-if="paginatedResponses.length > 0" class="flex-1 overflow-y-auto space-y-2 pr-2">
+        <div v-if="loadingResponses" class="flex-1 flex items-center justify-center text-sm text-gray-500">
+          응답을 불러오는 중...
+        </div>
+        <div v-else-if="paginatedResponses.length > 0" class="flex-1 overflow-y-auto space-y-2 pr-2">
           <div
-            v-for="(resp, i) in paginatedResponses"
-            :key="i"
+            v-for="resp in paginatedResponses"
+            :key="resp.id"
             class="flex items-center justify-between py-2 px-3 rounded border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors flex-shrink-0"
           >
-            <div class="text-sm text-gray-900 flex-1">{{ typeof resp === 'string' ? resp : resp.content }}</div>
+            <div class="text-sm text-gray-900 flex-1">{{ resp.content }}</div>
             <div class="flex items-center gap-1.5 text-xs text-gray-500 ml-4 flex-shrink-0">
               <Clock class="h-3.5 w-3.5 text-gray-400" />
-              <span>{{ typeof resp === 'string' ? formatTimeAgo(new Date().toISOString()) : formatTimeAgo(resp.createdAt) }}</span>
+              <span>{{ formatTimeAgo(resp.createdAt) }}</span>
             </div>
           </div>
         </div>
@@ -497,6 +500,11 @@ import type { QuestionStatisticsOption } from '@/interfaces/surveyInterface'
 
 Chart.register(ArcElement, Tooltip, Legend)
 
+// 라우터에서 전달되는 id prop을 명시적으로 정의하여 Vue 경고 해결
+defineProps<{
+  id?: string | number
+}>()
+
 const { showSuccess, showError } = useSnackbar()
 const router = useRouter()
 const route = useRoute()
@@ -573,53 +581,57 @@ const showResponsesModal = ref(false)
 const selectedQuestionIndex = ref<number | null>(null)
 const currentResponsePage = ref(1)
 const responsesPerPage = 10
-
-// 응답 데이터 타입 정의
-interface ResponseItem {
-  content: string
-  userName?: string
-  deviceId?: string
-  createdAt: string
-}
-
-// 임시 전체 응답 데이터 (질문별 배열) - 실제 API 연동 시 객체 배열로 변경
-const allResponses: (string | ResponseItem)[][] = [
-  [
-    { content: '정글', deviceId: 'user001', createdAt: new Date(Date.now() - 3600000).toISOString() },
-    { content: '미드', deviceId: 'user002', createdAt: new Date(Date.now() - 7200000).toISOString() },
-    { content: '정글', deviceId: 'user003', createdAt: new Date(Date.now() - 10800000).toISOString() },
-    { content: '원딜', deviceId: 'user004', createdAt: new Date(Date.now() - 14400000).toISOString() },
-    { content: '탑', deviceId: 'user005', createdAt: new Date(Date.now() - 18000000).toISOString() },
-    { content: '서포터', deviceId: 'user006', createdAt: new Date(Date.now() - 21600000).toISOString() },
-    { content: '정글', deviceId: 'user007', createdAt: new Date(Date.now() - 25200000).toISOString() }
-  ],
-  [
-    { content: '매칭 시스템이 너무 불공정해요.', deviceId: 'user001', createdAt: new Date(Date.now() - 3600000).toISOString() },
-    { content: '클라이언트가 자주 튕깁니다.', deviceId: 'user002', createdAt: new Date(Date.now() - 7200000).toISOString() },
-    { content: '버그가 많아요.', deviceId: 'user003', createdAt: new Date(Date.now() - 10800000).toISOString() },
-    { content: 'AFK 유저가 많아요.', deviceId: 'user004', createdAt: new Date(Date.now() - 14400000).toISOString() }
-  ]
-]
+const loadingResponses = ref(false)
+const questionResponses = ref<{
+  responses: Array<{ id: number; content: string; createdAt: string }>
+  pagination: { currentPage: number; pageSize: number; totalPages: number; totalCount: number }
+} | null>(null)
 
 // 페이징 관련 computed
 const totalResponseCount = computed(() => {
-  if (selectedQuestionIndex.value === null) return 0
-  const responses = allResponses[selectedQuestionIndex.value]
-  return responses ? responses.length : 0
+  return questionResponses.value?.pagination.totalCount || 0
 })
 
 const totalPages = computed(() => {
-  return Math.ceil(totalResponseCount.value / responsesPerPage)
+  return questionResponses.value?.pagination.totalPages || 0
 })
 
 const paginatedResponses = computed(() => {
-  if (selectedQuestionIndex.value === null) return []
-  const responses = allResponses[selectedQuestionIndex.value]
-  if (!responses || responses.length === 0) return []
+  return questionResponses.value?.responses || []
+})
+
+// 질문별 응답 조회
+const fetchQuestionResponses = async () => {
+  if (selectedQuestionIndex.value === null) return
   
-  const start = (currentResponsePage.value - 1) * responsesPerPage
-  const end = start + responsesPerPage
-  return responses.slice(start, end)
+  const question = resultQuestions.value[selectedQuestionIndex.value]
+  if (!question || !question.id || !surveyId.value) return
+  
+  try {
+    loadingResponses.value = true
+    const response = await surveyApi.getQuestionResponses(
+      surveyId.value,
+      question.id,
+      currentResponsePage.value,
+      responsesPerPage
+    )
+    questionResponses.value = {
+      responses: response.responses,
+      pagination: response.pagination
+    }
+  } catch (error) {
+    console.error('Failed to fetch question responses:', error)
+    questionResponses.value = null
+  } finally {
+    loadingResponses.value = false
+  }
+}
+
+// 페이지 변경 시 응답 재조회
+watch(currentResponsePage, () => {
+  if (showResponsesModal.value && selectedQuestionIndex.value !== null) {
+    fetchQuestionResponses()
+  }
 })
 
 const visiblePages = computed(() => {
@@ -931,7 +943,10 @@ function getWordCloudStyle(item: { word: string; count: number }, i: number, que
 function viewAllResponses(index: number) {
   selectedQuestionIndex.value = index
   currentResponsePage.value = 1 // 모달 열 때 첫 페이지로 리셋
+  questionResponses.value = null // 이전 데이터 초기화
   showResponsesModal.value = true
+  // 모달이 열리면 응답 조회
+  fetchQuestionResponses()
 }
 
 // endTime 포맷팅 함수 (예: "2025-11-23T20:00:00" -> "2025-11-23 20:00")
@@ -1074,6 +1089,14 @@ const fetchResultQuestions = async () => {
   try {
     isLoadingQuestions.value = true
     const questionsData = await surveyApi.getQuestionsBySurveyId(surveyId.value)
+    
+    // null 또는 undefined 체크 추가
+    if (!questionsData || !Array.isArray(questionsData)) {
+      console.warn('질문 데이터가 없거나 배열이 아닙니다:', questionsData)
+      resultQuestions.value = []
+      return
+    }
+    
     const typeMapping: Record<string, string> = {
       'MULTIPLE_CHOICE': '객관식',
       'SUBJECTIVE': '주관식',

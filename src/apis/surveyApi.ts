@@ -8,7 +8,8 @@ import {
   CreateAnswerRequest,
   SurveySummary,
   WordCloudResponse,
-  QuestionStatisticsResponse
+  QuestionStatisticsResponse,
+  QuestionResponsesResponse
 } from '@/interfaces/surveyInterface'
 
 const { showError } = useSnackbar()
@@ -53,6 +54,11 @@ export const surveyApi = {
   async getQuestionsBySurveyId(id: number): Promise<Question[]> {
     try {
       const response = await tbAxios.get('/survey/' + id + '/questions')
+      // null 또는 undefined 체크 추가
+      if (!response.data || !response.data.data) {
+        console.warn('질문 데이터가 없습니다:', response.data)
+        return []
+      }
       return response.data.data
     } catch (error) {
       showError('설문을 불러오는데 실패했습니다.')
@@ -266,6 +272,36 @@ export const surveyApi = {
         showError('질문을 찾을 수 없습니다.')
       } else {
         showError(error.response?.data?.message || '질문 통계를 불러오는데 실패했습니다.')
+      }
+      throw error
+    }
+  },
+
+  // 질문별 전체 응답 조회
+  async getQuestionResponses(
+    surveyId: number,
+    questionId: number,
+    page: number = 1,
+    size: number = 10
+  ): Promise<QuestionResponsesResponse> {
+    try {
+      const response = await tbAxios.get(`/survey/${surveyId}/questions/${questionId}/responses`, {
+        params: { page, size }
+      })
+      if (!response.data.success) {
+        showError(response.data.message || '응답을 불러오는데 실패했습니다.')
+        throw new Error(response.data.message || '응답을 불러오는데 실패했습니다.')
+      }
+      return response.data.data
+    } catch (error: any) {
+      if (error.response?.status === 403) {
+        showError('응답 조회에 접근할 권한이 없습니다.')
+      } else if (error.response?.status === 404) {
+        showError('질문을 찾을 수 없습니다.')
+      } else if (error.response?.status === 400) {
+        showError(error.response?.data?.message || '잘못된 요청입니다.')
+      } else {
+        showError(error.response?.data?.message || '응답을 불러오는데 실패했습니다.')
       }
       throw error
     }
