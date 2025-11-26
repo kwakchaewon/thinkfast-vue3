@@ -124,10 +124,39 @@
             </FormItem>
           </FormField>
 
+          <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 space-y-1">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="text-sm font-medium text-gray-800">이용 약관 동의</p>
+                <p class="text-xs text-gray-500">모달에서 약관을 확인하고 동의해야 회원가입이 가능합니다.</p>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                class="h-9 text-sm"
+                @click="openTermsModal"
+              >
+                약관 보기
+              </Button>
+            </div>
+            <p
+              v-if="termsAccepted"
+              class="text-xs font-medium text-green-600 flex items-center gap-1"
+            >
+              이미 약관에 동의했습니다.
+            </p>
+            <p
+              v-else
+              class="text-xs text-red-500 flex items-center gap-1"
+            >
+              약관 동의가 필요합니다.
+            </p>
+          </div>
+
           <Button
             type="submit"
             class="w-full h-12 text-base font-medium bg-primary-400 hover:bg-primary-500 text-white rounded-lg shadow-sm transition-colors"
-            :disabled="loading"
+            :disabled="loading || !termsAccepted"
           >
             <span v-if="loading" class="flex items-center justify-center gap-2">
               <Loader2 class="h-4 w-4 animate-spin" />
@@ -149,6 +178,88 @@
       </CardContent>
     </Card>
   </div>
+
+  <Dialog :open="termsModalOpen" @update:open="setTermsModal">
+    <DialogContent class="max-w-2xl max-h-[80vh] overflow-y-auto bg-white border border-gray-200 shadow-2xl">
+      <DialogHeader>
+        <DialogTitle>ThinkFast 개인 프로젝트용 이용 약관</DialogTitle>
+        <DialogDescription>
+          아래 내용은 개인 프로젝트 기반으로 제공되는 ThinkFast 서비스 사용 시 적용되는 약관입니다.
+        </DialogDescription>
+      </DialogHeader>
+
+      <div class="space-y-3 text-sm text-gray-700 leading-relaxed bg-gray-50 border border-gray-100 rounded-xl p-5 shadow-inner">
+        <section class="bg-white border border-gray-100 rounded-lg p-4 shadow-sm">
+          <h3 class="font-semibold text-gray-800">1. 목적 및 서비스 특성</h3>
+          <p>
+            본 서비스는 개인 학습·실험 목적의 프로젝트로 제공되며, 상업적 수준의 가용성이나 지원을 보장하지 않습니다.
+            기능은 언제든지 변경되거나 중단될 수 있습니다.
+          </p>
+        </section>
+        <section class="bg-white border border-gray-100 rounded-lg p-4 shadow-sm">
+          <h3 class="font-semibold text-gray-800">2. 회원 가입 및 데이터</h3>
+          <p>
+            회원은 이메일, 비밀번호 등 최소 정보만을 제공하며, 허위 정보나 타인 명의를 사용할 수 없습니다.
+            설문 및 응답 데이터는 개인 서버/로컬 환경에 저장되며 제3자에게 제공하지 않습니다.
+          </p>
+        </section>
+        <section class="bg-white border border-gray-100 rounded-lg p-4 shadow-sm">
+          <h3 class="font-semibold text-gray-800">3. 개인정보 보호</h3>
+          <p>
+            비밀번호 등 민감 정보는 가능한 안전한 방식으로 보관하지만, 개인 프로젝트 특성상 완전한 보안을 보장하지 못할 수 있습니다.
+          </p>
+        </section>
+        <section class="bg-white border border-gray-100 rounded-lg p-4 shadow-sm">
+          <h3 class="font-semibold text-gray-800">4. 회원 의무</h3>
+          <p>
+            불법 정보 수집, 스팸 설문 배포, 과도한 API 호출 등 서비스 남용을 금지하며,
+            설문 응답자에게 개인정보 수집 여부를 명확히 고지해야 합니다.
+          </p>
+        </section>
+        <section class="bg-white border border-gray-100 rounded-lg p-4 shadow-sm">
+          <h3 class="font-semibold text-gray-800">5. 지식재산권</h3>
+          <p>
+            서비스 UI, 코드, 문서 등은 프로젝트 운영자에게 귀속되며 무단 복제나 배포를 금지합니다.
+            회원이 작성한 설문과 응답은 회원에게 권리가 있으며 서비스 개선을 위해 내부적으로 활용될 수 있습니다.
+          </p>
+        </section>
+        <section class="bg-white border border-gray-100 rounded-lg p-4 shadow-sm">
+          <h3 class="font-semibold text-gray-800">6. 책임 제한</h3>
+          <p>
+            데이터 손실, 서비스 중단, 버그 등으로 발생한 손해에 대해 운영자는 책임을 지지 않습니다.
+            서비스를 사용하는 동안 발생하는 문제는 이용자가 감수합니다.
+          </p>
+        </section>
+        <section class="bg-white border border-gray-100 rounded-lg p-4 shadow-sm">
+          <h3 class="font-semibold text-gray-800">7. 탈퇴 및 약관 변경</h3>
+          <p>
+            회원은 언제든지 탈퇴를 요청할 수 있으며 요청 시 데이터를 삭제합니다.
+            프로젝트 상황에 따라 약관은 수시로 수정될 수 있으며 변경 사항은 서비스 내부 또는 문서로 안내합니다.
+          </p>
+        </section>
+        <section class="bg-white border border-gray-100 rounded-lg p-4 shadow-sm">
+          <h3 class="font-semibold text-gray-800">8. 문의</h3>
+          <p>
+            공식 지원 채널은 없지만, 버그나 피드백은 개인 연락처나 저장소 이슈를 통해 전달해 주시면 가능한 범위 내에서 대응합니다.
+          </p>
+        </section>
+      </div>
+
+      <DialogFooter class="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <Button
+          type="button"
+          variant="outline"
+          class="w-full sm:w-auto hover:text-white hover:bg-gray-800 hover:border-gray-800"
+          @click="closeTermsModal"
+        >
+          닫기
+        </Button>
+        <Button type="button" class="w-full sm:w-auto text-white" @click="acceptTerms">
+          위 내용을 모두 확인했고 동의합니다
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script lang="ts" setup>
@@ -163,6 +274,7 @@ import { useSnackbar } from '@/composables/useSnackbar'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import {
   FormControl,
   FormField,
@@ -182,6 +294,25 @@ const showConfirmPassword = ref(false)
 const loading = ref(false)
 const dateInputRef = ref<HTMLInputElement | null>(null)
 const flatpickrInstance = ref<flatpickr.Instance | null>(null)
+const termsModalOpen = ref(false)
+const termsAccepted = ref(false)
+
+const openTermsModal = () => {
+  termsModalOpen.value = true
+}
+
+const closeTermsModal = () => {
+  termsModalOpen.value = false
+}
+
+const setTermsModal = (value: boolean) => {
+  termsModalOpen.value = value
+}
+
+const acceptTerms = () => {
+  termsAccepted.value = true
+  closeTermsModal()
+}
 
 // 생년월일 유효성 검사는 Zod 스키마의 refine에서 처리
 
@@ -317,6 +448,10 @@ const handleSignup = handleSubmit(async (values: {
   name: string
   birthDate: string
 }) => {
+  if (!termsAccepted.value) {
+    showError('이용 약관에 동의해야 회원가입이 가능합니다.')
+    return
+  }
   loading.value = true
   try {
     const response = await authApi.signup({
