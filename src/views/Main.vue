@@ -76,7 +76,7 @@
                 <CardTitle class="text-lg font-semibold text-gray-900">
                   응답 많은 설문 Top 3
                 </CardTitle>
-                <Badge variant="secondary" class="bg-gray-100 text-gray-600">
+                <Badge variant="secondary" class="bg-red-100 text-red-700">
                   응답 높은 순
                 </Badge>
               </CardHeader>
@@ -117,7 +117,7 @@
                 <CardTitle class="text-lg font-semibold text-gray-900">
                   관심 필요한 설문
                 </CardTitle>
-                <Badge variant="secondary" class="bg-gray-100 text-gray-600">
+                <Badge variant="secondary" class="bg-blue-100 text-blue-700">
                   응답 낮은 순
                 </Badge>
               </CardHeader>
@@ -130,7 +130,6 @@
                     @click="goToSurveyDetail(survey.id)"
                   >
                     <div class="flex items-center gap-3">
-                      <div class="w-10 h-10 rounded-full opacity-0"></div>
                       <div class="min-w-0">
                         <p class="font-medium text-gray-800 truncate">{{ survey.title }}</p>
                         <p class="text-xs text-gray-500 mt-1">생성일 {{ survey.createdAt }}</p>
