@@ -76,7 +76,7 @@
                 <CardTitle class="text-lg font-semibold text-gray-900">
                   응답 많은 설문 Top 3
                 </CardTitle>
-                <Badge variant="secondary" class="bg-green-100 text-green-700">
+                <Badge variant="secondary" class="bg-gray-100 text-gray-600">
                   응답 높은 순
                 </Badge>
               </CardHeader>
@@ -88,17 +88,17 @@
                     class="flex items-center justify-between rounded-lg border border-gray-100 p-2.5 hover:border-primary-200 transition cursor-pointer"
                     @click="goToSurveyDetail(survey.id)"
                   >
-                    <div>
-                      <div class="flex items-center gap-3">
-                        <div
-                          class="w-10 h-10 rounded-full flex items-center justify-center font-semibold text-base"
-                          :class="medalClasses[index] || 'bg-primary-50 text-primary-500'"
-                        >
-                          {{ medalLabels[index] || (index + 1) }}
-                        </div>
-                        <p class="font-medium text-gray-800">{{ survey.title }}</p>
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-10 h-10 rounded-full flex items-center justify-center font-semibold text-base"
+                        :class="medalClasses[index] || 'bg-primary-50 text-primary-500'"
+                      >
+                        {{ medalLabels[index] || (index + 1) }}
                       </div>
-                      <p class="text-xs text-gray-500 mt-1">생성일 {{ survey.createdAt }}</p>
+                      <div class="min-w-0">
+                        <p class="font-medium text-gray-800 truncate">{{ survey.title }}</p>
+                        <p class="text-xs text-gray-500 mt-1">생성일 {{ survey.createdAt }}</p>
+                      </div>
                     </div>
                     <div class="text-right">
                       <p class="text-xs text-gray-500">응답</p>
@@ -117,7 +117,7 @@
                 <CardTitle class="text-lg font-semibold text-gray-900">
                   관심 필요한 설문
                 </CardTitle>
-                <Badge variant="secondary" class="bg-yellow-100 text-yellow-700">
+                <Badge variant="secondary" class="bg-gray-100 text-gray-600">
                   응답 낮은 순
                 </Badge>
               </CardHeader>
@@ -126,12 +126,15 @@
                   <div
                     v-for="survey in prioritySurveys"
                     :key="survey.id"
-                    class="flex items-center justify-between rounded-lg border border-gray-100 p-2.5 hover:border-yellow-200 transition cursor-pointer"
+                    class="flex items-center justify-between rounded-lg border border-gray-100 p-2.5 hover:border-primary-200 transition cursor-pointer"
                     @click="goToSurveyDetail(survey.id)"
                   >
-                    <div>
-                      <p class="font-medium text-gray-800">{{ survey.title }}</p>
-                      <p class="text-xs text-gray-500 mt-1">생성일 {{ survey.createdAt }}</p>
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 rounded-full opacity-0"></div>
+                      <div class="min-w-0">
+                        <p class="font-medium text-gray-800 truncate">{{ survey.title }}</p>
+                        <p class="text-xs text-gray-500 mt-1">생성일 {{ survey.createdAt }}</p>
+                      </div>
                     </div>
                     <div class="text-right">
                       <p class="text-xs text-gray-500">응답</p>
