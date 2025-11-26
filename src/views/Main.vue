@@ -4,6 +4,7 @@
       <div class="px-6 py-8">
         <!-- 상단 통계 카드 -->
         <div class="space-y-6">
+          <!-- 기간별 인사이트 카드는 추후 사용 시 다시 활성화
           <Card class="shadow-md border border-gray-200 bg-white">
             <CardHeader class="p-6 border-b border-gray-100">
               <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -67,10 +68,11 @@
               </div>
             </CardContent>
           </Card>
+          -->
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card class="shadow-md border border-gray-200 bg-white">
-              <CardHeader class="p-6 flex items-center justify-between">
+              <CardHeader class="px-4 py-3 flex items-center justify-between">
                 <CardTitle class="text-lg font-semibold text-gray-900">
                   응답 많은 설문 Top 3
                 </CardTitle>
@@ -78,12 +80,12 @@
                   응답 높은 순
                 </Badge>
               </CardHeader>
-              <CardContent class="p-6">
-                <div v-if="topSurveys.length > 0" class="space-y-4">
+              <CardContent class="px-4 py-3">
+                <div v-if="topSurveys.length > 0" class="space-y-2">
                   <div
                     v-for="(survey, index) in topSurveys"
                     :key="survey.id"
-                    class="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:border-primary-200 transition cursor-pointer"
+                    class="flex items-center justify-between rounded-lg border border-gray-100 p-2.5 hover:border-primary-200 transition cursor-pointer"
                     @click="goToSurveyDetail(survey.id)"
                   >
                     <div>
@@ -111,7 +113,7 @@
             </Card>
 
             <Card class="shadow-md border border-gray-200 bg-white">
-              <CardHeader class="p-6 flex items-center justify-between">
+              <CardHeader class="px-4 py-3 flex items-center justify-between">
                 <CardTitle class="text-lg font-semibold text-gray-900">
                   관심 필요한 설문
                 </CardTitle>
@@ -119,12 +121,12 @@
                   응답 낮은 순
                 </Badge>
               </CardHeader>
-              <CardContent class="p-6">
-                <div v-if="prioritySurveys.length > 0" class="space-y-4">
+              <CardContent class="px-4 py-3">
+                <div v-if="prioritySurveys.length > 0" class="space-y-2">
                   <div
                     v-for="survey in prioritySurveys"
                     :key="survey.id"
-                    class="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:border-yellow-200 transition cursor-pointer"
+                    class="flex items-center justify-between rounded-lg border border-gray-100 p-2.5 hover:border-yellow-200 transition cursor-pointer"
                     @click="goToSurveyDetail(survey.id)"
                   >
                     <div>
