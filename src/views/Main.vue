@@ -3,56 +3,147 @@
     <div class="min-h-screen bg-white">
       <div class="px-6 py-8">
         <!-- 상단 통계 카드 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="space-y-6">
           <Card class="shadow-md border border-gray-200 bg-white">
-            <CardHeader class="p-6">
-              <CardTitle class="text-sm font-medium text-gray-500 mb-2">
-                진행중 설문
-              </CardTitle>
-              <div class="flex items-center">
-                <span class="text-3xl font-semibold text-gray-800">{{ activeSurveysCount }}</span>
-                <TrendingUp class="ml-3 h-6 w-6 text-green-500" />
+            <CardHeader class="p-6 border-b border-gray-100">
+              <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <CardTitle class="text-lg font-semibold text-gray-900">
+                    기간별 인사이트
+                  </CardTitle>
+                  <p class="text-sm text-gray-500 mt-1">
+                    {{ rangeDescription }}
+                  </p>
+                </div>
+                <div class="inline-flex rounded-full bg-gray-100 p-1">
+                  <Button
+                    v-for="option in rangeOptions"
+                    :key="option"
+                    :variant="selectedRange === option ? 'default' : 'ghost'"
+                    size="sm"
+                    class="rounded-full px-4 text-sm"
+                    :class="selectedRange === option ? 'bg-primary-400 text-white hover:bg-primary-500' : 'text-gray-600 hover:text-gray-900'"
+                    @click="selectedRange = option"
+                  >
+                    {{ rangeLabels[option] }}
+                  </Button>
+                </div>
               </div>
             </CardHeader>
-          </Card>
-
-          <Card class="shadow-md border border-gray-200 bg-white">
-            <CardHeader class="p-6">
-              <CardTitle class="text-sm font-medium text-gray-500 mb-2">
-                총 응답수
-              </CardTitle>
-              <div class="flex items-center">
-                <span class="text-3xl font-semibold text-gray-800">{{ totalResponses }}</span>
-                <Reply class="ml-3 h-6 w-6 text-primary-400" />
+            <CardContent class="p-6">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="rounded-xl border border-gray-100 p-4">
+                  <p class="text-xs uppercase tracking-wide text-gray-500">새로 생성된 설문</p>
+                  <p class="mt-2 text-3xl font-semibold text-gray-900">{{ periodNewSurveys }}</p>
+                  <p class="text-xs text-gray-500 mt-1">선택한 기간 기준</p>
+                </div>
+                <div class="rounded-xl border border-gray-100 p-4">
+                  <p class="text-xs uppercase tracking-wide text-gray-500">응답 수</p>
+                  <p class="mt-2 text-3xl font-semibold text-gray-900">{{ periodResponses }}건</p>
+                  <p class="text-xs text-gray-500 mt-1">최근 입력된 응답 포함</p>
+                </div>
+                <div class="rounded-xl border border-gray-100 p-4">
+                  <p class="text-xs uppercase tracking-wide text-gray-500">설문당 평균</p>
+                  <p class="mt-2 text-3xl font-semibold text-gray-900">{{ periodAvgResponses }}건</p>
+                  <p class="text-xs text-gray-500 mt-1">선택 기간 내 설문 기준</p>
+                </div>
+                <div class="rounded-xl border border-gray-100 p-4">
+                  <p class="text-xs uppercase tracking-wide text-gray-500">활성 비율</p>
+                  <p class="mt-2 text-3xl font-semibold text-gray-900">{{ periodActiveRate }}%</p>
+                  <p class="text-xs text-gray-500 mt-1">활성 설문 / 전체 설문</p>
+                </div>
               </div>
-            </CardHeader>
+              <div class="mt-6">
+                <div class="flex justify-between text-xs text-gray-500 mb-2">
+                  <span>진행 중</span>
+                  <span>{{ activeSurveysCount }} / {{ totalSurveys }}개</span>
+                </div>
+                <div class="h-2 rounded-full bg-gray-100 overflow-hidden">
+                  <div
+                    class="h-full bg-primary-400 transition-all"
+                    :style="{ width: activeRate + '%' }"
+                  ></div>
+                </div>
+              </div>
+            </CardContent>
           </Card>
 
-          <Card class="shadow-md border border-gray-200 bg-white">
-            <CardHeader class="p-6">
-              <CardTitle class="text-sm font-medium text-gray-500 mb-2">
-                최근 7일 응답
-              </CardTitle>
-              <div class="flex items-center">
-                <span class="text-3xl font-semibold text-gray-800">{{ recentResponses }}</span>
-                <Badge variant="secondary" class="ml-3 bg-green-100 text-green-700">
-                  +{{ recentResponseIncrease }}%
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card class="shadow-md border border-gray-200 bg-white">
+              <CardHeader class="p-6 flex items-center justify-between">
+                <CardTitle class="text-lg font-semibold text-gray-900">
+                  응답 많은 설문 Top 3
+                </CardTitle>
+                <Badge variant="secondary" class="bg-green-100 text-green-700">
+                  응답 높은 순
                 </Badge>
-              </div>
-            </CardHeader>
-          </Card>
+              </CardHeader>
+              <CardContent class="p-6">
+                <div v-if="topSurveys.length > 0" class="space-y-4">
+                  <div
+                    v-for="(survey, index) in topSurveys"
+                    :key="survey.id"
+                    class="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:border-primary-200 transition cursor-pointer"
+                    @click="goToSurveyDetail(survey.id)"
+                  >
+                    <div>
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="w-10 h-10 rounded-full flex items-center justify-center font-semibold text-base"
+                          :class="medalClasses[index] || 'bg-primary-50 text-primary-500'"
+                        >
+                          {{ medalLabels[index] || (index + 1) }}
+                        </div>
+                        <p class="font-medium text-gray-800">{{ survey.title }}</p>
+                      </div>
+                      <p class="text-xs text-gray-500 mt-1">생성일 {{ survey.createdAt }}</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-xs text-gray-500">응답</p>
+                      <p class="text-xl font-semibold text-gray-900">{{ survey.responseCount }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div v-else class="text-center text-gray-500 py-8">
+                  아직 응답 데이터가 없습니다.
+                </div>
+              </CardContent>
+            </Card>
 
-          <Card class="shadow-md border border-gray-200 bg-white">
-            <CardHeader class="p-6">
-              <CardTitle class="text-sm font-medium text-gray-500 mb-2">
-                평균 응답 시간
-              </CardTitle>
-              <div class="flex items-center">
-                <span class="text-3xl font-semibold text-gray-800">{{ avgResponseTime }}분</span>
-                <Clock class="ml-3 h-6 w-6 text-primary-400" />
-              </div>
-            </CardHeader>
-          </Card>
+            <Card class="shadow-md border border-gray-200 bg-white">
+              <CardHeader class="p-6 flex items-center justify-between">
+                <CardTitle class="text-lg font-semibold text-gray-900">
+                  관심 필요한 설문
+                </CardTitle>
+                <Badge variant="secondary" class="bg-yellow-100 text-yellow-700">
+                  응답 낮은 순
+                </Badge>
+              </CardHeader>
+              <CardContent class="p-6">
+                <div v-if="prioritySurveys.length > 0" class="space-y-4">
+                  <div
+                    v-for="survey in prioritySurveys"
+                    :key="survey.id"
+                    class="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:border-yellow-200 transition cursor-pointer"
+                    @click="goToSurveyDetail(survey.id)"
+                  >
+                    <div>
+                      <p class="font-medium text-gray-800">{{ survey.title }}</p>
+                      <p class="text-xs text-gray-500 mt-1">생성일 {{ survey.createdAt }}</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-xs text-gray-500">응답</p>
+                      <p class="text-xl font-semibold text-gray-900">{{ survey.responseCount }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div v-else class="text-center text-gray-500 py-8">
+                  모든 설문이 안정적으로 운영 중입니다.
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
         </div>
 
         <!-- 최근 설문 & 활동 -->
@@ -187,9 +278,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import {
-  TrendingUp,
   Reply,
-  Clock,
   ChevronRight,
   Plus,
 } from 'lucide-vue-next'
@@ -197,8 +286,28 @@ import {
 const router = useRouter()
 const { showError } = useSnackbar()
 
+type RangeKey = 'today' | 'week' | 'month'
+
 const recentSurveys = ref<recentSurvey[]>([])
 const isLoading = ref(false)
+const selectedRange = ref<RangeKey>('week')
+const rangeOptions: RangeKey[] = ['today', 'week', 'month']
+const rangeLabels: Record<RangeKey, string> = {
+  today: '오늘',
+  week: '이번 주',
+  month: '이번 달',
+}
+const rangeDescriptions: Record<RangeKey, string> = {
+  today: '오늘 생성된 설문과 응답 흐름을 보여줘요.',
+  week: '이번 주 전체 설문 현황과 응답 트렌드를 확인하세요.',
+  month: '이번 달 설문 성과를 한눈에 요약해드립니다.',
+}
+const medalLabels = ['1', '2', '3']
+const medalClasses = [
+  'bg-white text-amber-500 border border-amber-300 shadow-sm',
+  'bg-white text-gray-500 border border-gray-300 shadow-sm',
+  'bg-white text-orange-500 border border-orange-300 shadow-sm',
+]
 
 const fetchRecentSurveys = async () => {
   try {
@@ -256,6 +365,17 @@ const totalResponses = computed(() => {
   return recentSurveys.value.reduce((sum: number, survey: recentSurvey) => sum + survey.responseCount, 0)
 })
 
+const totalSurveys = computed(() => recentSurveys.value.length)
+
+const inactiveSurveysCount = computed(() => {
+  return Math.max(totalSurveys.value - activeSurveysCount.value, 0)
+})
+
+const activeRate = computed(() => {
+  if (totalSurveys.value === 0) return 0
+  return Math.round((activeSurveysCount.value / totalSurveys.value) * 100)
+})
+
 const recentResponses = computed(() => {
   return recentSurveys.value.reduce((sum: number, survey: recentSurvey) => {
     const surveyDate = new Date(survey.createdAt)
@@ -288,9 +408,89 @@ const recentResponseIncrease = computed(() => {
   return Math.round(((currentResponses - previousResponses) / previousResponses) * 100)
 })
 
-const avgResponseTime = computed(() => {
-  return 10
+const newSurveysThisWeek = computed(() => {
+  const sevenDaysAgo = new Date()
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+  return recentSurveys.value.filter((survey: recentSurvey) => new Date(survey.createdAt) >= sevenDaysAgo).length
 })
+
+const weeklySurveyGrowth = computed(() => {
+  const sevenDaysAgo = new Date()
+  const fourteenDaysAgo = new Date()
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+  fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14)
+
+  const currentWeek = recentSurveys.value.filter((survey: recentSurvey) => {
+    const date = new Date(survey.createdAt)
+    return date >= sevenDaysAgo
+  }).length
+
+  const previousWeek = recentSurveys.value.filter((survey: recentSurvey) => {
+    const date = new Date(survey.createdAt)
+    return date >= fourteenDaysAgo && date < sevenDaysAgo
+  }).length
+
+  if (previousWeek === 0) return currentWeek === 0 ? 0 : 100
+  return Math.round(((currentWeek - previousWeek) / previousWeek) * 100)
+})
+
+const avgResponsesPerSurvey = computed(() => {
+  if (totalSurveys.value === 0) return 0
+  return Math.round(totalResponses.value / totalSurveys.value)
+})
+
+const topSurveys = computed(() => {
+  if (recentSurveys.value.length === 0) return []
+  return [...recentSurveys.value]
+    .sort((a, b) => b.responseCount - a.responseCount)
+    .slice(0, 3)
+})
+
+const prioritySurveys = computed(() => {
+  if (recentSurveys.value.length === 0) return []
+  return [...recentSurveys.value]
+    .sort((a, b) => a.responseCount - b.responseCount)
+    .slice(0, 3)
+})
+
+const getRangeStart = (range: RangeKey) => {
+  const now = new Date()
+  if (range === 'today') {
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  }
+  if (range === 'week') {
+    const start = new Date(now)
+    start.setDate(start.getDate() - 7)
+    return start
+  }
+  const start = new Date(now)
+  start.setDate(start.getDate() - 30)
+  return start
+}
+
+const periodSurveys = computed(() => {
+  const rangeStart = getRangeStart(selectedRange.value)
+  return recentSurveys.value.filter((survey: recentSurvey) => new Date(survey.createdAt) >= rangeStart)
+})
+
+const periodNewSurveys = computed(() => periodSurveys.value.length)
+
+const periodResponses = computed(() => {
+  return periodSurveys.value.reduce((sum, survey) => sum + survey.responseCount, 0)
+})
+
+const periodAvgResponses = computed(() => {
+  if (periodSurveys.value.length === 0) return 0
+  return Math.round(periodResponses.value / periodSurveys.value.length)
+})
+
+const periodActiveRate = computed(() => {
+  if (periodSurveys.value.length === 0) return 0
+  const activeCount = periodSurveys.value.filter((survey) => survey.isActive).length
+  return Math.round((activeCount / periodSurveys.value.length) * 100)
+})
+
+const rangeDescription = computed(() => rangeDescriptions[selectedRange.value])
 </script>
 
 <style scoped>
