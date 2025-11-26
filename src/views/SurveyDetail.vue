@@ -356,27 +356,75 @@
 
   <!-- 전체 응답 모달 -->
   <Dialog v-model:open="showResponsesModal">
-    <DialogContent class="max-w-xl max-h-[80vh] overflow-y-auto bg-white border-gray-200">
-      <DialogHeader>
+    <DialogContent class="max-w-xl h-[600px] bg-white border-gray-200 flex flex-col">
+      <DialogHeader class="flex-shrink-0">
         <DialogTitle class="text-xl font-semibold text-gray-900">
           전체 응답 보기
         </DialogTitle>
       </DialogHeader>
-      <div v-if="selectedQuestionIndex !== null" class="py-4">
-        <div class="mb-4 text-sm font-medium text-gray-900">
+      <div v-if="selectedQuestionIndex !== null" class="flex-1 flex flex-col overflow-hidden py-4">
+        <div class="mb-4 text-sm font-medium text-gray-900 flex-shrink-0">
           질문: {{ resultQuestions[selectedQuestionIndex]?.content }}
         </div>
-        <Separator class="mb-4" />
-        <div v-if="allResponses[selectedQuestionIndex] && allResponses[selectedQuestionIndex].length" class="space-y-2">
+        <Separator class="mb-4 flex-shrink-0" />
+        <div v-if="paginatedResponses.length > 0" class="flex-1 overflow-y-auto space-y-2 pr-2">
           <div
-            v-for="(resp, i) in allResponses[selectedQuestionIndex]"
+            v-for="(resp, i) in paginatedResponses"
             :key="i"
-            class="p-3 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-900 hover:bg-gray-100 transition-colors"
+            class="flex items-center justify-between py-2 px-3 rounded border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors flex-shrink-0"
           >
-            {{ resp }}
+            <div class="text-sm text-gray-900 flex-1">{{ typeof resp === 'string' ? resp : resp.content }}</div>
+            <div class="flex items-center gap-1.5 text-xs text-gray-500 ml-4 flex-shrink-0">
+              <Clock class="h-3.5 w-3.5 text-gray-400" />
+              <span>{{ typeof resp === 'string' ? formatTimeAgo(new Date().toISOString()) : formatTimeAgo(resp.createdAt) }}</span>
+            </div>
           </div>
         </div>
-        <div v-else class="text-sm text-gray-600 text-center py-4">응답이 없습니다.</div>
+        <div v-else class="flex-1 flex items-center justify-center text-sm text-gray-600">응답이 없습니다.</div>
+        
+        <!-- 페이지네이션 -->
+        <div v-if="totalPages > 1" class="mt-4 flex items-center justify-center border-t border-gray-200 pt-4 flex-shrink-0">
+          <div class="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              :disabled="currentResponsePage === 1"
+              @click="currentResponsePage--"
+              class="h-8 w-8 p-0"
+            >
+              <ChevronLeft class="h-4 w-4" />
+            </Button>
+            <div class="flex items-center gap-1">
+              <template v-for="(page, idx) in visiblePages" :key="`page-${idx}`">
+                <span
+                  v-if="page !== -1"
+                  class="px-3 py-1 text-sm rounded cursor-pointer transition-colors"
+                  :class="page === currentResponsePage
+                    ? 'bg-primary-400 text-white font-medium'
+                    : 'text-gray-600 hover:bg-gray-100'"
+                  @click="currentResponsePage = page"
+                >
+                  {{ page }}
+                </span>
+                <span
+                  v-else
+                  class="px-2 text-gray-400"
+                >
+                  ...
+                </span>
+              </template>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              :disabled="currentResponsePage === totalPages"
+              @click="currentResponsePage++"
+              class="h-8 w-8 p-0"
+            >
+              <ChevronRight class="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       </div>
     </DialogContent>
   </Dialog>
@@ -438,6 +486,9 @@ import {
   ListChecks,
   Eye,
   X,
+  Clock,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-vue-next'
 import { Doughnut } from 'vue-chartjs'
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js'
@@ -520,11 +571,122 @@ const loadingInsight = ref<Set<number>>(new Set())
 
 const showResponsesModal = ref(false)
 const selectedQuestionIndex = ref<number | null>(null)
-// 임시 전체 응답 데이터 (질문별 배열)
-const allResponses = [
-  ['정글', '미드', '정글', '원딜', '탑', '서포터', '정글'],
-  ['매칭 시스템이 너무 불공정해요.', '클라이언트가 자주 튕깁니다.', '버그가 많아요.', 'AFK 유저가 많아요.']
+const currentResponsePage = ref(1)
+const responsesPerPage = 10
+
+// 응답 데이터 타입 정의
+interface ResponseItem {
+  content: string
+  userName?: string
+  deviceId?: string
+  createdAt: string
+}
+
+// 임시 전체 응답 데이터 (질문별 배열) - 실제 API 연동 시 객체 배열로 변경
+const allResponses: (string | ResponseItem)[][] = [
+  [
+    { content: '정글', deviceId: 'user001', createdAt: new Date(Date.now() - 3600000).toISOString() },
+    { content: '미드', deviceId: 'user002', createdAt: new Date(Date.now() - 7200000).toISOString() },
+    { content: '정글', deviceId: 'user003', createdAt: new Date(Date.now() - 10800000).toISOString() },
+    { content: '원딜', deviceId: 'user004', createdAt: new Date(Date.now() - 14400000).toISOString() },
+    { content: '탑', deviceId: 'user005', createdAt: new Date(Date.now() - 18000000).toISOString() },
+    { content: '서포터', deviceId: 'user006', createdAt: new Date(Date.now() - 21600000).toISOString() },
+    { content: '정글', deviceId: 'user007', createdAt: new Date(Date.now() - 25200000).toISOString() }
+  ],
+  [
+    { content: '매칭 시스템이 너무 불공정해요.', deviceId: 'user001', createdAt: new Date(Date.now() - 3600000).toISOString() },
+    { content: '클라이언트가 자주 튕깁니다.', deviceId: 'user002', createdAt: new Date(Date.now() - 7200000).toISOString() },
+    { content: '버그가 많아요.', deviceId: 'user003', createdAt: new Date(Date.now() - 10800000).toISOString() },
+    { content: 'AFK 유저가 많아요.', deviceId: 'user004', createdAt: new Date(Date.now() - 14400000).toISOString() }
+  ]
 ]
+
+// 페이징 관련 computed
+const totalResponseCount = computed(() => {
+  if (selectedQuestionIndex.value === null) return 0
+  const responses = allResponses[selectedQuestionIndex.value]
+  return responses ? responses.length : 0
+})
+
+const totalPages = computed(() => {
+  return Math.ceil(totalResponseCount.value / responsesPerPage)
+})
+
+const paginatedResponses = computed(() => {
+  if (selectedQuestionIndex.value === null) return []
+  const responses = allResponses[selectedQuestionIndex.value]
+  if (!responses || responses.length === 0) return []
+  
+  const start = (currentResponsePage.value - 1) * responsesPerPage
+  const end = start + responsesPerPage
+  return responses.slice(start, end)
+})
+
+const visiblePages = computed(() => {
+  const pages: number[] = []
+  const total = totalPages.value
+  const current = currentResponsePage.value
+  
+  if (total <= 7) {
+    // 7페이지 이하면 모두 표시
+    for (let i = 1; i <= total; i++) {
+      pages.push(i)
+    }
+  } else {
+    // 현재 페이지 기준으로 앞뒤 2페이지씩 표시
+    if (current <= 3) {
+      // 앞부분
+      for (let i = 1; i <= 5; i++) {
+        pages.push(i)
+      }
+      pages.push(-1) // 구분자
+      pages.push(total)
+    } else if (current >= total - 2) {
+      // 뒷부분
+      pages.push(1)
+      pages.push(-1) // 구분자
+      for (let i = total - 4; i <= total; i++) {
+        pages.push(i)
+      }
+    } else {
+      // 중간
+      pages.push(1)
+      pages.push(-1) // 구분자
+      for (let i = current - 1; i <= current + 1; i++) {
+        pages.push(i)
+      }
+      pages.push(-1) // 구분자
+      pages.push(total)
+    }
+  }
+  
+  return pages
+})
+
+// 시간 포맷팅 함수 (상대 시간)
+const formatTimeAgo = (dateString: string): string => {
+  const date = new Date(dateString)
+  const now = new Date()
+  const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60))
+  
+  if (diffInMinutes < 1) return '방금 전'
+  if (diffInMinutes < 60) return `${diffInMinutes}분 전`
+  
+  const diffInHours = Math.floor(diffInMinutes / 60)
+  if (diffInHours < 24) return `${diffInHours}시간 전`
+  
+  const diffInDays = Math.floor(diffInHours / 24)
+  if (diffInDays < 7) return `${diffInDays}일 전`
+  
+  // 7일 이상이면 날짜 형식으로 표시
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  
+  return `${year}-${month}-${day} ${hours}:${minutes}`
+}
 
 // 실제 응답 데이터를 기반으로 총 참여자 수 계산
 const actualResponseCount = computed(() => {
@@ -768,6 +930,7 @@ function getWordCloudStyle(item: { word: string; count: number }, i: number, que
 
 function viewAllResponses(index: number) {
   selectedQuestionIndex.value = index
+  currentResponsePage.value = 1 // 모달 열 때 첫 페이지로 리셋
   showResponsesModal.value = true
 }
 
