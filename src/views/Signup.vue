@@ -133,7 +133,7 @@
               <Button
                 type="button"
                 variant="outline"
-                class="h-9 text-sm"
+                class="h-9 text-sm hover:bg-primary-400 hover:text-white hover:border-primary-400"
                 @click="openTermsModal"
               >
                 약관 보기
