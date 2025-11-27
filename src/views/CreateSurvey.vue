@@ -267,10 +267,40 @@
                     <Eye class="h-5 w-5 text-primary-400" />
                     <span class="text-sm font-medium text-gray-800">결과 공개</span>
                   </div>
-                  <Switch
-                    v-model="survey.showResults"
-                    class="data-[state=checked]:bg-primary-400"
-                  />
+                  <div class="relative inline-flex rounded-lg bg-gray-100 p-1 border border-gray-200">
+                    <div
+                      :class="[
+                        'absolute top-1 bottom-1 rounded-md transition-all duration-300 ease-in-out shadow-sm',
+                        survey.showResults ? 'left-1 right-1/2 bg-white' : 'left-1/2 right-1 bg-white'
+                      ]"
+                    />
+                    <button
+                      type="button"
+                      :class="[
+                        'relative z-10 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200',
+                        survey.showResults
+                          ? 'text-primary-600'
+                          : 'text-gray-500 hover:text-gray-700'
+                      ]"
+                      @click="survey.showResults = true"
+                    >
+                      <Eye :class="['h-3.5 w-3.5 transition-all', survey.showResults ? 'text-primary-500' : 'text-gray-400']" />
+                      공개
+                    </button>
+                    <button
+                      type="button"
+                      :class="[
+                        'relative z-10 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200',
+                        !survey.showResults
+                          ? 'text-primary-600'
+                          : 'text-gray-500 hover:text-gray-700'
+                      ]"
+                      @click="survey.showResults = false"
+                    >
+                      <EyeOff :class="['h-3.5 w-3.5 transition-all', !survey.showResults ? 'text-primary-500' : 'text-gray-400']" />
+                      비공개
+                    </button>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -329,6 +359,7 @@ import {
   Users,
   Clock,
   Eye,
+  EyeOff,
   Save,
 } from 'lucide-vue-next'
 
