@@ -131,6 +131,7 @@ const handleLogin = handleSubmit(async (values: { email: string; password: strin
 
     await store.dispatch('setUser', {
       username: response.username,
+      realUsername: response.realUsername,
       accessToken: response.accessToken,
       refreshToken: response.refreshToken,
       role: response.role

@@ -78,7 +78,7 @@
             </FormItem>
           </FormField>
 
-          <FormField v-slot="{ componentField, errorMessage }" name="name">
+          <FormField v-slot="{ componentField, errorMessage }" name="realUsername">
             <FormItem>
               <FormControl>
                 <div class="relative">
@@ -329,7 +329,7 @@ const schema = toTypedSchema(
     confirmPassword: z
       .string({ required_error: '필수 입력 항목입니다.' })
       .min(1, '필수 입력 항목입니다.'),
-    name: z
+    realUsername: z
       .string({ required_error: '필수 입력 항목입니다.' })
       .min(1, '필수 입력 항목입니다.'),
     birthDate: z
@@ -375,7 +375,7 @@ const { handleSubmit, setFieldValue } = useForm<{
   email: string
   password: string
   confirmPassword: string
-  name: string
+  realUsername: string
   birthDate: string
 }>({
   validationSchema: schema,
@@ -444,7 +444,7 @@ const handleSignup = handleSubmit(async (values: {
   email: string
   password: string
   confirmPassword: string
-  name: string
+  realUsername: string
   birthDate: string
 }) => {
   if (!termsAccepted.value) {
@@ -456,7 +456,8 @@ const handleSignup = handleSubmit(async (values: {
     const response = await authApi.signup({
       username: values.email,
       password: values.password,
-      name: values.name,
+      name: values.realUsername, // 백엔드 호환성을 위해 name에도 realUsername 값 전달
+      realUsername: values.realUsername,
       birthDate: values.birthDate
     })
     

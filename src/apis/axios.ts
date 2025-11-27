@@ -86,8 +86,21 @@ tbAxios.interceptors.response.use(
 
                 const accessToken = response.data.data.accessToken;
                 const newRefreshToken = response.data.data.refreshToken;
+                const realUsername = response.data.data.realUsername;
                 localStorage.setItem("accessToken", accessToken);
                 localStorage.setItem("refreshToken", newRefreshToken);
+                if (realUsername) {
+                    localStorage.setItem("realUsername", realUsername);
+                }
+
+                // Store 업데이트
+                store.dispatch('setUser', {
+                    username: localStorage.getItem('username') || '',
+                    realUsername: realUsername,
+                    accessToken: accessToken,
+                    refreshToken: newRefreshToken,
+                    role: localStorage.getItem('role') || ''
+                });
 
                 // 대기 중인 모든 요청에 새 토큰 적용
                 onRefreshed(accessToken);
@@ -98,6 +111,7 @@ tbAxios.interceptors.response.use(
             } catch (refreshError) {
                 // 리프레시 실패 시 로그아웃 처리
                 localStorage.removeItem("username");
+                localStorage.removeItem("realUsername");
                 localStorage.removeItem("role");
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("refreshToken");

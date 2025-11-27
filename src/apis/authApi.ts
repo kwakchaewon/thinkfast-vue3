@@ -1,5 +1,5 @@
 import { tbAxios } from "@/apis/axios.ts"
-import { SignupRequest,LoginResponse } from "@/interfaces/authInterface.ts"
+import { SignupRequest, LoginResponse, UpdateProfileRequest, UserProfileResponse } from "@/interfaces/authInterface.ts"
 import store from "@/store";
 
 
@@ -25,5 +25,15 @@ export const authApi = {
   signup: async (data: SignupRequest) => {
     const response = await tbAxios.post('/auth/signup', data)
     return response.data
+  },
+
+  updateProfile: async (data: UpdateProfileRequest) => {
+    const response = await tbAxios.put('/auth/profile', data)
+    return response.data
+  },
+
+  getUserProfile: async (): Promise<UserProfileResponse> => {
+    const response = await tbAxios.get('/auth/me')
+    return response.data.data
   }
 }

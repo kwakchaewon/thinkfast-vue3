@@ -130,9 +130,12 @@ const handleLogin = handleSubmit(async (values: { email: string; password: strin
   loading.value = true
   try {
     const response = await authApi.login(values.email, values.password)
-    await store.dispatch('login', {
-      user: response.username,
-      accessToken: response.accessToken
+    await store.dispatch('setUser', {
+      username: response.username,
+      realUsername: response.realUsername,
+      accessToken: response.accessToken,
+      refreshToken: response.refreshToken,
+      role: response.role
     })
     showSuccess('로그인 성공!')
     await router.push('/main')
