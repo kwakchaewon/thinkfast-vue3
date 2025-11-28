@@ -112,9 +112,9 @@
             </div>
           </CardHeader>
           <CardContent class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-              <!-- QR 코드 (모바일: 전체, 데스크톱: 5/12) -->
-              <div class="md:col-span-5 text-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <!-- QR 코드 (모바일: 전체, 데스크톱: 1/2) -->
+              <div class="text-center">
                 <div class="mb-4 flex justify-center">
                   <div class="p-4 bg-white rounded-lg border border-gray-200 inline-block">
                     <qrcode-vue
@@ -129,30 +129,21 @@
                   QR 코드를 스캔하여 설문에 참여하세요
                 </div>
               </div>
-              <!-- 설문 참여 버튼 및 응답 현황 (모바일: 전체, 데스크톱: 7/12) -->
-              <div class="md:col-span-7 flex flex-col justify-center gap-4">
-                <div class="text-center md:text-left">
-                  <div class="flex justify-center md:justify-start">
-                    <Button
-                      variant="default"
-                      size="lg"
-                      class="bg-primary-400 hover:bg-primary-500 text-white"
-                      @click="openSurveyInNewTab"
-                    >
-                      <ExternalLink class="h-4 w-4 mr-2" />
-                      설문 참여하기
-                    </Button>
-                  </div>
-                  <div class="text-xs text-gray-500 mt-2">
-                    버튼을 클릭하여 설문에 참여하세요
-                  </div>
+              <!-- 설문 참여 버튼 (모바일: 전체, 데스크톱: 1/2) -->
+              <div class="text-center md:text-left">
+                <div class="flex justify-center md:justify-start">
+                  <Button
+                    variant="default"
+                    size="lg"
+                    class="bg-primary-400 hover:bg-primary-500 text-white"
+                    @click="openSurveyInNewTab"
+                  >
+                    <ExternalLink class="h-4 w-4 mr-2" />
+                    설문 참여하기
+                  </Button>
                 </div>
-                <div class="pt-4 border-t border-gray-200 text-center md:text-left">
-                  <div class="text-sm font-medium text-gray-800 mb-2">응답 현황</div>
-                  <div class="text-2xl font-semibold text-gray-800">
-                    {{ actualResponseCount }}개
-                  </div>
-                  <div class="text-xs text-gray-500 mt-1">총 응답 수</div>
+                <div class="text-xs text-gray-500 mt-2">
+                  버튼을 클릭하여 설문에 참여하세요
                 </div>
               </div>
             </div>
