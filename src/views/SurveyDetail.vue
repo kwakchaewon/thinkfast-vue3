@@ -92,29 +92,29 @@
           </CardHeader>
         </Card>
 
-        <!-- 설문 공유 -->
+        <!-- 설문 참여 -->
         <Card class="mt-4 shadow-md border border-gray-200 bg-white">
           <CardHeader class="border-b border-gray-200 px-6 py-4">
             <div class="flex items-center justify-between">
               <CardTitle class="flex items-center text-xl font-semibold text-gray-800">
                 <Share2 class="h-5 w-5 text-primary-400 mr-2" />
-                설문 공유
+                설문 참여
               </CardTitle>
               <Button
                 variant="ghost"
                 size="sm"
                 class="text-primary-400 hover:bg-primary-400 hover:text-white"
-                @click="copyShareUrl"
+                @click="openSurveyInNewTab"
               >
-                <Copy class="h-4 w-4 mr-2" />
-                URL 복사
+                <ExternalLink class="h-4 w-4 mr-2" />
+                바로가기
               </Button>
             </div>
           </CardHeader>
           <CardContent class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-              <!-- QR 코드 (모바일: 전체, 데스크톱: 4/12) -->
-              <div class="md:col-span-4 text-center">
+              <!-- QR 코드 (모바일: 전체, 데스크톱: 5/12) -->
+              <div class="md:col-span-5 text-center">
                 <div class="mb-4 flex justify-center">
                   <div class="p-4 bg-white rounded-lg border border-gray-200 inline-block">
                     <qrcode-vue
@@ -129,35 +129,31 @@
                   QR 코드를 스캔하여 설문에 참여하세요
                 </div>
               </div>
-              <!-- 공유 URL 및 응답 현황 (모바일: 전체, 데스크톱: 8/12) -->
-              <div class="md:col-span-8 flex flex-col h-full justify-center">
-                <div>
-                  <div class="text-sm font-medium text-gray-800 mb-2">공유 URL</div>
-                  <div class="flex gap-2">
-                    <Input
-                      :model-value="shareUrl"
-                      readonly
-                      class="flex-1 h-12 bg-white border-gray-300 rounded-lg focus:border-primary-400 focus:ring-primary-400"
-                    />
+              <!-- 설문 참여 버튼 및 응답 현황 (모바일: 전체, 데스크톱: 7/12) -->
+              <div class="md:col-span-7 flex flex-col justify-center gap-4">
+                <div class="text-center md:text-left">
+                  <div class="flex justify-center md:justify-start">
                     <Button
-                      variant="outline"
-                      size="sm"
-                      class="h-12 px-4 hover:bg-primary-400 hover:text-white hover:border-primary-400"
-                      @click="copyShareUrl"
+                      variant="default"
+                      size="lg"
+                      class="bg-primary-400 hover:bg-primary-500 text-white"
+                      @click="openSurveyInNewTab"
                     >
-                      <Copy class="h-4 w-4" />
+                      <ExternalLink class="h-4 w-4 mr-2" />
+                      설문 참여하기
                     </Button>
                   </div>
                   <div class="text-xs text-gray-500 mt-2">
-                    URL을 복사하여 설문을 공유하세요
+                    버튼을 클릭하여 설문에 참여하세요
                   </div>
                 </div>
-<!--                <div class="mt-auto">-->
-<!--                  <div class="text-sm font-medium text-gray-800 mb-2">응답 현황</div>-->
-<!--                  <div class="text-lg font-semibold text-gray-800">-->
-<!--                    {{ survey.responseCount }}개-->
-<!--                  </div>-->
-<!--                </div>-->
+                <div class="pt-4 border-t border-gray-200 text-center md:text-left">
+                  <div class="text-sm font-medium text-gray-800 mb-2">응답 현황</div>
+                  <div class="text-2xl font-semibold text-gray-800">
+                    {{ actualResponseCount }}개
+                  </div>
+                  <div class="text-xs text-gray-500 mt-1">총 응답 수</div>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -552,6 +548,7 @@ import {
   Clock,
   ChevronLeft,
   ChevronRight,
+  ExternalLink,
 } from 'lucide-vue-next'
 import { Doughnut } from 'vue-chartjs'
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js'
@@ -840,6 +837,12 @@ const handleLogout = async () => {
   }
 }
 
+// 새 창으로 설문 응답 페이지 열기
+const openSurveyInNewTab = () => {
+  window.open(shareUrl.value, '_blank', 'noopener,noreferrer')
+}
+
+// URL 복사 함수 (필요시 사용)
 const copyShareUrl = async () => {
   try {
     // 최신 클립보드 API 사용
@@ -1297,3 +1300,4 @@ onMounted(() => {
   border-radius: 10px;
 }
 </style>
+
