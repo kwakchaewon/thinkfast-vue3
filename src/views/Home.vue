@@ -24,7 +24,7 @@
                 variant="outline"
                 size="sm"
                 @click="handleLogout"
-                class="text-gray-700 hover:text-gray-900"
+                class="text-gray-700 hover:bg-primary-400 hover:text-white hover:border-primary-400 transition-colors"
               >
                 로그아웃
               </Button>
@@ -81,7 +81,7 @@
           <SelectTrigger class="w-full sm:w-[200px]">
             <SelectValue placeholder="정렬 기준" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent class="select-content-custom bg-white">
             <SelectItem value="newest">최신순</SelectItem>
             <SelectItem value="oldest">오래된순</SelectItem>
             <SelectItem value="responses">응답 많은순</SelectItem>
@@ -335,5 +335,35 @@ onMounted(() => {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Select 필터 배경색 흰색 - 투명도 제거 */
+:deep(.select-content-custom) {
+  background-color: white !important;
+  background: white !important;
+}
+
+:deep(.select-content-custom [data-reka-select-viewport]) {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Select 필터 호버 스타일 - primary-400 = #5C6BC0 */
+/* 모든 가능한 선택자 패턴 적용 */
+:deep(.select-content-custom *:hover) {
+  color: white !important;
+}
+
+:deep(.select-content-custom [data-highlighted] *),
+:deep(.select-content-custom [data-highlighted="true"] *) {
+  color: white !important;
+}
+
+/* 배경색 적용 */
+:deep(.select-content-custom button:hover),
+:deep(.select-content-custom [data-highlighted]),
+:deep(.select-content-custom li:hover),
+:deep(.select-content-custom [role="option"]:hover) {
+  background-color: #5C6BC0 !important;
 }
 </style>
