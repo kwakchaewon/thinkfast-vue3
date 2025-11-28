@@ -18,7 +18,7 @@
                 to="/main"
                 class="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors"
               >
-                내 설문 보기
+                마이 페이지
               </router-link>
               <Button
                 variant="outline"

@@ -46,8 +46,7 @@ const router = createRouter({
       },
       beforeEnter: (_to, _from, next) => {
         if (store.getters.isAuthenticated) {
-          showError('로그인 세션이 만료됐습니다.')
-          next('/main')
+          next('/')
         } else {
           next()
         }
@@ -62,8 +61,7 @@ const router = createRouter({
       },
       beforeEnter: (_to, _from, next) => {
         if (store.getters.isAuthenticated) {
-          showError('로그인 세션이 만료됐습니다.')
-          next('/main')
+          next('/')
         } else {
           next()
         }

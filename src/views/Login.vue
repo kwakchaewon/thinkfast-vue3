@@ -138,7 +138,7 @@ const handleLogin = handleSubmit(async (values: { email: string; password: strin
       role: response.role
     })
     showSuccess('로그인 성공!')
-    await router.push('/main')
+    await router.push('/')
   } catch (error) {
     showError('로그인에 실패했습니다.')
   } finally {
