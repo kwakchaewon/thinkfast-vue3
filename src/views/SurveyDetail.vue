@@ -1,7 +1,58 @@
 <template>
-  <HeaderMenu>
-    <div class="min-h-screen bg-white">
-      <div class="px-6 py-8 pb-16">
+  <div class="min-h-screen bg-white">
+    <!-- 헤더 -->
+    <header class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+      <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <router-link to="/" class="flex items-center gap-3">
+              <img
+                :src="thinkfastLogo"
+                alt="ThinkFast 로고"
+                class="h-8 w-8 rounded-xl shadow-sm"
+              />
+              <span class="text-xl font-bold text-gray-900 tracking-tight">ThinkFast</span>
+            </router-link>
+          </div>
+          <div class="flex items-center gap-3">
+            <template v-if="isAuthenticated">
+              <router-link
+                to="/main"
+                class="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors"
+              >
+                마이 페이지
+              </router-link>
+              <Button
+                variant="outline"
+                size="sm"
+                @click="handleLogout"
+                class="text-gray-700 hover:bg-primary-400 hover:text-white hover:border-primary-400 transition-colors"
+              >
+                로그아웃
+              </Button>
+            </template>
+            <template v-else>
+              <router-link
+                to="/login"
+                class="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors"
+              >
+                로그인
+              </router-link>
+              <Button
+                variant="default"
+                size="sm"
+                as-child
+                class="bg-primary-400 hover:bg-primary-500 text-white"
+              >
+                <router-link to="/signup">회원가입</router-link>
+              </Button>
+            </template>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8">
         <!-- 설문 정보 헤더 -->
         <Card class="mb-4 shadow-md border border-gray-200 bg-white">
           <CardHeader class="px-6 py-4">
@@ -358,9 +409,8 @@
             </div>
           </CardContent>
         </Card>
-      </div>
     </div>
-  </HeaderMenu>
+  </div>
 
   <!-- 전체 응답 모달 -->
   <Dialog v-model:open="showResponsesModal">
@@ -475,7 +525,8 @@ import { surveyApi } from '@/apis/surveyApi'
 import { useRouter, useRoute } from 'vue-router'
 import QrcodeVue from 'qrcode.vue'
 import { getQuestionsResponse, GetSurveyDetailResponse } from '@/interfaces/surveyInterface'
-import HeaderMenu from '@/components/mobile/HeaderMenu.vue'
+import thinkfastLogo from '@/assets/thinkfast-logo.svg'
+import { authApi } from '@/apis/authApi'
 import store from '@/store'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -775,6 +826,17 @@ const confirmDelete = async () => {
     showError('설문 삭제에 실패했습니다.')
   } finally {
     showDeleteDialog.value = false
+  }
+}
+
+// 로그아웃
+const handleLogout = async () => {
+  try {
+    await authApi.logout()
+    showSuccess('로그아웃에 성공했습니다.')
+    window.location.reload()
+  } catch (error) {
+    console.error('Logout failed:', error)
   }
 }
 
