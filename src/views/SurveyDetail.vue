@@ -92,8 +92,8 @@
           </CardHeader>
         </Card>
 
-        <!-- 설문 참여 -->
-        <Card class="mt-4 shadow-md border border-gray-200 bg-white">
+        <!-- 설문 참여 (진행중인 설문만 표시) -->
+        <Card v-if="survey.isActive === true" class="mt-4 shadow-md border border-gray-200 bg-white">
           <CardHeader class="border-b border-gray-200 px-6 py-4">
             <div class="flex items-center justify-between">
               <CardTitle class="flex items-center text-xl font-semibold text-gray-800">

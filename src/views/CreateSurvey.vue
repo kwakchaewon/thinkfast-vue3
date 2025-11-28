@@ -238,27 +238,27 @@
             </CardHeader>
             <CardContent class="p-6">
               <div class="space-y-4">
-                <div class="flex items-center justify-between py-2">
-                  <div class="flex items-center gap-3">
-                    <Users class="h-5 w-5 text-primary-400" />
-                    <span class="text-sm font-medium text-gray-800">응답자 수</span>
-                  </div>
-                  <Badge variant="default" class="bg-primary-400 text-white">
-                    무제한
-                  </Badge>
-                </div>
+<!--                <div class="flex items-center justify-between py-2">-->
+<!--                  <div class="flex items-center gap-3">-->
+<!--                    <Users class="h-5 w-5 text-primary-400" />-->
+<!--                    <span class="text-sm font-medium text-gray-800">응답자 수</span>-->
+<!--                  </div>-->
+<!--                  <Badge variant="default" class="bg-primary-400 text-white">-->
+<!--                    무제한-->
+<!--                  </Badge>-->
+<!--                </div>-->
 
-                <Separator />
+<!--                <Separator />-->
 
-                <div class="flex items-center justify-between py-2">
-                  <div class="flex items-center gap-3">
-                    <Clock class="h-5 w-5 text-primary-400" />
-                    <span class="text-sm font-medium text-gray-800">응답 시간 제한</span>
-                  </div>
-                  <Badge variant="secondary" class="bg-gray-100 text-gray-600">
-                    없음
-                  </Badge>
-                </div>
+<!--                <div class="flex items-center justify-between py-2">-->
+<!--                  <div class="flex items-center gap-3">-->
+<!--                    <Clock class="h-5 w-5 text-primary-400" />-->
+<!--                    <span class="text-sm font-medium text-gray-800">응답 시간 제한</span>-->
+<!--                  </div>-->
+<!--                  <Badge variant="secondary" class="bg-gray-100 text-gray-600">-->
+<!--                    없음-->
+<!--                  </Badge>-->
+<!--                </div>-->
 
                 <Separator />
 
