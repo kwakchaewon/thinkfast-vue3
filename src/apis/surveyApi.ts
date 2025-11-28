@@ -9,19 +9,55 @@ import {
   SurveySummary,
   WordCloudResponse,
   QuestionStatisticsResponse,
-  QuestionResponsesResponse
+  QuestionResponsesResponse,
+  PublicSurveysResponse
 } from '@/interfaces/surveyInterface'
 
 const { showError } = useSnackbar()
 
 export const surveyApi = {
-  // 전체 설문 목록 조회
+  // 전체 설문 목록 조회 (본인 설문만)
   async getSurveys(): Promise<Survey[]> {
     try {
       const response = await tbAxios.get('/survey')
       return response.data.data
     } catch (error) {
       showError('설문 목록을 불러오는데 실패했습니다.')
+      throw error
+    }
+  },
+
+  // 공개 설문 목록 조회 (인증 불필요)
+  async getPublicSurveys(
+    page: number = 1,
+    size: number = 10,
+    sort: 'newest' | 'oldest' | 'responses' = 'newest',
+    search?: string
+  ): Promise<PublicSurveysResponse> {
+    try {
+      const params: Record<string, any> = { page, size, sort }
+      if (search) {
+        params.search = search
+      }
+      const response = await tbAxios.get<{ success: boolean; data: PublicSurveysResponse }>('/survey/public', { params })
+      if (!response.data.success) {
+        throw new Error('공개 설문 목록을 불러오는데 실패했습니다.')
+      }
+      return response.data.data
+    } catch (error: any) {
+      // 404 같은 경우는 에러를 표시하지 않고 빈 목록 반환
+      if (error.response?.status === 404) {
+        return {
+          surveys: [],
+          pagination: {
+            currentPage: 1,
+            pageSize: size,
+            totalPages: 0,
+            totalCount: 0
+          }
+        }
+      }
+      showError(error.response?.data?.message || '공개 설문 목록을 불러오는데 실패했습니다.')
       throw error
     }
   },

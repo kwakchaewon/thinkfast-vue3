@@ -20,6 +20,7 @@
                 <div class="text-xs text-gray-500 mb-1">마감일</div>
                 <div class="text-sm text-gray-800 mb-4">{{ formatEndTime(survey.endTime) }}</div>
                 <Button
+                  v-if="canManageSurvey"
                   variant="outline"
                   size="sm"
                   class="text-red-500 border-red-500 hover:bg-red-50 hover:text-red-600"
@@ -28,6 +29,13 @@
                   <Trash2 class="h-4 w-4 mr-2" />
                   삭제
                 </Button>
+                <Badge
+                  v-else-if="isPublicSurvey"
+                  variant="default"
+                  class="bg-green-500 text-white"
+                >
+                  공개 설문
+                </Badge>
               </div>
             </div>
           </CardHeader>
@@ -105,7 +113,7 @@
         </Card>
 
         <!-- 요약 리포트 카드 -->
-        <Card class="mt-4 shadow-md border border-gray-200 bg-white">
+        <Card v-if="canViewResults" class="mt-4 shadow-md border border-gray-200 bg-white">
           <CardHeader class="border-b border-gray-200 px-6 py-4">
             <div class="flex items-center justify-between">
               <CardTitle class="text-xl font-semibold text-gray-800">설문 요약 리포트</CardTitle>
@@ -225,7 +233,7 @@
         </Card>
 
         <!-- 응답 결과 섹션 -->
-        <Card class="mt-4 shadow-md border border-gray-200 bg-white">
+        <Card v-if="canViewResults" class="mt-4 shadow-md border border-gray-200 bg-white">
           <CardHeader class="border-b border-gray-200 px-6 py-4">
             <CardTitle class="text-xl font-semibold text-gray-800">응답 결과</CardTitle>
           </CardHeader>
@@ -468,6 +476,7 @@ import { useRouter, useRoute } from 'vue-router'
 import QrcodeVue from 'qrcode.vue'
 import { getQuestionsResponse, GetSurveyDetailResponse } from '@/interfaces/surveyInterface'
 import HeaderMenu from '@/components/mobile/HeaderMenu.vue'
+import store from '@/store'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -727,8 +736,18 @@ const survey = ref<GetSurveyDetailResponse>({
   isActive: false,
   endTime: '',
   responseCount: 0,
+  showResults: false,
+  isOwner: false,
   questions: []
 })
+
+const isAuthenticated = computed(() => store.getters.isAuthenticated)
+const isPublicSurvey = computed(() => survey.value.showResults === true)
+// 백엔드에서 제공하는 isOwner 값을 우선 사용
+// 백엔드에서 isOwner를 제공하지 않는 경우를 대비한 fallback 로직은 필요시 추가
+const isOwner = computed(() => survey.value.isOwner === true)
+const canViewResults = computed(() => isPublicSurvey.value || isOwner.value)
+const canManageSurvey = computed(() => isOwner.value && isAuthenticated.value)
 
 const shareUrl = computed(() => {
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
@@ -815,6 +834,10 @@ const fetchSurveyDetail = async () => {
       isActive: surveyDetail.isActive,
       endTime: surveyDetail.endTime,
       responseCount: surveyDetail.responseCount,
+      showResults: surveyDetail.showResults ?? false,
+      isOwner: surveyDetail.isOwner ?? false,
+      ownerId: surveyDetail.ownerId,
+      ownerName: surveyDetail.ownerName,
       questions: questions.map((question: getQuestionsResponse) => ({
         id: question.id,
         content: question.content,
@@ -824,11 +847,25 @@ const fetchSurveyDetail = async () => {
       }))
     }
     
+    // 권한 체크: 비공개 설문이고 소유자가 아니면 접근 불가
+    if (!survey.value.showResults && !survey.value.isOwner) {
+      showError('비공개 설문입니다. 소유자만 접근할 수 있습니다.')
+      router.push('/')
+      return
+    }
+    
     // 동적 제목 설정
     if (survey.value.title) {
       document.title = `${survey.value.title} :: ThinkFast`
     }
-  } catch (error) {
+  } catch (error: any) {
+    if (error.response?.status === 403) {
+      showError('이 설문에 접근할 권한이 없습니다.')
+    } else if (error.response?.status === 404) {
+      showError('설문을 찾을 수 없습니다.')
+    } else {
+      showError('설문을 불러오는데 실패했습니다.')
+    }
     router.push('/')
   } finally {
     isLoading.value = false
@@ -985,6 +1022,11 @@ watch(() => route.params.id, (newId) => {
 
 // 설문 요약 리포트 가져오기
 const fetchSurveySummary = async () => {
+  // 권한 체크: 결과를 볼 수 있는 경우에만 조회
+  if (!canViewResults.value) {
+    return
+  }
+  
   try {
     isLoadingSummary.value = true
     const summaryData = await surveyApi.getSurveySummary(surveyId.value)
@@ -1086,6 +1128,11 @@ const fetchQuestionStatistics = async (questionId: number) => {
 
 // 응답 결과용 질문 목록 가져오기
 const fetchResultQuestions = async () => {
+  // 권한 체크: 결과를 볼 수 있는 경우에만 조회
+  if (!canViewResults.value) {
+    return
+  }
+  
   try {
     isLoadingQuestions.value = true
     const questionsData = await surveyApi.getQuestionsBySurveyId(surveyId.value)

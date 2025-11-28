@@ -97,11 +97,20 @@
                   >
                     <TableCell class="font-medium">{{ survey.title }}</TableCell>
                     <TableCell>
-                      <Badge
-                        :variant="survey.isActive === true ? 'default' : 'destructive'"
-                      >
-                        {{ survey.isActive === true ? '진행중' : '종료' }}
-                      </Badge>
+                      <div class="flex flex-col gap-1">
+                        <Badge
+                          :variant="survey.isActive === true ? 'default' : 'destructive'"
+                        >
+                          {{ survey.isActive === true ? '진행중' : '종료' }}
+                        </Badge>
+                        <Badge
+                          v-if="survey.showResults !== undefined"
+                          :variant="survey.showResults ? 'default' : 'secondary'"
+                          :class="survey.showResults ? 'bg-green-500 text-white' : 'bg-gray-400 text-white'"
+                        >
+                          {{ survey.showResults ? '공개' : '비공개' }}
+                        </Badge>
+                      </div>
                     </TableCell>
                     <TableCell>{{ survey.responseCount }}개</TableCell>
                     <TableCell>{{ survey.createdAt }}</TableCell>
@@ -211,6 +220,7 @@ interface Survey {
   isActive: boolean
   responseCount: number
   createdAt: string
+  showResults?: boolean
 }
 
 const router = useRouter()

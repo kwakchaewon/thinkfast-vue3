@@ -226,6 +226,7 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSnackbar } from '@/composables/useSnackbar'
 import { authApi } from '@/apis/authApi'
+import { getDisplayName } from '@/composables/useUserDisplay'
 import tbAxios from "@/apis/axios.ts"
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -271,6 +272,7 @@ interface RawNotification {
   isRead: boolean
   createdAt: string
   alarmCount: number
+  displayName?: string
 }
 
 const router = useRouter()
@@ -282,13 +284,11 @@ const userEmail = computed(() => {
   return localStorage.getItem('username') || ''
 })
 
-// 사용자 이름을 이메일 주소의 @ 앞 부분에서 추출 (첫 글자 대문자)
+// 사용자 이름 표시 (realUsername 우선, 없으면 username 사용)
 const userName = computed(() => {
-  const email = userEmail.value
-  if (!email) return 'User'
-  const emailPrefix = email.split('@')[0]
-  // 첫 글자를 대문자로 변환
-  return emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1)
+  const username = userEmail.value
+  const realUsername = localStorage.getItem('realUsername')
+  return getDisplayName(realUsername, username || 'User')
 })
 
 const showNotifications = ref(false)

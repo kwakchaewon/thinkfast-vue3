@@ -16,15 +16,10 @@ const router = createRouter({
       name: 'home',
       component: () => import('@/views/Home.vue'),
       meta: {
-        title: 'ThinkFast :: AI 인사이트 제공 설문 플랫폼'
-      },
-      beforeEnter: (_to, _from, next) => {
-        if (store.getters.isAuthenticated) {
-          next('/main')
-        } else {
-          next()
-        }
+        title: 'ThinkFast :: AI 인사이트 제공 설문 플랫폼',
+        requiresAuth: false
       }
+      // 인증 없이 접근 가능 (커뮤니티 페이지)
     },
     {
       path: '/main',
@@ -97,7 +92,8 @@ const router = createRouter({
       props: true,
       meta: {
         title: '설문 상세 :: ThinkFast',
-        dynamicTitle: true
+        dynamicTitle: true,
+        requiresAuth: false // 공개 설문은 인증 불필요 (컴포넌트 내에서 권한 체크)
       }
     },
     {

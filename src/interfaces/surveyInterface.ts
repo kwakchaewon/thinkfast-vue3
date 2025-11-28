@@ -36,6 +36,10 @@ export interface GetSurveyDetailResponse {
   isActive: boolean
   endTime: string
   responseCount: number
+  showResults?: boolean
+  ownerId?: number
+  ownerName?: string
+  isOwner?: boolean
   questions: getQuestionsResponse[]
 }
 
@@ -47,6 +51,7 @@ export interface recentSurvey {
   endTime: string
   responseCount: number
   createdAt: string
+  showResults?: boolean
 }
 
 export type GetRecentSurveysResponse = {
@@ -86,7 +91,34 @@ export interface Survey {
   isActive: boolean;
   endTime: string;
   responseCount: number;
+  showResults?: boolean;
+  ownerId?: number;
+  ownerName?: string;
   questions: Question[];
+}
+
+// 공개 설문 목록 조회 응답
+export interface PublicSurvey {
+  id: number;
+  title: string;
+  description: string;
+  isActive: boolean;
+  endTime: string;
+  responseCount: number;
+  createdAt: string;
+  showResults: boolean;
+  ownerId: number;
+  ownerName: string;
+}
+
+export interface PublicSurveysResponse {
+  surveys: PublicSurvey[];
+  pagination: {
+    currentPage: number;
+    pageSize: number;
+    totalPages: number;
+    totalCount: number;
+  };
 }
 
 // 설문 요약 리포트 타입 정의
