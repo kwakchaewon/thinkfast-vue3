@@ -904,6 +904,7 @@ const fetchSurveyDetail = async () => {
     }
     
     // 권한 체크: 비공개 설문이고 소유자가 아니면 접근 불가
+    // 공개 설문(showResults === true)이면 모든 사용자가 접근 가능
     if (!survey.value.showResults && !survey.value.isOwner) {
       showError('비공개 설문입니다. 소유자만 접근할 수 있습니다.')
       router.push('/')
@@ -913,6 +914,14 @@ const fetchSurveyDetail = async () => {
     // 동적 제목 설정
     if (survey.value.title) {
       document.title = `${survey.value.title} :: ThinkFast`
+    }
+    
+    // survey 데이터 로드 완료 후, 결과를 볼 수 있는 권한이 있으면 결과 조회
+    if (canViewResults.value) {
+      await Promise.all([
+        fetchSurveySummary(),
+        fetchResultQuestions()
+      ])
     }
   } catch (error: any) {
     if (error.response?.status === 403) {
@@ -1070,9 +1079,7 @@ function formatEndTime(endTime: string): string {
 // 라우트 파라미터 변경 감지
 watch(() => route.params.id, (newId) => {
   if (newId) {
-    fetchSurveyDetail()
-    fetchSurveySummary()
-    fetchResultQuestions()
+    fetchSurveyDetail() // fetchSurveyDetail 내부에서 fetchSurveySummary와 fetchResultQuestions를 호출
   }
 })
 
@@ -1239,9 +1246,7 @@ const fetchResultQuestions = async () => {
 }
 
 onMounted(() => {
-  fetchSurveyDetail()
-  fetchSurveySummary()
-  fetchResultQuestions()
+  fetchSurveyDetail() // fetchSurveyDetail 내부에서 fetchSurveySummary와 fetchResultQuestions를 호출
 })
 </script>
 
