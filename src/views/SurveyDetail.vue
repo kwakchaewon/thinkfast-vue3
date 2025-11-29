@@ -364,9 +364,9 @@
                             ></div>
                             <span class="text-sm font-medium text-gray-800">{{ option.optionContent }}</span>
                           </div>
-                          <div class="flex items-center gap-2">
-                            <span class="text-sm text-gray-600">{{ option.count }}명</span>
-                            <span class="text-sm font-semibold text-primary-600">{{ option.percent.toFixed(1) }}%</span>
+                          <div class="flex items-center gap-3">
+                            <span class="text-sm text-gray-600 min-w-[3rem] text-right">{{ option.count }}명</span>
+                            <span class="text-sm font-semibold text-primary-600 min-w-[3.5rem] text-right">{{ option.percent.toFixed(1) }}%</span>
                           </div>
                         </div>
                       </div>
@@ -382,31 +382,52 @@
                       <div class="text-sm text-gray-500">워드클라우드를 불러오는 중...</div>
                     </div>
                     <template v-else-if="question.id">
-                      <div v-if="wordCloudDataMap.get(question.id)?.wordCloud && (wordCloudDataMap.get(question.id)?.wordCloud?.length || 0) > 0" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                      <!-- 워드클라우드 -->
-                      <div class="wordcloud-visual">
-                        <span
-                          v-for="(item, i) in wordCloudDataMap.get(question.id)?.wordCloud || []"
-                          :key="item.word"
-                          class="wordcloud-key"
-                          :style="getWordCloudStyle(item, i, question.id)"
-                        >
-                          {{ item.word }}
-                          <span class="wordcloud-count">{{ item.count }}</span>
-                        </span>
-                      </div>
-                      <!-- 인사이트 텍스트 -->
-                      <div class="flex items-center">
-                        <div v-if="question.id && isLoadingInsight(question.id)" class="text-sm text-gray-500">
-                          인사이트를 불러오는 중...
+                      <div v-if="wordCloudDataMap.get(question.id)?.wordCloud && (wordCloudDataMap.get(question.id)?.wordCloud?.length || 0) > 0" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                          <!-- 워드클라우드 -->
+                          <div class="wordcloud-visual">
+                            <span
+                              v-for="(item, i) in wordCloudDataMap.get(question.id)?.wordCloud || []"
+                              :key="item.word"
+                              class="wordcloud-key"
+                              :style="getWordCloudStyle(item, i, question.id)"
+                            >
+                              {{ item.word }}
+                              <span class="wordcloud-count">{{ item.count }}</span>
+                            </span>
+                          </div>
+                          <!-- 인사이트 텍스트 -->
+                          <div class="flex items-center">
+                            <div v-if="question.id && isLoadingInsight(question.id)" class="text-sm text-gray-500">
+                              인사이트를 불러오는 중...
+                            </div>
+                            <div v-else-if="question.id && insightMap.get(question.id)" class="text-base text-gray-600 leading-relaxed">
+                              {{ insightMap.get(question.id) }}
+                            </div>
+                            <div v-else class="text-sm text-gray-500">
+                              인사이트 데이터가 없습니다.
+                            </div>
+                          </div>
                         </div>
-                        <div v-else-if="question.id && insightMap.get(question.id)" class="text-base text-gray-600 leading-relaxed">
-                          {{ insightMap.get(question.id) }}
+                        <!-- 상위 키워드별 표시 -->
+                        <div class="mt-4 space-y-2">
+                          <template v-for="(item, index) in getTopWordCloudItems(question.id)" :key="item.word">
+                            <div
+                              class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
+                            >
+                              <div class="flex items-center gap-3">
+                                <div
+                                  class="w-4 h-4 rounded-full"
+                                  :style="{ backgroundColor: colorPalette[index % colorPalette.length] }"
+                                ></div>
+                                <span class="text-sm font-medium text-gray-800">{{ item.word }}</span>
+                              </div>
+                              <div class="flex items-center gap-2">
+                                <span class="text-sm font-semibold text-gray-700">{{ item.count }}명</span>
+                              </div>
+                            </div>
+                          </template>
                         </div>
-                        <div v-else class="text-sm text-gray-500">
-                          인사이트 데이터가 없습니다.
-                        </div>
-                      </div>
                       </div>
                       <div v-else class="text-sm text-gray-500 text-center py-8">
                         워드클라우드 데이터가 없습니다.
@@ -995,6 +1016,42 @@ function getChartData(questionId: number | undefined) {
 // 특정 질문의 워드클라우드 로딩 상태 확인
 function isLoadingWordCloud(questionId: number): boolean {
   return loadingWordCloud.value.has(questionId)
+}
+
+// 주관식 상위 키워드 항목 가져오기 (상위 5개 + 기타)
+function getTopWordCloudItems(questionId: number | undefined): Array<{ word: string; count: number }> {
+  if (!questionId) {
+    return []
+  }
+  
+  const wordCloudData = wordCloudDataMap.value.get(questionId)
+  if (!wordCloudData || !wordCloudData.wordCloud || wordCloudData.wordCloud.length === 0) {
+    return []
+  }
+  
+  // count 기준으로 내림차순 정렬
+  const sortedItems = [...wordCloudData.wordCloud].sort((a, b) => b.count - a.count)
+  
+  // 상위 5개
+  const top5 = sortedItems.slice(0, 5).map(item => ({
+    word: item.word,
+    count: item.count
+  }))
+  
+  // 나머지 합계 계산
+  const others = sortedItems.slice(5)
+  if (others.length > 0) {
+    const othersCount = others.reduce((sum, item) => sum + item.count, 0)
+    
+    if (othersCount > 0) {
+      top5.push({
+        word: '기타',
+        count: othersCount
+      })
+    }
+  }
+  
+  return top5
 }
 
 // 특정 질문의 인사이트 로딩 상태 확인
