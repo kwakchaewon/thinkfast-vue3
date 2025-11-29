@@ -353,7 +353,7 @@
                       <!-- 옵션별 비율 표시 -->
                       <div class="mt-4 space-y-2">
                         <div
-                          v-for="(option, index) in statisticsMap.get(question.id)?.statistics.options || []"
+                          v-for="(option, index) in getSortedOptions(question.id)"
                           :key="option.optionId"
                           class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
                         >
@@ -986,23 +986,36 @@ function isLoadingStatistics(questionId: number | undefined): boolean {
   return loadingStatistics.value.has(questionId)
 }
 
+// 정렬된 옵션 가져오기 (응답 건 내림차순, 시계 반대 방향을 위해 역순)
+function getSortedOptions(questionId: number | undefined): QuestionStatisticsOption[] {
+  if (!questionId) {
+    return []
+  }
+  
+  const statistics = statisticsMap.value.get(questionId)
+  if (!statistics || !statistics.statistics.options || statistics.statistics.options.length === 0) {
+    return []
+  }
+
+  // 응답 건(count) 기준 오름차순 정렬 후, 시계 반대 방향을 위해 역순
+  const sorted = [...statistics.statistics.options].sort((a, b) => a.count - b.count)
+  return sorted.reverse()
+}
+
 // 질문별 차트 데이터 생성
 function getChartData(questionId: number | undefined) {
   if (!questionId) {
     return { labels: [], datasets: [] }
   }
   
-  const statistics = statisticsMap.value.get(questionId)
-  if (!statistics || !statistics.statistics.options || statistics.statistics.options.length === 0) {
+  const sortedOptions = getSortedOptions(questionId)
+  if (sortedOptions.length === 0) {
     return { labels: [], datasets: [] }
   }
 
-  const options = statistics.statistics.options
-  // 시계 반대 방향으로 표시하기 위해 역순으로 정렬
-  const reversedOptions = [...options].reverse()
-  const labels = reversedOptions.map((opt: QuestionStatisticsOption) => opt.optionContent)
-  const data = reversedOptions.map((opt: QuestionStatisticsOption) => opt.percent)
-  const backgroundColor = reversedOptions.map((_: QuestionStatisticsOption, index: number) => colorPalette[index % colorPalette.length])
+  const labels = sortedOptions.map((opt: QuestionStatisticsOption) => opt.optionContent)
+  const data = sortedOptions.map((opt: QuestionStatisticsOption) => opt.percent)
+  const backgroundColor = sortedOptions.map((_: QuestionStatisticsOption, index: number) => colorPalette[index % colorPalette.length])
 
   return {
     labels,
