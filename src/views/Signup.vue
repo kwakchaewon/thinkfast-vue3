@@ -125,7 +125,7 @@
           </FormField>
 
           <div class="rounded-2xl border border-slate-200 bg-white/90 px-6 py-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur ring-1 ring-slate-900/5">
-            <div class="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center border border-slate-100 rounded-2xl px-4 py-3 bg-white/60">
+            <div class="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center">
               <div class="flex items-center gap-3">
                 <div
                   class="h-10 w-10 rounded-full flex items-center justify-center"
