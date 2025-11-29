@@ -167,7 +167,7 @@
           <div class="text-center pt-2">
             <span class="text-sm text-gray-600">이미 계정이 있으신가요? </span>
             <router-link
-              to="/"
+              to="/login"
               class="text-sm text-gray-800 hover:text-primary-600 font-medium transition-colors"
             >
               로그인
