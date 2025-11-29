@@ -329,23 +329,45 @@
                     <div v-if="isLoadingStatistics(question.id)" class="flex items-center justify-center py-8">
                       <div class="text-sm text-gray-500">통계 데이터를 불러오는 중...</div>
                     </div>
-                    <div v-else-if="question.id && statisticsMap.get(question.id)" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                      <!-- 차트 -->
-                      <div class="flex justify-center">
-                        <div class="w-full max-w-sm">
-                          <Doughnut :data="getChartData(question.id)" :options="chartOptions" />
+                    <div v-else-if="question.id && statisticsMap.get(question.id)" class="space-y-4">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                        <!-- 차트 -->
+                        <div class="flex justify-center">
+                          <div class="w-full max-w-sm">
+                            <Doughnut :data="getChartData(question.id)" :options="chartOptions" />
+                          </div>
+                        </div>
+                        <!-- 인사이트 텍스트 -->
+                        <div class="flex items-center">
+                          <div v-if="question.id && isLoadingInsight(question.id)" class="text-sm text-gray-500">
+                            인사이트를 불러오는 중...
+                          </div>
+                          <div v-else-if="question.id && insightMap.get(question.id)" class="text-base text-gray-600 leading-relaxed">
+                            {{ insightMap.get(question.id) }}
+                          </div>
+                          <div v-else class="text-sm text-gray-500">
+                            인사이트 데이터가 없습니다.
+                          </div>
                         </div>
                       </div>
-                      <!-- 인사이트 텍스트 -->
-                      <div class="flex items-center">
-                        <div v-if="question.id && isLoadingInsight(question.id)" class="text-sm text-gray-500">
-                          인사이트를 불러오는 중...
-                        </div>
-                        <div v-else-if="question.id && insightMap.get(question.id)" class="text-base text-gray-600 leading-relaxed">
-                          {{ insightMap.get(question.id) }}
-                        </div>
-                        <div v-else class="text-sm text-gray-500">
-                          인사이트 데이터가 없습니다.
+                      <!-- 옵션별 비율 표시 -->
+                      <div class="mt-4 space-y-2">
+                        <div
+                          v-for="(option, index) in statisticsMap.get(question.id)?.statistics.options || []"
+                          :key="option.optionId"
+                          class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
+                        >
+                          <div class="flex items-center gap-3">
+                            <div
+                              class="w-4 h-4 rounded-full"
+                              :style="{ backgroundColor: colorPalette[index % colorPalette.length] }"
+                            ></div>
+                            <span class="text-sm font-medium text-gray-800">{{ option.optionContent }}</span>
+                          </div>
+                          <div class="flex items-center gap-2">
+                            <span class="text-sm text-gray-600">{{ option.count }}명</span>
+                            <span class="text-sm font-semibold text-primary-600">{{ option.percent.toFixed(1) }}%</span>
+                          </div>
                         </div>
                       </div>
                     </div>
