@@ -1002,34 +1002,33 @@ function getSortedOptions(questionId: number | undefined): QuestionStatisticsOpt
   return sorted.reverse()
 }
 
-// Primary 색상 기반 그라데이션 색상 생성 (내림차순 정렬 기준, 확장된 색상 범위)
+// 프로젝트 Primary 색상 기반 그라데이션 색상 생성 (내림차순 정렬 기준, 확연한 채도/명도 차이)
 function generatePrimaryGradientColor(index: number, totalOptions: number): string {
-  // 메인 색상 #5C6BC0 (primary-400)의 HSL 값
+  // 프로젝트 메인 색상 #5C6BC0 (primary-400)의 HSL 값
   // RGB(92, 107, 192) → HSL(230°, 45%, 56%)
-  const baseHue = 230 // 인디고 계열 (메인 색상)
+  const baseHue = 230 // 인디고 계열 (프로젝트 메인 색상)
   
   if (totalOptions === 1) {
-    return `hsl(${baseHue}, 45%, 56%)` // 메인 색상
+    return `hsl(${baseHue}, 45%, 56%)` // 프로젝트 메인 색상
   }
   
-  // 색상 범위 확장: 보라색 계열(270°) → 인디고(230°) → 청록색 계열(190°)
-  // 총 80도 범위로 확장하여 더 다양한 색상 제공
-  const hueRange = 80
-  const startHue = baseHue + (hueRange / 2) // 270도 (보라색 계열)
-  const endHue = baseHue - (hueRange / 2)   // 190도 (청록색 계열)
+  // 인디고 계열 내에서 약간의 색상 변화 (보라색 계열 ~ 파란색 계열)
+  const hueRange = 40
+  const startHue = baseHue + (hueRange / 2) // 250도 (보라색 계열)
+  const endHue = baseHue - (hueRange / 2)   // 210도 (파란색 계열)
   
-  // 내림차순이므로 index 0이 가장 높은 비율 (보라색 계열, 진함)
-  // index가 증가할수록 낮은 비율 (청록색 계열, 밝음)
+  // 내림차순이므로 index 0이 가장 높은 비율 (어두운 색)
+  // index가 증가할수록 낮은 비율 (밝은 색)
   const hue = startHue - (index / (totalOptions - 1)) * (startHue - endHue)
   
-  // 채도: 높은 비율일수록 더 선명하게 (50% ~ 60%)
-  const minSaturation = 50
-  const maxSaturation = 60
+  // 채도: 높은 비율일수록 더 선명하게 (20% ~ 85%)
+  const minSaturation = 20
+  const maxSaturation = 85
   const saturation = maxSaturation - (index / (totalOptions - 1)) * (maxSaturation - minSaturation)
   
-  // 명도: 높은 비율일수록 더 진하게 (40% ~ 70%)
-  const minLightness = 40
-  const maxLightness = 70
+  // 명도: 높은 비율일수록 더 진하게 (20% ~ 80%)
+  const minLightness = 20
+  const maxLightness = 80
   const lightness = minLightness + (index / (totalOptions - 1)) * (maxLightness - minLightness)
   
   return `hsl(${Math.round(hue)}, ${Math.round(saturation)}%, ${Math.round(lightness)}%)`
