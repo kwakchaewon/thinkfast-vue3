@@ -360,7 +360,7 @@
                           <div class="flex items-center gap-3">
                             <div
                               class="w-4 h-4 rounded-full"
-                              :style="{ backgroundColor: colorPalette[index % colorPalette.length] }"
+                              :style="{ backgroundColor: generatePrimaryGradientColor(index, getSortedOptions(question.id).length) }"
                             ></div>
                             <span class="text-sm font-medium text-gray-800">{{ option.optionContent }}</span>
                           </div>
@@ -1002,6 +1002,39 @@ function getSortedOptions(questionId: number | undefined): QuestionStatisticsOpt
   return sorted.reverse()
 }
 
+// Primary 색상 기반 그라데이션 색상 생성 (내림차순 정렬 기준, 확장된 색상 범위)
+function generatePrimaryGradientColor(index: number, totalOptions: number): string {
+  // 메인 색상 #5C6BC0 (primary-400)의 HSL 값
+  // RGB(92, 107, 192) → HSL(230°, 45%, 56%)
+  const baseHue = 230 // 인디고 계열 (메인 색상)
+  
+  if (totalOptions === 1) {
+    return `hsl(${baseHue}, 45%, 56%)` // 메인 색상
+  }
+  
+  // 색상 범위 확장: 보라색 계열(270°) → 인디고(230°) → 청록색 계열(190°)
+  // 총 80도 범위로 확장하여 더 다양한 색상 제공
+  const hueRange = 80
+  const startHue = baseHue + (hueRange / 2) // 270도 (보라색 계열)
+  const endHue = baseHue - (hueRange / 2)   // 190도 (청록색 계열)
+  
+  // 내림차순이므로 index 0이 가장 높은 비율 (보라색 계열, 진함)
+  // index가 증가할수록 낮은 비율 (청록색 계열, 밝음)
+  const hue = startHue - (index / (totalOptions - 1)) * (startHue - endHue)
+  
+  // 채도: 높은 비율일수록 더 선명하게 (50% ~ 60%)
+  const minSaturation = 50
+  const maxSaturation = 60
+  const saturation = maxSaturation - (index / (totalOptions - 1)) * (maxSaturation - minSaturation)
+  
+  // 명도: 높은 비율일수록 더 진하게 (40% ~ 70%)
+  const minLightness = 40
+  const maxLightness = 70
+  const lightness = minLightness + (index / (totalOptions - 1)) * (maxLightness - minLightness)
+  
+  return `hsl(${Math.round(hue)}, ${Math.round(saturation)}%, ${Math.round(lightness)}%)`
+}
+
 // 질문별 차트 데이터 생성
 function getChartData(questionId: number | undefined) {
   if (!questionId) {
@@ -1015,7 +1048,10 @@ function getChartData(questionId: number | undefined) {
 
   const labels = sortedOptions.map((opt: QuestionStatisticsOption) => opt.optionContent)
   const data = sortedOptions.map((opt: QuestionStatisticsOption) => opt.percent)
-  const backgroundColor = sortedOptions.map((_: QuestionStatisticsOption, index: number) => colorPalette[index % colorPalette.length])
+  // Primary 색상 기반 그라데이션 색상 생성
+  const backgroundColor = sortedOptions.map((_: QuestionStatisticsOption, index: number) => 
+    generatePrimaryGradientColor(index, sortedOptions.length)
+  )
 
   return {
     labels,
