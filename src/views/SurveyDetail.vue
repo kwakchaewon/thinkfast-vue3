@@ -998,9 +998,11 @@ function getChartData(questionId: number | undefined) {
   }
 
   const options = statistics.statistics.options
-  const labels = options.map((opt: QuestionStatisticsOption) => opt.optionContent)
-  const data = options.map((opt: QuestionStatisticsOption) => opt.percent)
-  const backgroundColor = options.map((_: QuestionStatisticsOption, index: number) => colorPalette[index % colorPalette.length])
+  // 시계 반대 방향으로 표시하기 위해 역순으로 정렬
+  const reversedOptions = [...options].reverse()
+  const labels = reversedOptions.map((opt: QuestionStatisticsOption) => opt.optionContent)
+  const data = reversedOptions.map((opt: QuestionStatisticsOption) => opt.percent)
+  const backgroundColor = reversedOptions.map((_: QuestionStatisticsOption, index: number) => colorPalette[index % colorPalette.length])
 
   return {
     labels,
