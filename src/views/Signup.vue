@@ -1,7 +1,11 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-white p-4">
+  <div class="min-h-screen flex flex-col items-center justify-center bg-white p-4">
+<!--    &lt;!&ndash; 큰 로고 &ndash;&gt;-->
+<!--    <Logo size="large" container-class="mb-8" />-->
+
     <Card class="w-full max-w-md shadow-md border border-gray-200">
       <CardHeader class="text-center py-8 px-6">
+        <Logo size="large" container-class="mb-8" />
         <CardTitle class="text-3xl font-bold text-gray-800 mb-2">회원가입</CardTitle>
         <p class="text-sm text-gray-500">ThinkFast에 오신 것을 환영합니다</p>
       </CardHeader>
@@ -283,6 +287,7 @@ import {
 import { Mail, Lock, LockKeyhole, User, Calendar as CalendarIcon, Eye, EyeOff, Loader2, FileText, CheckCircle2 } from 'lucide-vue-next'
 import flatpickr from 'flatpickr'
 import 'flatpickr/dist/flatpickr.min.css'
+import Logo from '@/components/common/Logo.vue'
 
 const router = useRouter()
 const { navigateWithDelay } = useDelayedRouter(router)
