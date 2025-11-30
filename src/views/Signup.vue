@@ -473,7 +473,7 @@ const handleSignup = handleSubmit(async (values: {
     
     // 성공 처리
     showSuccess('회원가입이 완료되었습니다.')
-    await navigateWithDelay('/')
+    await navigateWithDelay('/login')
   } catch (error: any) {
     // 에러 응답 처리
     const errorMessage = error.response?.data?.message || error.message || '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
