@@ -162,12 +162,19 @@
             <div v-if="isLoadingSummary" class="flex items-center justify-center py-8">
               <div class="text-sm text-gray-500">요약 리포트를 불러오는 중...</div>
             </div>
+            <div v-else-if="hasNoSummaryResponse" class="flex flex-col items-center justify-center py-12">
+              <div class="text-4xl mb-4">📭</div>
+              <div class="text-lg font-medium text-gray-800 mb-2">아직 응답이 없습니다</div>
+              <div class="text-sm text-gray-500 text-center max-w-md">
+                설문 결과를 확인하려면 최소 1건의 응답이 필요합니다.
+              </div>
+            </div>
             <div v-else class="space-y-6">
               <!-- 주요 포지션 -->
               <div v-if="summary.mainPosition">
                 <div class="text-base font-semibold text-gray-800 mb-3">주요 포지션</div>
                 <div class="text-base text-gray-700">{{ summary.mainPosition }}</div>
-                <div v-if="summary.mainPositionPercent !== undefined" class="text-xs text-gray-500 mt-1">
+                <div v-if="summary.mainPositionPercent !== undefined && summary.mainPositionPercent !== null" class="text-xs text-gray-500 mt-1">
                   전체 응답자의 {{ summary.mainPositionPercent.toFixed(1) }}%가 선택
                 </div>
               </div>
@@ -185,9 +192,6 @@
                     <span class="text-base text-gray-700">{{ item }}</span>
                   </div>
                 </div>
-              </div>
-              <div v-if="!summary.mainPosition && (!summary.improvements || summary.improvements.length === 0)" class="text-sm text-gray-500">
-                요약 리포트 데이터가 없습니다.
               </div>
             </div>
           </CardContent>
@@ -329,7 +333,7 @@
                     <div v-if="isLoadingStatistics(question.id)" class="flex items-center justify-center py-8">
                       <div class="text-sm text-gray-500">통계 데이터를 불러오는 중...</div>
                     </div>
-                    <div v-else-if="question.id && statisticsMap.get(question.id)" class="space-y-4">
+                    <div v-else-if="question.id && statisticsMap.get(question.id) && !hasNoStatisticsResponse(question.id)" class="space-y-4">
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                         <!-- 차트 -->
                         <div class="flex justify-center">
@@ -342,7 +346,7 @@
                           <div v-if="question.id && isLoadingInsight(question.id)" class="text-sm text-gray-500">
                             인사이트를 불러오는 중...
                           </div>
-                          <div v-else-if="question.id && insightMap.get(question.id)" class="text-base text-gray-600 leading-relaxed">
+                          <div v-else-if="question.id && !hasNoInsightResponse(question.id)" class="text-base text-gray-600 leading-relaxed">
                             {{ insightMap.get(question.id) }}
                           </div>
                           <div v-else class="text-sm text-gray-500">
@@ -371,8 +375,12 @@
                         </div>
                       </div>
                     </div>
-                    <div v-else class="text-sm text-gray-500 text-center py-8">
-                      통계 데이터가 없습니다.
+                    <div v-else class="flex flex-col items-center justify-center py-12">
+                      <div class="text-4xl mb-4">📊</div>
+                      <div class="text-lg font-medium text-gray-800 mb-2">통계 데이터가 없습니다</div>
+                      <div class="text-sm text-gray-500 text-center">
+                        이 질문에 대한 응답이 아직 없습니다.
+                      </div>
                     </div>
                   </div>
 
@@ -381,8 +389,8 @@
                     <div v-if="isLoadingWordCloud(question.id)" class="flex items-center justify-center py-8">
                       <div class="text-sm text-gray-500">워드클라우드를 불러오는 중...</div>
                     </div>
-                    <template v-else-if="question.id">
-                      <div v-if="wordCloudDataMap.get(question.id)?.wordCloud && (wordCloudDataMap.get(question.id)?.wordCloud?.length || 0) > 0" class="space-y-4">
+                    <template v-else-if="question.id && !hasNoWordCloudResponse(question.id)">
+                      <div class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                           <!-- 워드클라우드 -->
                           <div class="wordcloud-visual">
@@ -401,7 +409,7 @@
                             <div v-if="question.id && isLoadingInsight(question.id)" class="text-sm text-gray-500">
                               인사이트를 불러오는 중...
                             </div>
-                            <div v-else-if="question.id && insightMap.get(question.id)" class="text-base text-gray-600 leading-relaxed">
+                            <div v-else-if="question.id && !hasNoInsightResponse(question.id)" class="text-base text-gray-600 leading-relaxed">
                               {{ insightMap.get(question.id) }}
                             </div>
                             <div v-else class="text-sm text-gray-500">
@@ -429,10 +437,14 @@
                           </template>
                         </div>
                       </div>
-                      <div v-else class="text-sm text-gray-500 text-center py-8">
-                        워드클라우드 데이터가 없습니다.
-                      </div>
                     </template>
+                    <div v-else class="flex flex-col items-center justify-center py-12">
+                      <div class="text-4xl mb-4">☁️</div>
+                      <div class="text-lg font-medium text-gray-800 mb-2">워드클라우드가 없습니다</div>
+                      <div class="text-sm text-gray-500 text-center">
+                        주관식 응답이 필요합니다.
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -605,12 +617,12 @@ const isLoading = ref(false)
 
 // 요약 리포트 관련
 const summary = ref<{
-  mainPosition: string
-  mainPositionPercent?: number
+  mainPosition: string | null
+  mainPositionPercent: number | null
   improvements: string[]
 }>({
-  mainPosition: '',
-  mainPositionPercent: undefined,
+  mainPosition: null,
+  mainPositionPercent: null,
   improvements: []
 })
 const isLoadingSummary = ref(false)
@@ -986,6 +998,36 @@ function isLoadingStatistics(questionId: number | undefined): boolean {
   return loadingStatistics.value.has(questionId)
 }
 
+// 요약 리포트에 응답이 없는지 확인
+const hasNoSummaryResponse = computed(() => {
+  return !summary.value.mainPosition && 
+         (!summary.value.improvements || summary.value.improvements.length === 0)
+})
+
+// 특정 질문의 통계에 응답이 없는지 확인
+function hasNoStatisticsResponse(questionId: number | undefined): boolean {
+  if (!questionId) return true
+  const statistics = statisticsMap.value.get(questionId)
+  if (!statistics) return true
+  return !statistics.statistics?.totalResponses || statistics.statistics.totalResponses === 0
+}
+
+// 특정 질문의 인사이트에 응답이 없는지 확인
+function hasNoInsightResponse(questionId: number | undefined): boolean {
+  if (!questionId) return true
+  const insight = insightMap.value.get(questionId)
+  return !insight || insight === ''
+}
+
+// 특정 질문의 워드클라우드에 응답이 없는지 확인
+function hasNoWordCloudResponse(questionId: number | undefined): boolean {
+  if (!questionId) return true
+  const wordCloudData = wordCloudDataMap.value.get(questionId)
+  if (!wordCloudData) return true
+  return !wordCloudData.totalResponses || wordCloudData.totalResponses === 0 || 
+         !wordCloudData.wordCloud || wordCloudData.wordCloud.length === 0
+}
+
 // 정렬된 옵션 가져오기 (응답 건 내림차순, 시계 반대 방향을 위해 역순)
 function getSortedOptions(questionId: number | undefined): QuestionStatisticsOption[] {
   if (!questionId) {
@@ -1222,10 +1264,11 @@ const fetchSurveySummary = async () => {
   try {
     isLoadingSummary.value = true
     const summaryData = await surveyApi.getSurveySummary(surveyId.value)
+    // 백엔드에서 빈 데이터를 반환하는 경우 처리 (null 또는 빈 배열)
     summary.value = {
-      mainPosition: summaryData.mainPosition || '',
-      mainPositionPercent: summaryData.mainPositionPercent,
-      improvements: summaryData.improvements || []
+      mainPosition: summaryData.mainPosition ?? null,
+      mainPositionPercent: summaryData.mainPositionPercent ?? null,
+      improvements: summaryData.improvements ?? []
     }
   } catch (error: any) {
     // 403 권한 없음 에러인 경우 요약 리포트 섹션을 숨기거나 기본값 유지
@@ -1233,6 +1276,12 @@ const fetchSurveySummary = async () => {
       console.warn('설문 요약 리포트에 접근할 권한이 없습니다.')
     } else {
       console.error('설문 요약 리포트 로딩 실패:', error)
+    }
+    // 에러 발생 시 빈 데이터로 설정
+    summary.value = {
+      mainPosition: null,
+      mainPositionPercent: null,
+      improvements: []
     }
   } finally {
     isLoadingSummary.value = false
@@ -1248,6 +1297,7 @@ const fetchWordCloud = async (questionId: number) => {
   try {
     loadingWordCloud.value.add(questionId)
     const wordCloudData = await surveyApi.getWordCloud(surveyId.value, questionId)
+    // 백엔드에서 빈 데이터를 반환하는 경우 처리 (wordCloud: [], totalResponses: 0)
     wordCloudDataMap.value.set(questionId, {
       wordCloud: wordCloudData.wordCloud || [],
       totalResponses: wordCloudData.totalResponses || 0
@@ -1258,6 +1308,7 @@ const fetchWordCloud = async (questionId: number) => {
     } else {
       console.error(`질문 ${questionId}의 워드클라우드 로딩 실패:`, error)
     }
+    // 에러 발생 시 빈 데이터로 설정
     wordCloudDataMap.value.set(questionId, {
       wordCloud: [],
       totalResponses: 0
@@ -1276,13 +1327,15 @@ const fetchQuestionInsight = async (questionId: number) => {
   try {
     loadingInsight.value.add(questionId)
     const insightText = await surveyApi.getQuestionInsight(surveyId.value, questionId)
-    insightMap.value.set(questionId, insightText)
+    // 백엔드에서 null을 반환하는 경우 처리
+    insightMap.value.set(questionId, insightText || '')
   } catch (error: any) {
     if (error.response?.status === 403) {
       console.warn(`질문 ${questionId}의 인사이트에 접근할 권한이 없습니다.`)
     } else {
       console.error(`질문 ${questionId}의 인사이트 로딩 실패:`, error)
     }
+    // 에러 발생 시 빈 문자열로 설정
     insightMap.value.set(questionId, '')
   } finally {
     loadingInsight.value.delete(questionId)
@@ -1298,6 +1351,7 @@ const fetchQuestionStatistics = async (questionId: number) => {
   try {
     loadingStatistics.value.add(questionId)
     const statisticsData = await surveyApi.getQuestionStatistics(surveyId.value, questionId)
+    // 백엔드에서 빈 데이터를 반환하는 경우 처리 (totalResponses: 0, options: [{ count: 0, percent: 0.0 }])
     statisticsMap.value.set(questionId, statisticsData)
   } catch (error: any) {
     if (error.response?.status === 403) {
@@ -1305,6 +1359,7 @@ const fetchQuestionStatistics = async (questionId: number) => {
     } else {
       console.error(`질문 ${questionId}의 통계 로딩 실패:`, error)
     }
+    // 에러 발생 시 빈 데이터로 설정
     statisticsMap.value.set(questionId, {
       questionId,
       type: 'MULTIPLE_CHOICE',
