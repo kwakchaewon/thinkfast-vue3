@@ -1,10 +1,6 @@
-# ThinkFast
-
-AI 기반 실시간 설문조사 플랫폼 프론트엔드 애플리케이션
-
-## 📋 프로젝트 소개
-
-ThinkFast는 AI 인사이트를 제공하는 설문조사 플랫폼입니다. 사용자는 간편하고 빠르게 설문을 생성하고 관리할 수 있으며, 설문 결과에 대한 AI 기반 인사이트를 확인할 수 있습니다.
+# 🚀 ThinkFast (띵패스트)
+Think Fast는 실시간 설문 조사, AI 기반 인사이트 분석, 실시간 알림 등의 서비스를 제공하는 웹 애플리케이션입니다.
+<br></br>
 
 ## ✨ 주요 기능
 
@@ -15,7 +11,7 @@ ThinkFast는 AI 인사이트를 제공하는 설문조사 플랫폼입니다. �
 - 🏠 **대시보드**: 개인 설문 관리 및 통계 확인
 - 🔍 **설문 검색**: 공개 설문 검색 및 필터링
 - 📱 **반응형 디자인**: 모바일 및 데스크톱 환경 지원
-
+<br></br>
 ## 🛠 기술 스택
 
 ### 핵심 프레임워크
@@ -23,7 +19,7 @@ ThinkFast는 AI 인사이트를 제공하는 설문조사 플랫폼입니다. �
 - **TypeScript**
 - **Vite** (빌드 도구)
 
-### UI 라이브러리
+### 라이브러리
 - **shadcn-vue** (UI 컴포넌트)
 - **Tailwind CSS** (스타일링)
 - **Lucide Vue Next** (아이콘)
@@ -52,7 +48,7 @@ ThinkFast는 AI 인사이트를 제공하는 설문조사 플랫폼입니다. �
 - **VueUse** (유틸리티 컴포저블)
 - **QRCode.vue** (QR 코드 생성)
 - **WebFontLoader** (폰트 로딩)
-
+<br></br>
 ## 📁 프로젝트 구조
 
 ```
@@ -87,7 +83,6 @@ thinkfast_front/
 ├── vite.config.ts
 └── tailwind.config.js
 ```
-
 ## 🚀 시작하기
 
 ### 필수 요구사항
@@ -170,7 +165,7 @@ services:
     depends_on:
       - thinkfast-backend
 ```
-
+<br></br>
 ## ⚙️ 환경 설정
 
 ### API 엔드포인트 설정
@@ -189,7 +184,7 @@ Docker 환경에서 다음 환경 변수를 설정할 수 있습니다:
 - `BACKEND_URL`: 백엔드 서버 URL (기본값: `http://thinkfast-backend:8080`)
 - `NGINX_HOST`: Nginx 호스트명 (기본값: `localhost`)
 - `NGINX_PORT`: Nginx 포트 (기본값: `80`)
-
+<br></br>
 ## 🔐 인증 시스템
 
 애플리케이션은 JWT 기반 인증을 사용합니다:
@@ -198,7 +193,7 @@ Docker 환경에서 다음 환경 변수를 설정할 수 있습니다:
 - **Refresh Token**: Access Token 갱신에 사용되는 토큰
 - **자동 토큰 갱신**: Access Token 만료 시 자동으로 Refresh Token을 사용하여 갱신
 - **토큰 만료 처리**: Refresh Token도 만료된 경우 자동 로그아웃
-
+<br></br>
 ## 📱 주요 페이지
 
 - `/` - 홈 (공개 설문 목록)
@@ -211,10 +206,10 @@ Docker 환경에서 다음 환경 변수를 설정할 수 있습니다:
 - `/survey-completion` - 설문 완료
 - `/all-surveys` - 전체 설문 목록 (인증 필요)
 - `/posts` - 게시글
-
+<br></br>
 ## 🎨 UI 컴포넌트
 
-이 프로젝트는 **shadcn-vue**를 기반으로 한 UI 컴포넌트를 사용합니다:
+이 프로젝트는 **shadcn-vue**를 기반 UI 컴포넌트를 사용합니다:
 
 - Button, Input, Card, Dialog
 - Form, Select, Radio Group
@@ -223,7 +218,7 @@ Docker 환경에서 다음 환경 변수를 설정할 수 있습니다:
 - 등등...
 
 모든 컴포넌트는 `src/components/ui/` 디렉토리에 있습니다.
-
+<br></br>
 ## 📦 빌드 최적화
 
 Vite 빌드 설정에서 다음과 같은 최적화가 적용됩니다:
@@ -232,7 +227,7 @@ Vite 빌드 설정에서 다음과 같은 최적화가 적용됩니다:
 - **CSS 코드 분할**: 페이지별 CSS 분리
 - **자산 최적화**: 이미지, 폰트 파일 최적화
 - **소스맵**: 프로덕션 빌드에서는 비활성화
-
+<br></br>
 ## 🔧 개발 가이드
 
 ### 경로 별칭
@@ -257,19 +252,6 @@ import { useForm } from 'vee-validate'
 import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 ```
-
-## 📄 라이선스
-
-이 프로젝트는 비공개 프로젝트입니다.
-
-## 👥 기여
-
-프로젝트 기여에 관심이 있으시면 이슈를 생성하거나 풀 리퀘스트를 제출해주세요.
-
-## 📞 문의
-
-프로젝트에 대한 문의사항이 있으시면 이슈를 생성해주세요.
-
 ---
 
 **ThinkFast** - AI 인사이트 제공 설문 플랫폼
