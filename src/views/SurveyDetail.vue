@@ -60,7 +60,7 @@
               <div class="flex-1">
                 <Badge
                   :variant="survey.isActive === true ? 'default' : 'destructive'"
-                  class="mb-3"
+                  class="mb-3 text-white"
                 >
                   {{ survey.isActive === true ? '진행중' : '종료' }}
                 </Badge>
