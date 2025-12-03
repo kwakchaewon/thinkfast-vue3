@@ -6,7 +6,7 @@
         <CardHeader class="px-6 py-4">
           <Badge
             :variant="survey.status === 'active' ? 'default' : 'destructive'"
-            class="mb-3"
+            class="mb-3 text-white"
           >
             {{ survey.status === 'active' ? '진행중' : '종료' }}
           </Badge>
