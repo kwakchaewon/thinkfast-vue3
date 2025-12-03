@@ -109,7 +109,7 @@
               </Badge>
               <Badge
                 :variant="survey.isActive ? 'default' : 'destructive'"
-                :class="survey.isActive ? 'bg-primary-400' : ''"
+                :class="survey.isActive ? 'bg-primary-400 text-white' : ''"
               >
                 {{ survey.isActive ? '진행중' : '종료' }}
               </Badge>
